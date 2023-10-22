@@ -21,5 +21,5 @@ https://katanazero.com/
 - Deep project that the creator have to explain one way or another for us to get it
 - Doing design for designer/artits
 - Design the bullshit apology
-- Private sphere
+
 
