@@ -19,7 +19,7 @@ https://katanazero.com/
 
 ## Dislikes
 - Deep project that needs a lot of explanation for us to get it
-- Doing design for designer/artits
+
 
 
 
