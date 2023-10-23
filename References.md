@@ -18,8 +18,8 @@ https://katanazero.com/
 
 
 ## Dislikes
-- Deep project that the creator have to explain one way or another for us to get it
+- Deep project that needs a lot of explanation for us to get it
 - Doing design for designer/artits
-- Design the bullshit apology
+
 
 
