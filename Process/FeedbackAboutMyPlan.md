@@ -14,4 +14,9 @@
 - Try things, scan things, make a bank of idea assets environnement sounds.
 
 
+REFS GIVEN:
+https://www.studiomcguire.com/
+https://dpt.co/en/
+
+
 
