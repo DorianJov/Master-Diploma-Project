@@ -17,4 +17,8 @@
 
 
 ## What I got so far
-![](img/01.png =250x250)
+<img
+  src="img/01.png"
+  alt="Alt text"
+  title="Fog"
+  style="display: inline-block; margin: 0 auto; max-width: 300px">
