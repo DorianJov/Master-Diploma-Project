@@ -17,5 +17,4 @@
 
 
 ## What I got so far
-![](img/01.png | width=300)
- 
+![](img/01.png =250x250)
