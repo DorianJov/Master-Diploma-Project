@@ -7135,11 +7135,10 @@ Transform:
   m_GameObject: {fileID: 1554028403}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.562, y: 0.33, z: 0.9737052}
+  m_LocalPosition: {x: 0.33, y: 0.33, z: 0.9737052}
   m_LocalScale: {x: 0.02, y: 0.02, z: 0.02}
   m_ConstrainProportionsScale: 1
   m_Children:
-  - {fileID: 1823688467}
   - {fileID: 1536923737}
   - {fileID: 837059343}
   m_Father: {fileID: 0}
@@ -7156,6 +7155,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5834f3a77a50ea4ba0c64c97ebf55c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MaxDashSpeed: 2
+  DashsmoothSpeed: 8
+  MaxSpeed: 0.4
+  Acceleration: 2
+  Deceleration: 2
 --- !u!1001 &1570895167
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7566,6 +7570,7 @@ GameObject:
   - component: {fileID: 1823688466}
   - component: {fileID: 1823688465}
   - component: {fileID: 1823688468}
+  - component: {fileID: 1823688469}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -7641,11 +7646,11 @@ Transform:
   m_GameObject: {fileID: 1823688464}
   serializedVersion: 2
   m_LocalRotation: {x: 0.06845061, y: -0, z: -0, w: 0.99765456}
-  m_LocalPosition: {x: 2.3499994, y: 5.0160317, z: -34.18526}
-  m_LocalScale: {x: 50, y: 50, z: 50}
+  m_LocalPosition: {x: 0.33, y: 0.43032065, z: 0.28999996}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1554028407}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 7.85, y: 0, z: 0}
 --- !u!114 &1823688468
 MonoBehaviour:
@@ -7776,6 +7781,21 @@ MonoBehaviour:
       enableFptlForForwardOpaque: 0
       enableBigTilePrepass: 0
       isFptlEnabled: 0
+--- !u!114 &1823688469
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1823688464}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dab254693a31e874385d7d5b484aff1f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 1554028407}
+  smoothSpeed: 0.125
+  offset: {x: 0, y: 0.1, z: -0.69}
 --- !u!1 &2013410473
 GameObject:
   m_ObjectHideFlags: 1
@@ -7896,6 +7916,7 @@ PrefabInstance:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 1823688467}
   - {fileID: 1554028407}
   - {fileID: 157207114}
   - {fileID: 432432461}
