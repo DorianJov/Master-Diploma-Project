@@ -22,7 +22,7 @@ public class MoveSphere : MonoBehaviour
     public float Deceleration = 10f; //How fast will object reach a speed of 0
     void Start()
     {
-
+        gameObject.tag = "Player";
     }
 
 
@@ -66,11 +66,11 @@ public class MoveSphere : MonoBehaviour
         {
 
             dashSpeed = MaxDashSpeed;
-            Debug.Log("CLICKEDCLICKEDCLICKEDCLICKEDCLICKEDCLICKEDCLICKEDCLICKED");
+            //Debug.Log("CLICKEDCLICKEDCLICKEDCLICKEDCLICKEDCLICKEDCLICKEDCLICKED");
         }
         else
         {
-            Debug.Log("dashSpeed : " + dashSpeed);
+            //Debug.Log("dashSpeed : " + dashSpeed);
             if (dashSpeed != 1)
             {
                 dashSpeed = Mathf.Lerp(5, 1, t += DashsmoothSpeed * Time.deltaTime);
