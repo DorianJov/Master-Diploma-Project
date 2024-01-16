@@ -20,6 +20,12 @@ public class MoveSphere : MonoBehaviour
     public float MaxSpeed = 0.5f; //This is the maximum speed that the object will achieve
     public float Acceleration = 0.1f; //How fast will object reach a maximum speed
     public float Deceleration = 10f; //How fast will object reach a speed of 0
+
+    public float speedUpDown = 1;
+    public float distanceUpDown = 1;
+
+    public float speedUpDownUP = 1;
+    public float distanceUpDownUP = 1;
     void Start()
     {
         gameObject.tag = "Player";
@@ -84,6 +90,8 @@ public class MoveSphere : MonoBehaviour
 
 
         transform.position += new Vector3(Speed * Time.deltaTime * dashSpeed, Speed2 * Time.deltaTime * dashSpeed, 0f);
+        transform.position += transform.right * Mathf.Sin(speedUpDown * Time.time) * Time.deltaTime * distanceUpDown;
+        transform.position += transform.up * Mathf.Sin(speedUpDownUP * Time.time) * Time.deltaTime * distanceUpDownUP;
 
         //Debug.Log("Current Speed: " + Speed);
     }

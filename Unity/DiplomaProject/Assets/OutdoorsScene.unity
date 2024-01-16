@@ -17520,6 +17520,10 @@ MonoBehaviour:
   MaxSpeed: 0.4
   Acceleration: 2
   Deceleration: 2
+  speedUpDown: 19.85
+  distanceUpDown: 0.02
+  speedUpDownUP: 11.1
+  distanceUpDownUP: 0.03
 --- !u!54 &1554028410
 Rigidbody:
   m_ObjectHideFlags: 0
