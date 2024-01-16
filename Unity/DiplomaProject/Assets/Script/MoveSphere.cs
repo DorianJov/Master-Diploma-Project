@@ -26,9 +26,19 @@ public class MoveSphere : MonoBehaviour
 
     public float speedUpDownUP = 1;
     public float distanceUpDownUP = 1;
+    public float arrowKeySpeed = 5f; // Speed for arrow key movement
+    public float orbitSpeed = 1f; // Adjust this to control the speed of the orbit
+    public float orbitRadius = 2f; // Adjust this to control the radius of the orbit
+    public float noiseFrequency = 1f; // Adjust this to control the amount of noise
+    public float noiseAmplitude = 0.1f; // Limit the amplitude of the noise to control the range
+
+
+
+    private Vector3 initialPosition;
     void Start()
     {
         gameObject.tag = "Player";
+        initialPosition = transform.position;
     }
 
 
@@ -88,8 +98,32 @@ public class MoveSphere : MonoBehaviour
         }
 
 
+        Vector3 controlKeysMovement = new Vector3(Speed * Time.deltaTime * dashSpeed, Speed2 * Time.deltaTime * dashSpeed, 0f);
+        transform.position += controlKeysMovement;
 
-        transform.position += new Vector3(Speed * Time.deltaTime * dashSpeed, Speed2 * Time.deltaTime * dashSpeed, 0f);
+        /*float horizontalInput = Input.GetAxis("Horizontal");
+        float verticalInput = Input.GetAxis("Vertical");
+
+        // Calculate the angle based on time to achieve rotation
+        float angle = Time.time * orbitSpeed;
+
+        // Calculate the noise values
+        float xNoise = Mathf.PerlinNoise(Time.time * noiseFrequency, 0f) * 2f - 1f;
+        float yNoise = Mathf.PerlinNoise(0f, Time.time * noiseFrequency) * 2f - 1f;
+
+        // Limit the amplitude of the noise
+        xNoise *= noiseAmplitude;
+        yNoise *= noiseAmplitude;
+
+        // Combine arrow key movement and orbital movement
+        Vector3 arrowKeyMovement = new Vector3(horizontalInput, verticalInput, 0f);
+        Vector3 orbitalMovement = new Vector3(Mathf.Cos(angle) * orbitRadius + xNoise, Mathf.Sin(angle) * orbitRadius + yNoise, 0f);
+
+        // Update the position
+        transform.position += (controlKeysMovement * arrowKeySpeed + orbitalMovement) * Time.deltaTime;
+        */
+
+
         transform.position += transform.right * Mathf.Sin(speedUpDown * Time.time) * Time.deltaTime * distanceUpDown;
         transform.position += transform.up * Mathf.Sin(speedUpDownUP * Time.time) * Time.deltaTime * distanceUpDownUP;
 

@@ -17524,6 +17524,11 @@ MonoBehaviour:
   distanceUpDown: 0.02
   speedUpDownUP: 11.1
   distanceUpDownUP: 0.03
+  arrowKeySpeed: 0.4
+  orbitSpeed: 1
+  orbitRadius: 2
+  noiseFrequency: 1
+  noiseAmplitude: 0.1
 --- !u!54 &1554028410
 Rigidbody:
   m_ObjectHideFlags: 0
