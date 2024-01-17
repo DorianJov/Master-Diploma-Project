@@ -17517,7 +17517,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxDashSpeed: 2
   DashsmoothSpeed: 8
-  MaxSpeed: 0.4
+  MaxSpeed: 0.3
   Acceleration: 2
   Deceleration: 2
   speedUpDown: 19.85
