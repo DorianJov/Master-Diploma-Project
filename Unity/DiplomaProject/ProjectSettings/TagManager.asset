@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Lamp
   - PlayerLighting
+  - sunFlowers
   layers:
   - Default
   - TransparentFX

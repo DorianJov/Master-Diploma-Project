@@ -24,16 +24,32 @@ public class GlowingAttack : MonoBehaviour
         if (Input.GetKey(KeyCode.Space))
         {
             animator.SetBool("PlayAnim", true);
-            this.gameObject.tag = "Lamp";
+            //this.gameObject.tag = "Lamp";
         }
         else
         {
-            animator.SetBool("PlayAnim", false);
-            this.gameObject.tag = "Untagged";
+            //animator.SetBool("PlayAnim", false);
+            //this.gameObject.tag = "Untagged";
         }
 
 
 
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("LIGHT");
+        if (other.tag == "sunFlowers")
+        {
+            animator.SetBool("PlayAnim", true);
+            //this.gameObject.tag = "Lamp";
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        animator.SetBool("PlayAnim", false);
+        //this.gameObject.tag = "Lamp";
     }
 
 

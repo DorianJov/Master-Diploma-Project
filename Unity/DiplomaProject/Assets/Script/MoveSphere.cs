@@ -37,7 +37,7 @@ public class MoveSphere : MonoBehaviour
     private Vector3 initialPosition;
     void Start()
     {
-        gameObject.tag = "Player";
+        // gameObject.tag = "Player";
         initialPosition = transform.position;
     }
 
