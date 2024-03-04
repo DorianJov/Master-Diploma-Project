@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d08ce26990eb1a4a9177b860541e702, type: 3}
   m_Name: Exposure
   m_EditorClassIdentifier: 
-  active: 0
+  active: 1
   mode:
     m_OverrideState: 0
-    m_Value: 0
+    m_Value: 1
   meteringMode:
     m_OverrideState: 0
     m_Value: 2
@@ -27,10 +27,10 @@ MonoBehaviour:
     m_Value: 0
   compensation:
     m_OverrideState: 0
-    m_Value: 0
+    m_Value: 80.34
   limitMin:
     m_OverrideState: 0
-    m_Value: -1
+    m_Value: -5
   limitMax:
     m_OverrideState: 0
     m_Value: 14
@@ -113,13 +113,13 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
   adaptationMode:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 1
   adaptationSpeedDarkToLight:
-    m_OverrideState: 0
-    m_Value: 3
+    m_OverrideState: 1
+    m_Value: 1
   adaptationSpeedLightToDark:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 1
   weightTextureMask:
     m_OverrideState: 0
@@ -166,7 +166,7 @@ MonoBehaviour:
   active: 0
   mode:
     m_OverrideState: 1
-    m_Value: 2
+    m_Value: 0
   useFullACES:
     m_OverrideState: 0
     m_Value: 0
@@ -527,16 +527,16 @@ MonoBehaviour:
     m_OverrideState: 1
     m_Value: {x: 0.5, y: 0.5}
   intensity:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 0.334
   smoothness:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 0.2
   roundness:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 1
   rounded:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 0
   mask:
     m_OverrideState: 0
@@ -659,22 +659,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24f077503be6ae942a1e1245dbd53ea9, type: 3}
   m_Name: Bloom
   m_EditorClassIdentifier: 
-  active: 0
+  active: 1
   quality:
     m_OverrideState: 1
     m_Value: 2
   threshold:
     m_OverrideState: 1
-    m_Value: 0.23
+    m_Value: 4.13
   intensity:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 0.026
   scatter:
-    m_OverrideState: 0
-    m_Value: 0.407
+    m_OverrideState: 1
+    m_Value: 0.374
   tint:
     m_OverrideState: 0
-    m_Value: {r: 0.35016912, g: 0.3753694, b: 0.4056604, a: 1}
+    m_Value: {r: 1, g: 1, b: 1, a: 1}
   dirtTexture:
     m_OverrideState: 0
     m_Value: {fileID: 0}
@@ -733,19 +733,19 @@ MonoBehaviour:
   active: 0
   quality:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 3
   rayTracing:
     m_OverrideState: 0
     m_Value: 0
   intensity:
     m_OverrideState: 1
-    m_Value: 2.72
+    m_Value: 2.84
   directLightingStrength:
     m_OverrideState: 1
-    m_Value: 0.423
+    m_Value: 0.5
   radius:
     m_OverrideState: 1
-    m_Value: 0.25
+    m_Value: 3.6
   spatialBilateralAggressiveness:
     m_OverrideState: 0
     m_Value: 0.15
@@ -774,13 +774,13 @@ MonoBehaviour:
     m_Value: 1
   m_StepCount:
     m_OverrideState: 1
-    m_Value: 4
+    m_Value: 24
   m_FullResolution:
     m_OverrideState: 1
     m_Value: 0
   m_MaximumRadiusInPixels:
     m_OverrideState: 1
-    m_Value: 32
+    m_Value: 170
   m_BilateralUpsample:
     m_OverrideState: 1
     m_Value: 0
@@ -811,7 +811,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 598e2d32e2c7b0c418e030c3236d663a, type: 3}
   m_Name: ChromaticAberration
   m_EditorClassIdentifier: 
-  active: 0
+  active: 1
   quality:
     m_OverrideState: 1
     m_Value: 2
@@ -820,7 +820,7 @@ MonoBehaviour:
     m_Value: {fileID: 0}
   intensity:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 0.05
   m_MaxSamples:
     m_OverrideState: 1
     m_Value: 12
@@ -878,4 +878,4 @@ MonoBehaviour:
     m_Value: {r: 1, g: 1, b: 1, a: 1}
   gradientDiffusion:
     m_OverrideState: 0
-    m_Value: 1
+    m_Value: 8.62

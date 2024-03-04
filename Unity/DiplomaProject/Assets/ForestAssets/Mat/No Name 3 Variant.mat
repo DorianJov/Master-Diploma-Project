@@ -7,10 +7,10 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: No Name Variant
+  m_Name: No Name 3 Variant
   m_Shader: {fileID: 4800000, guid: 6e4ae4064600d784cac1e41a9e6f2e59, type: 3}
-  m_Parent: {fileID: 2100000, guid: 637350a235edd5849ad7a6263d2559fa, type: 2}
-  m_ModifiedSerializedProperties: 24
+  m_Parent: {fileID: 2100000, guid: b58ca9d74e7792747b360e763cf0759b, type: 2}
+  m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _DISABLE_SSR_TRANSPARENT
   - _NORMALMAP
@@ -19,7 +19,7 @@ Material:
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 2225
+  m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses:
   - TransparentDepthPrepass
@@ -34,25 +34,12 @@ Material:
     m_Ints: []
     m_Floats:
     - _CoatMask: 0
-    - _CullMode: 2
-    - _CullModeForward: 2
-    - _DoubleSidedEnable: 0
-    - _Metallic: 0
-    - _NormalMapSpace: 0
+    - _Metallic: 1
     - _NormalScale: 0
-    - _OpaqueCullMode: 2
-    - _ReceivesSSR: 1
-    - _Smoothness: 1
-    - _StencilRefDepth: 8
-    - _StencilRefGBuffer: 10
-    - _StencilRefMV: 40
-    - _SupportDecals: 1
-    - _UseEmissiveIntensity: 0
-    m_Colors:
-    - _BaseColor: {r: 0.084905684, g: 0.084905684, b: 0.084905684, a: 1}
-    - _Color: {r: 0.08490568, g: 0.08490568, b: 0.08490568, a: 1}
+    - _Smoothness: 0
+    m_Colors: []
   m_BuildTextureStacks: []
---- !u!114 &8976409419206457031
+--- !u!114 &4879943446129729941
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}

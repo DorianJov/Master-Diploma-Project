@@ -41,7 +41,11 @@ public class GlowingAttack : MonoBehaviour
         Debug.Log("LIGHT");
         if (other.tag == "sunFlowers")
         {
+            //AudioSource[] sources = this.gameObject.GetComponents<AudioSource>();
+            //sources[0].Play();
             animator.SetBool("PlayAnim", true);
+            StartCoroutine(turnOFFLightIn(0.1f));
+            //animator.SetBool("PlayAnim", false);
             //this.gameObject.tag = "Lamp";
         }
     }
@@ -52,5 +56,16 @@ public class GlowingAttack : MonoBehaviour
         //this.gameObject.tag = "Lamp";
     }
 
+
+
+    IEnumerator turnOFFLightIn(float seconds)
+    {
+        // wait for 1 second
+        Debug.Log("turnOFFLight in 1 sec");
+        yield return new WaitForSeconds(seconds);
+        animator.SetBool("PlayAnim", false);
+
+        Debug.Log("coroutine has stopped");
+    }
 
 }
