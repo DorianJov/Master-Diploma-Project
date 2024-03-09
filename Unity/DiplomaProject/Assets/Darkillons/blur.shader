@@ -1,9 +1,8 @@
-Shader "Custom/MotionBlurWithColor"
+Shader "Custom/ColorSelectionWithLighting"
 {
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
-        _BlurAmount ("Blur Amount", Range(0, 5)) = 2.0 // Adjust the range and default value as needed
         _Color ("Color", Color) = (1, 1, 1, 1)
     }
     SubShader
@@ -24,16 +23,17 @@ Shader "Custom/MotionBlurWithColor"
             {
                 float4 vertex : POSITION;
                 float2 uv : TEXCOORD0;
+                float3 normal : NORMAL;
             };
 
             struct v2f
             {
                 float2 uv : TEXCOORD0;
                 float4 vertex : SV_POSITION;
+                float3 normal : TEXCOORD1;
             };
 
             sampler2D _MainTex;
-            float _BlurAmount;
             fixed4 _Color;
 
             v2f vert (appdata v)
@@ -41,14 +41,22 @@ Shader "Custom/MotionBlurWithColor"
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = v.uv;
+                o.normal = v.normal;
                 return o;
             }
 
             half4 frag (v2f i) : SV_Target
             {
-                float2 velocity = ddx(i.uv) * _Time.y * _BlurAmount;
-                half4 color = tex2D(_MainTex, i.uv - velocity) * _Color * 0.5;
-                color += tex2D(_MainTex, i.uv) * _Color * 0.5;
+                // Calculate lighting intensity
+                half3 lighting = max(0, dot(normalize(i.normal), normalize(_WorldSpaceLightPos0)));
+
+                // Sample texture and apply color
+                half4 texColor = tex2D(_MainTex, i.uv);
+                half4 color = texColor * _Color;
+
+                // Apply lighting to the color
+                color.rgb *= lighting;
+
                 return color;
             }
             ENDCG
