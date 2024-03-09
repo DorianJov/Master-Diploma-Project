@@ -7,6 +7,7 @@ public class GlowingFlower : MonoBehaviour
     // Start is called before the first frame update
     private Animator animator;
     public bool active = false;
+    bool turnOFFLight = true;
 
 
     void Start()
@@ -22,10 +23,7 @@ public class GlowingFlower : MonoBehaviour
     {
 
 
-        if (active)
-        {
 
-        }
 
 
     }
@@ -38,7 +36,8 @@ public class GlowingFlower : MonoBehaviour
             if (!active)
             {
                 Debug.Log("ENTER");
-
+                active = true;
+                //StopCoroutine("turnOFFAudio");
 
 
                 animator.SetBool("lightUP", true);
@@ -46,11 +45,12 @@ public class GlowingFlower : MonoBehaviour
                 AudioSource[] sources = this.gameObject.GetComponents<AudioSource>();
                 sources[0].volume = 0.117f;
                 sources[0].Play();
-                active = true;
+
+
             }
             else
             {
-
+                active = false;
                 Debug.Log("ENTER");
 
 
@@ -60,10 +60,12 @@ public class GlowingFlower : MonoBehaviour
                 AudioSource[] sources = this.gameObject.GetComponents<AudioSource>();
                 sources[1].Play();
                 StartCoroutine(turnOFFAudio());
-                active = false;
+
+
+
 
             }
-            //sources[1].Play();
+
         }
     }
 
@@ -76,9 +78,17 @@ public class GlowingFlower : MonoBehaviour
 
         while (sources[0].volume != 0)
         {
-            print("volune down");
+            if (active)
+            {
+                yield break; // Exit the coroutine immediately
+            }
+
+            print("volume down");
             sources[0].volume -= Time.deltaTime * 0.1f;
             // Yield execution of this coroutine and return to the main loop until next frame
+            // Check for cancellation
+
+
             yield return null;
         }
 
