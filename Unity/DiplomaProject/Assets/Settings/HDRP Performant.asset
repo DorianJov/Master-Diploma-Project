@@ -29,7 +29,7 @@ MonoBehaviour:
     supportWater: 1
     waterSimulationResolution: 128
     waterCPUSimulation: 0
-    supportDistortion: 0
+    supportDistortion: 1
     supportTransparentBackface: 1
     supportTransparentDepthPrepass: 1
     supportTransparentDepthPostpass: 1
@@ -172,8 +172,8 @@ MonoBehaviour:
       - 5
       - 6
       - 6
-      DoFResolution: 040000000400000002000000
-      DoFHighQualityFiltering: 000100
+      DoFResolution: 040000000400000001000000
+      DoFHighQualityFiltering: 000101
       DoFPhysicallyBased: 000000
       LimitManualRangeNearBlur: 000000
       MotionBlurSampleCount: 04000000080000000c000000
@@ -290,7 +290,7 @@ MonoBehaviour:
   allowShaderVariantStripping: 1
   enableSRPBatcher: 1
   availableMaterialQualityLevels: -1
-  m_DefaultMaterialQualityLevel: 1
+  m_DefaultMaterialQualityLevel: 4
   diffusionProfileSettings: {fileID: 0}
   virtualTexturingSettings:
     streamingCpuCacheSizeInMegaBytes: 256
