@@ -8,12 +8,12 @@ public class GlowingFlower : MonoBehaviour
     private Animator animator;
     public bool active = false;
     bool turnOFFLight = true;
-
+    AudioSource[] sources;
 
     void Start()
     {
         //Get default Parameters
-
+        sources = this.gameObject.GetComponents<AudioSource>();
         animator = GetComponentInChildren<Animator>();
         //gameObject.tag = "Player";
     }
@@ -38,14 +38,9 @@ public class GlowingFlower : MonoBehaviour
                 Debug.Log("ENTER");
                 active = true;
                 //StopCoroutine("turnOFFAudio");
-
-
                 animator.SetBool("lightUP", true);
-
-                AudioSource[] sources = this.gameObject.GetComponents<AudioSource>();
                 sources[0].volume = 0.117f;
                 sources[0].Play();
-
 
             }
             else
@@ -53,17 +48,9 @@ public class GlowingFlower : MonoBehaviour
                 active = false;
                 Debug.Log("ENTER");
 
-
-
                 animator.SetBool("lightUP", false);
-
-                AudioSource[] sources = this.gameObject.GetComponents<AudioSource>();
                 sources[1].Play();
                 StartCoroutine(turnOFFAudio());
-
-
-
-
             }
 
         }
