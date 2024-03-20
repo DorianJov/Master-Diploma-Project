@@ -95,6 +95,7 @@ public class FlockUnit : MonoBehaviour
 		FindNeighbours();
 		CalculateSpeed();
 
+		//NEED PERF ISEELIGHT
 		var cohesionVector = CalculateCohesionVector() * assignedFlock.cohesionWeight;
 		var avoidanceVector = CalculateAvoidanceVector() * assignedFlock.avoidanceWeight;
 		var aligementVector = CalculateAligementVector() * assignedFlock.aligementWeight;
@@ -113,7 +114,9 @@ public class FlockUnit : MonoBehaviour
 
 		//var moveVector = cohesionVector + avoidanceVector + aligementVector + boundsVector + obstacleVector + goalPos;
 
+		//NEED PERF ISEELIGHT remplaced cohesion with nothing.
 		var moveVector = cohesionVector + avoidanceVector + aligementVector + boundsVector;
+		//var moveVector = avoidanceVector + boundsVector;
 		moveVector = Vector3.SmoothDamp(myTransform.forward, moveVector, ref currentVelocity, smoothDamp);
 
 		float distance = Vector3.Distance(transform.position, goalPos);

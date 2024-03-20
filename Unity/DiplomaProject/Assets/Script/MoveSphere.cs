@@ -13,6 +13,7 @@ public class MoveSphere : MonoBehaviour
     float dash = 0f; //Don’t touch this
     float t = 0;
 
+    Rigidbody m_Rigidbody;
     public float MaxDashSpeed = 5f;
     public float DashsmoothSpeed = 0.5f;
     private float dashVelocity = 0.0f; //Don’t touch this
@@ -33,24 +34,47 @@ public class MoveSphere : MonoBehaviour
     public float noiseAmplitude = 0.1f; // Limit the amplitude of the noise to control the range
 
 
+    ParticleSystem myParticleSystem;
+    ParticleSystem.EmissionModule emissionModule;
 
-    private Vector3 initialPosition;
+
     void Start()
     {
-        // gameObject.tag = "Player";
-        initialPosition = transform.position;
+
+        m_Rigidbody = GetComponent<Rigidbody>();
+
+        // Get the system and the emission module.
+        myParticleSystem = GetComponentInChildren<ParticleSystem>();
+        emissionModule = myParticleSystem.emission;
+        //var emission = ps.emission;
+
     }
 
 
     void Update()
     {
+
+        if (Speed != 0 || Speed2 != 0)
+        {
+
+            emissionModule.enabled = true;
+
+        }
+        else
+        {
+            emissionModule.enabled = false;
+
+        }
+
         if (Input.GetKey("a"))
         {
             if (Speed > -MaxSpeed) Speed -= Acceleration * Time.deltaTime;
+
         }
         else if (Input.GetKey("d"))
         {
             if (Speed < MaxSpeed) Speed += Acceleration * Time.deltaTime;
+
         }
 
         else
@@ -59,15 +83,18 @@ public class MoveSphere : MonoBehaviour
             else if (Speed < -Deceleration * Time.deltaTime) Speed += Deceleration * Time.deltaTime;
             else
                 Speed = 0;
+
         }
 
         if (Input.GetKey("s"))
         {
             if (Speed2 > -MaxSpeed) Speed2 -= Acceleration * Time.deltaTime;
+
         }
         else if (Input.GetKey("w"))
         {
             if (Speed2 < MaxSpeed) Speed2 += Acceleration * Time.deltaTime;
+
         }
 
         else
@@ -76,6 +103,7 @@ public class MoveSphere : MonoBehaviour
             else if (Speed2 < -Deceleration * Time.deltaTime) Speed2 += Deceleration * Time.deltaTime;
             else
                 Speed2 = 0;
+
         }
 
         if (Input.GetKeyDown(KeyCode.Mouse0) & dashSpeed == 1)
@@ -98,8 +126,8 @@ public class MoveSphere : MonoBehaviour
         }
 
 
-        Vector3 controlKeysMovement = new Vector3(Speed * Time.deltaTime * dashSpeed, Speed2 * Time.deltaTime * dashSpeed, 0f);
-        transform.position += controlKeysMovement;
+        Vector3 controlKeysMovement = new(Speed * Time.deltaTime * dashSpeed, Speed2 * Time.deltaTime * dashSpeed, 0f);
+        m_Rigidbody.MovePosition(transform.position += controlKeysMovement);
 
         /*float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
@@ -124,8 +152,9 @@ public class MoveSphere : MonoBehaviour
         */
 
 
-        transform.position += transform.right * Mathf.Sin(speedUpDown * Time.time) * Time.deltaTime * distanceUpDown;
-        transform.position += transform.up * Mathf.Sin(speedUpDownUP * Time.time) * Time.deltaTime * distanceUpDownUP;
+        m_Rigidbody.MovePosition(transform.position += transform.right * Mathf.Sin(speedUpDown * Time.time) * Time.deltaTime * distanceUpDown);
+        m_Rigidbody.MovePosition(transform.position += transform.up * Mathf.Sin(speedUpDownUP * Time.time) * Time.deltaTime * distanceUpDownUP);
+        m_Rigidbody.velocity = Vector3.zero;
 
         //Debug.Log("Current Speed: " + Speed);
     }

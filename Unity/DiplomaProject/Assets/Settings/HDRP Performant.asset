@@ -42,7 +42,7 @@ MonoBehaviour:
       m_SchemaId:
         m_Id: With3Levels
     cubeReflectionResolution:
-      m_Values: 000100000002000000040000
+      m_Values: 000100000002000000020000
       m_SchemaId:
         m_Id: With3Levels
     supportDecals: 1
@@ -56,12 +56,12 @@ MonoBehaviour:
     supportDitheringCrossFade: 1
     supportTerrainHole: 0
     lightProbeSystem: 0
-    probeVolumeMemoryBudget: 1024
+    probeVolumeMemoryBudget: 512
     probeVolumeBlendingMemoryBudget: 128
     supportProbeVolumeStreaming: 0
     probeVolumeSHBands: 1
-    supportRayTracing: 0
-    supportedRayTracingMode: 3
+    supportRayTracing: 1
+    supportedRayTracingMode: 1
     lightLoopSettings:
       cookieAtlasSize: 512
       cookieFormat: 74
@@ -73,7 +73,7 @@ MonoBehaviour:
       maxEnvLightsOnScreen: 32
       reflectionCacheCompressed: 1
       reflectionProbeFormat: 74
-      reflectionProbeTexCacheSize: 4096
+      reflectionProbeTexCacheSize: 268437504
       reflectionProbeTexLastValidCubeMip: 3
       reflectionProbeTexLastValidPlanarMip: 0
       reflectionProbeDecreaseResToFit: 1
@@ -157,8 +157,8 @@ MonoBehaviour:
       checkerboardDepthBuffer: 1
       upsampleType: 1
     xrSettings:
-      singlePass: 1
-      occlusionMesh: 1
+      singlePass: 0
+      occlusionMesh: 0
       cameraJitter: 0
       allowMotionBlur: 0
     postProcessQualitySettings:

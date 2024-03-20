@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class GlowingFlower : MonoBehaviour
@@ -8,12 +9,23 @@ public class GlowingFlower : MonoBehaviour
     private Animator animator;
     public bool active = false;
     bool turnOFFLight = true;
+
+    public float LookAtSpeed = 0.1f;
+
+    Transform circleChild;
+    //Transform lightChild;
+
+    public Transform target;
+    public Transform RestTarget;
+    public bool lookingAtGenerator = false;
     AudioSource[] sources;
 
     void Start()
     {
         //Get default Parameters
         sources = this.gameObject.GetComponents<AudioSource>();
+        circleChild = this.gameObject.transform.GetChild(0);
+        //lightChild = this.gameObject.transform.GetChild(0).GetChild(0);
         animator = GetComponentInChildren<Animator>();
         //gameObject.tag = "Player";
     }
@@ -21,9 +33,48 @@ public class GlowingFlower : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //circleChild.transform.Rotate(Vector3.right, 90f, Space.Self);
+
+        if (active)
+        {
+
+            //StartCoroutine(LookAtSmoothly());
+
+
+        }
 
 
 
+    }
+
+    private IEnumerator LookAtSmoothly(Transform target)
+    {
+
+        if (!active) { yield break; }
+
+        while (active)
+        {
+            Quaternion lookRotation = Quaternion.LookRotation(target.position - circleChild.transform.position);
+            circleChild.transform.rotation = Quaternion.Slerp(circleChild.transform.rotation, lookRotation, Time.deltaTime * LookAtSpeed);
+            yield return null;
+        }
+
+
+    }
+
+
+    private IEnumerator LookAtRestSmoothly(Transform target)
+    {
+
+        if (active) { yield break; }
+
+        while (!active)
+        {
+            Quaternion lookRotation = Quaternion.LookRotation(target.position - circleChild.transform.position);
+            circleChild.transform.rotation = Quaternion.Slerp(circleChild.transform.rotation, lookRotation, Time.deltaTime * LookAtSpeed);
+            if (circleChild.transform.rotation == lookRotation) { yield break; }
+            yield return null;
+        }
 
 
     }
@@ -31,13 +82,13 @@ public class GlowingFlower : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Player")
+        if (other.CompareTag("Player"))
         {
             if (!active)
             {
                 Debug.Log("ENTER");
                 active = true;
-                //StopCoroutine("turnOFFAudio");
+                StartCoroutine(LookAtSmoothly(target));
                 animator.SetBool("lightUP", true);
                 sources[0].volume = 0.117f;
                 sources[0].Play();
@@ -46,40 +97,35 @@ public class GlowingFlower : MonoBehaviour
             else
             {
                 active = false;
+                StartCoroutine(LookAtRestSmoothly(RestTarget));
                 Debug.Log("ENTER");
-
                 animator.SetBool("lightUP", false);
                 sources[1].Play();
-                StartCoroutine(turnOFFAudio());
+                StartCoroutine(TurnOFFAudio());
             }
+
+        }
+
+        if (other.CompareTag("Player"))
+        {
+
 
         }
     }
 
-    IEnumerator turnOFFAudio()
+    IEnumerator TurnOFFAudio()
     {
-        // wait for 1 second
-        //Debug.Log("turnOFFLight in 1 sec");
         AudioSource[] sources = this.gameObject.GetComponents<AudioSource>();
-        //Debug.Log("coroutine has stopped");
-
         while (sources[0].volume != 0)
         {
             if (active)
             {
                 yield break; // Exit the coroutine immediately
             }
-
             print("volume down");
             sources[0].volume -= Time.deltaTime * 0.1f;
-            // Yield execution of this coroutine and return to the main loop until next frame
-            // Check for cancellation
-
-
             yield return null;
         }
-
-        //sources[0].Stop();
     }
 
 }
