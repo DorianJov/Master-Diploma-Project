@@ -55,7 +55,10 @@ QualitySettings:
     terrainBillboardStart: 50
     terrainFadeLength: 5
     terrainMaxTrees: 50
-    excludedTargetPlatforms: []
+    excludedTargetPlatforms:
+    - Standalone
+    - Server
+    - iPhone
   - serializedVersion: 3
     name: Balanced
     pixelLightCount: 0
@@ -108,6 +111,7 @@ QualitySettings:
     excludedTargetPlatforms:
     - Server
     - Standalone
+    - iPhone
   - serializedVersion: 3
     name: Performant
     pixelLightCount: 0
@@ -123,14 +127,14 @@ QualitySettings:
     skinWeights: 255
     globalTextureMipmapLimit: 0
     textureMipmapLimitSettings: []
-    anisotropicTextures: 2
+    anisotropicTextures: 0
     antiAliasing: 0
     softParticles: 0
     softVegetation: 0
     realtimeReflectionProbes: 0
     billboardsFaceCameraPosition: 1
     useLegacyDetailDistribution: 1
-    vSyncCount: 1
+    vSyncCount: 0
     realtimeGICPUUsage: 25
     lodBias: 1
     maximumLODLevel: 0
