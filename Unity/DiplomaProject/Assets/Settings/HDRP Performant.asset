@@ -25,7 +25,7 @@ MonoBehaviour:
         m_Id: With3Levels
     supportVolumetrics: 1
     supportVolumetricClouds: 0
-    supportLightLayers: 1
+    supportLightLayers: 0
     supportWater: 1
     waterSimulationResolution: 256
     waterCPUSimulation: 0
@@ -34,7 +34,7 @@ MonoBehaviour:
     supportTransparentDepthPrepass: 0
     supportTransparentDepthPostpass: 0
     colorBufferFormat: 74
-    supportCustomPass: 1
+    supportCustomPass: 0
     customBufferFormat: 12
     supportedLitShaderMode: 2
     planarReflectionResolution:
@@ -122,7 +122,7 @@ MonoBehaviour:
       maxDirectionalShadowMapResolution: 1024
       maxPunctualShadowMapResolution: 2048
       maxAreaShadowMapResolution: 2048
-      supportScreenSpaceShadows: 1
+      supportScreenSpaceShadows: 0
       maxScreenSpaceShadowSlots: 4
       screenSpaceShadowBufferFormat: 48
     decalSettings:
@@ -139,7 +139,7 @@ MonoBehaviour:
       useMipBias: 0
       enableDLSS: 1
       DLSSPerfQualitySetting: 3
-      DLSSInjectionPoint: 0
+      DLSSInjectionPoint: 2
       DLSSUseOptimalSettings: 0
       DLSSSharpness: 1
       fsrOverrideSharpness: 0
@@ -265,11 +265,11 @@ MonoBehaviour:
       Fog_Budget:
       - 0.125
       - 0.25
-      - 0.5
+      - 0.7
       Fog_DepthRatio:
       - 0.5
       - 0.5
-      - 0.45
+      - 0.3
     m_ObsoleteLightLayerName0: Light LayerDefault
     m_ObsoleteLightLayerName1: InteriorOnly
     m_ObsoleteLightLayerName2: ExteriorOnly

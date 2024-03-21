@@ -37,6 +37,9 @@ public class MoveSphere : MonoBehaviour
     ParticleSystem myParticleSystem;
     ParticleSystem.EmissionModule emissionModule;
 
+    ParticleSystem myParticleSystem2;
+    ParticleSystem.EmissionModule emissionModule2;
+
 
     void Start()
     {
@@ -47,6 +50,9 @@ public class MoveSphere : MonoBehaviour
         myParticleSystem = GetComponentInChildren<ParticleSystem>();
         emissionModule = myParticleSystem.emission;
         //var emission = ps.emission;
+
+        myParticleSystem2 = GetComponent<ParticleSystem>();
+
 
     }
 
