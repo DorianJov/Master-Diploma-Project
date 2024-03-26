@@ -40,6 +40,8 @@ public class FlockUnit : MonoBehaviour
 	private float noiseFrequency = 1f; // Adjust this to control the frequency of noise
 	private float noiseMagnitude = 0.1f;
 
+	public float distance = 0f;
+
 
 	public Transform myTransform { get; set; }
 
@@ -119,7 +121,7 @@ public class FlockUnit : MonoBehaviour
 		//var moveVector = avoidanceVector + boundsVector;
 		moveVector = Vector3.SmoothDamp(myTransform.forward, moveVector, ref currentVelocity, smoothDamp);
 
-		float distance = Vector3.Distance(transform.position, goalPos);
+		distance = Vector3.Distance(transform.position, goalPos);
 		Vector3 targetForward = moveVector.normalized;
 
 

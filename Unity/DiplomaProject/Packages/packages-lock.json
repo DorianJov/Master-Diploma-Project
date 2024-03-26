@@ -235,6 +235,59 @@
       },
       "url": "https://packages.unity.com"
     },
+    "jp.keijiro.kino.aqua": {
+      "version": "3.0.0",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.render-pipelines.core": "14.0.0"
+      },
+      "url": "https://registry.npmjs.com"
+    },
+    "jp.keijiro.kino.aqua.high-definition": {
+      "version": "3.0.0",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.render-pipelines.high-definition": "14.0.0",
+        "jp.keijiro.kino.aqua": "3.0.0"
+      },
+      "url": "https://registry.npmjs.com"
+    },
+    "jp.keijiro.kino.feedback": {
+      "version": "1.0.3",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://registry.npmjs.com"
+    },
+    "jp.keijiro.kino.post-processing": {
+      "version": "2.1.15",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.render-pipelines.high-definition": "7.4.1"
+      },
+      "url": "https://registry.npmjs.com"
+    },
+    "jp.keijiro.kino.post-processing.eight": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.render-pipelines.high-definition": "7.1.6"
+      },
+      "url": "https://registry.npmjs.com"
+    },
+    "jp.keijiro.kino.post-processing.hatch": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.render-pipelines.high-definition": "7.3.1"
+      },
+      "url": "https://registry.npmjs.com"
+    },
     "com.unity.modules.ai": {
       "version": "1.0.0",
       "depth": 0,

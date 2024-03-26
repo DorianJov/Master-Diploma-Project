@@ -20,6 +20,8 @@ public class GlowingFlower : MonoBehaviour
     public bool lookingAtGenerator = false;
     AudioSource[] sources;
 
+    ParticleSystem myParticleSystem;
+
     void Start()
     {
         //Get default Parameters
@@ -27,6 +29,7 @@ public class GlowingFlower : MonoBehaviour
         circleChild = this.gameObject.transform.GetChild(0);
         //lightChild = this.gameObject.transform.GetChild(0).GetChild(0);
         animator = GetComponentInChildren<Animator>();
+        myParticleSystem = GetComponentInChildren<ParticleSystem>();
         //gameObject.tag = "Player";
     }
 
@@ -86,6 +89,7 @@ public class GlowingFlower : MonoBehaviour
         {
             if (!active)
             {
+                myParticleSystem.Play();
                 Debug.Log("ENTER");
                 active = true;
                 StartCoroutine(LookAtSmoothly(target));

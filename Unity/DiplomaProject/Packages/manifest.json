@@ -9,6 +9,11 @@
     "com.unity.timeline": "1.7.6",
     "com.unity.ugui": "1.0.0",
     "com.unity.visualscripting": "1.9.1",
+    "jp.keijiro.kino.aqua.high-definition": "3.0.0",
+    "jp.keijiro.kino.feedback": "1.0.3",
+    "jp.keijiro.kino.post-processing": "2.1.15",
+    "jp.keijiro.kino.post-processing.eight": "1.0.0",
+    "jp.keijiro.kino.post-processing.hatch": "1.0.0",
     "com.unity.modules.ai": "1.0.0",
     "com.unity.modules.androidjni": "1.0.0",
     "com.unity.modules.animation": "1.0.0",
@@ -49,6 +54,13 @@
       "scopes": [
         "com.openupm",
         "com.tayx.graphy"
+      ]
+    },
+    {
+      "name": "Keijiro",
+      "url": "https://registry.npmjs.com",
+      "scopes": [
+        "jp.keijiro"
       ]
     }
   ]

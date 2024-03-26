@@ -6,6 +6,7 @@ public class CameraFollow : MonoBehaviour
     public float smoothSpeed = 0.5f;
 
     public Vector3 offset;
+    public float zOffset = 0f; // Additional offset for the z-axis
 
     private Vector3 velocity = Vector3.zero;
 
@@ -15,12 +16,13 @@ public class CameraFollow : MonoBehaviour
     void LateUpdate()
     {
         Vector3 desiredPosition = target.position + offset;
+        // Add the zOffset to the desired position's z-coordinate
+        desiredPosition.z += zOffset;
         // Clamp the desired position along the Y-axis
         desiredPosition.y = Mathf.Clamp(desiredPosition.y, minY, maxY);
 
         Vector3 smoothedPosition = Vector3.SmoothDamp(transform.position, desiredPosition, ref velocity, smoothSpeed);
         transform.position = smoothedPosition;
-
     }
 }
 

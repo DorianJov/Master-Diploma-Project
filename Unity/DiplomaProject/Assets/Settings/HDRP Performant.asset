@@ -27,7 +27,7 @@ MonoBehaviour:
     supportVolumetricClouds: 0
     supportLightLayers: 0
     supportWater: 1
-    waterSimulationResolution: 256
+    waterSimulationResolution: 128
     waterCPUSimulation: 0
     supportDistortion: 1
     supportTransparentBackface: 0
@@ -103,10 +103,10 @@ MonoBehaviour:
       areaLightShadowAtlas:
         shadowAtlasResolution: 2048
         shadowAtlasDepthBits: 16
-        useDynamicViewportRescale: 0
+        useDynamicViewportRescale: 1
       cachedPunctualLightShadowAtlas: 2048
       cachedAreaLightShadowAtlas: 2048
-      allowDirectionalMixedCachedShadows: 0
+      allowDirectionalMixedCachedShadows: 1
       shadowResolutionDirectional:
         m_Values: 80000000000100000002000000040000
         m_SchemaId:
@@ -269,7 +269,7 @@ MonoBehaviour:
       Fog_DepthRatio:
       - 0.5
       - 0.5
-      - 0.3
+      - 0.6
     m_ObsoleteLightLayerName0: Light LayerDefault
     m_ObsoleteLightLayerName1: InteriorOnly
     m_ObsoleteLightLayerName2: ExteriorOnly

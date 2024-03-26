@@ -4965,6 +4965,7 @@ MonoBehaviour:
   crevetteMaterialVagabond: {fileID: 0}
   crevetteMaterialTouching: {fileID: 0}
   amIFollowingPlayer: 0
+  distance: 0
 --- !u!96 &8015252578629472778
 TrailRenderer:
   serializedVersion: 3

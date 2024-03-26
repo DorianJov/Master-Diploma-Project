@@ -104,6 +104,7 @@ public class Flock : MonoBehaviour
     bool doneChecking = false;
 
 
+    public float averageDistance = 0f;
 
     private void Update()
     {
@@ -115,6 +116,16 @@ public class Flock : MonoBehaviour
         {
             allUnits[i].MoveUnit();
         }
+
+
+        float totalDistance = 0f;
+        for (int i = 0; i < allUnits.Count; i++)
+        {
+            totalDistance += allUnits[i].distance;
+        }
+
+        averageDistance = totalDistance / allUnits.Count;
+        //Debug.Log("Average Distance: " + averageDistance);
 
 
     }

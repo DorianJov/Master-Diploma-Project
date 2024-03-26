@@ -9,6 +9,7 @@ TagManager:
   - sunFlowers
   - Darkillons
   - Generator
+  - Flock
   layers:
   - Default
   - TransparentFX
