@@ -3,13 +3,7 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags:
-  - Lamp
-  - PlayerLighting
-  - sunFlowers
-  - Darkillons
-  - Generator
-  - Flock
+  tags: []
   layers:
   - Default
   - TransparentFX
