@@ -163,16 +163,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5f019255bcd1cb489b193b5e8443a27, type: 3}
   m_Name: Streak
   m_EditorClassIdentifier: 
-  active: 0
+  active: 1
   threshold:
     m_OverrideState: 1
     m_Value: 0
   stretch:
     m_OverrideState: 1
-    m_Value: 0.639
+    m_Value: 0.176
   intensity:
     m_OverrideState: 1
-    m_Value: 0.043
+    m_Value: 0.001
   tint:
     m_OverrideState: 1
     m_Value: {r: 1, g: 1, b: 1, a: 1}
@@ -191,7 +191,7 @@ MonoBehaviour:
   active: 0
   intensity:
     m_OverrideState: 1
-    m_Value: 0.453
+    m_Value: 1
 --- !u!114 &-4151792930034644520
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -222,7 +222,7 @@ MonoBehaviour:
     m_Value: {r: 1, g: 1, b: 1, a: 1}
   maxFogDistance:
     m_OverrideState: 1
-    m_Value: 2.88
+    m_Value: 100
   mipFogMaxMip:
     m_OverrideState: 0
     m_Value: 0.5
@@ -322,7 +322,7 @@ MonoBehaviour:
     m_Value: 3
   m_NearMaxBlur:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 2
   m_FarSampleCount:
     m_OverrideState: 1
     m_Value: 3
