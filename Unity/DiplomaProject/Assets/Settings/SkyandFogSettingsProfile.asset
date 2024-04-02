@@ -1020,7 +1020,7 @@ MonoBehaviour:
     m_Value: 0.057
   shake:
     m_OverrideState: 0
-    m_Value: 0.01
+    m_Value: 0.03
 --- !u!114 &6320869682178402757
 MonoBehaviour:
   m_ObjectHideFlags: 3
