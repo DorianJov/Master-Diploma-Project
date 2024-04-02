@@ -298,6 +298,7 @@ Material:
     - _DstBlend: 0
     - _EnableBlendModePreserveSpecularLighting: 1
     - _EnableFogOnTransparent: 1
+    - _ExcludeFromTUAndAA: 0
     - _GlossMapScale: 0.776
     - _Glossiness: 0.112
     - _GlossyReflections: 1
