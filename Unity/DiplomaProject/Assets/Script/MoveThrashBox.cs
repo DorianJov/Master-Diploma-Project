@@ -21,7 +21,7 @@ public class MoveTrashBox : MonoBehaviour
     public float IdleRotationAmplitude = 10f; // Amplitude of the idle rotation
     public float IdleRotationFrequency = 2f; // Frequency of the idle rotation
 
-
+    public bool invertspeed = false;
 
     void Start()
     {
@@ -33,6 +33,7 @@ public class MoveTrashBox : MonoBehaviour
 
     void Update()
     {
+
 
         if (Speed != 0)
         {
@@ -79,7 +80,10 @@ public class MoveTrashBox : MonoBehaviour
 
         // Apply rotation to the rectangle with the idle rotation offset
         rectangle.localRotation = Quaternion.Euler(-baseRotationAngle + idleRotationOffset, 90f, 0f); // Invert rotation around the X-axis
-
+        if (invertspeed)
+        {
+            Speed = Speed * -1;
+        }
         Vector3 controlKeysMovement = new(Speed * Time.deltaTime, 0f, 0f);
         m_Rigidbody.MovePosition(transform.position += controlKeysMovement);
 
