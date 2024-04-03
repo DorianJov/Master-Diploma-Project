@@ -33,7 +33,11 @@ public class MoveTrashBox : MonoBehaviour
 
     void Update()
     {
-
+        //not to keep that shit (actually it just make the object not move on speed value)
+        if (invertspeed)
+        {
+            Speed = Speed * -1;
+        }
 
         if (Speed != 0)
         {
@@ -80,10 +84,7 @@ public class MoveTrashBox : MonoBehaviour
 
         // Apply rotation to the rectangle with the idle rotation offset
         rectangle.localRotation = Quaternion.Euler(-baseRotationAngle + idleRotationOffset, 90f, 0f); // Invert rotation around the X-axis
-        if (invertspeed)
-        {
-            Speed = Speed * -1;
-        }
+
         Vector3 controlKeysMovement = new(Speed * Time.deltaTime, 0f, 0f);
         m_Rigidbody.MovePosition(transform.position += controlKeysMovement);
 

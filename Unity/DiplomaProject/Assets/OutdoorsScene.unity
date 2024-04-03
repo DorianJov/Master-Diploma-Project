@@ -25667,7 +25667,7 @@ GameObject:
   - component: {fileID: 720695418}
   - component: {fileID: 720695417}
   m_Layer: 0
-  m_Name: Bac-Limules (1)
+  m_Name: Bac-dead-Limules (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31249,7 +31249,7 @@ ParticleSystem:
     boxThickness: {x: 0, y: 0, z: 0}
     radiusThickness: 1
     donutRadius: 0.2
-    m_Position: {x: 0, y: 0.23, z: 0}
+    m_Position: {x: 0, y: 0.26, z: 0}
     m_Rotation: {x: 0, y: 0, z: 0}
     m_Scale: {x: 1, y: 1, z: 1}
     placementMode: 0
@@ -31330,7 +31330,7 @@ ParticleSystem:
     sphericalDirectionAmount: 0
     randomPositionAmount: 0
     radius:
-      value: 0.05
+      value: 0.1
       mode: 0
       spread: 0
       speed:
@@ -31573,6 +31573,15 @@ ParticleSystem:
           weightedMode: 0
           inWeight: 0
           outWeight: 0
+        - serializedVersion: 3
+          time: 0.10860723
+          value: 0.30234456
+          inSlope: -1.435735
+          outSlope: -1.435735
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.18344766
         - serializedVersion: 3
           time: 1
           value: 0
