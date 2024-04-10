@@ -6,12 +6,15 @@ public class MoveTrashBox : MonoBehaviour
 {
     float Speed = 0.0f;
     Rigidbody m_Rigidbody;
+    AudioSource audioSource;
 
+    [Header("Movement Parameters")]
     public float MaxSpeed = 1f;
     public float Acceleration = 0.1f;
     public float Deceleration = 10f;
 
     public Transform rectangle;
+    [Header("Rotation Parameters")]
     public float MaxRotation = 45f;
     public float IdleMaxSpeedRange = 0.05f;
     public float IdleRotationAmplitude = 10f;
@@ -22,14 +25,23 @@ public class MoveTrashBox : MonoBehaviour
     private Coroutine boostCoroutine;
     private float originalMaxSpeed;
 
+    [Header("Boost Parameters")]
     public float boostMaxSpeed = 2f;
     public float boostDuration = 0.5f;
     public float boostFadeDuration = 1f;
+
+    [Header("Audio Parameters")]
+    // Define minimum and maximum speeds for the audio volume mapping
+    public float minSpeed = 0f;
+    public float maxSpeed = 2f;
+    public float minVolume = 0f; // Minimum volume when speed is 0
+    public float maxVolume = 1f; // Maximum volume when speed is at MaxSpeed
 
     void Start()
     {
         m_Rigidbody = GetComponent<Rigidbody>();
         originalMaxSpeed = MaxSpeed;
+        audioSource = GetComponent<AudioSource>();
     }
 
     void Update()
@@ -78,6 +90,12 @@ public class MoveTrashBox : MonoBehaviour
 
         m_Rigidbody.velocity = Vector3.zero;
 
+        // Map the current speed to the volume of the audio
+        float volume = Mathf.Lerp(minVolume, maxVolume, Mathf.InverseLerp(minSpeed, maxSpeed, Mathf.Abs(Speed)));
+
+        // Set the volume of the audio source
+        audioSource.volume = volume;
+
         Debug.Log("Current Speed: " + Speed);
     }
 
@@ -109,9 +127,11 @@ public class MoveTrashBox : MonoBehaviour
         float elapsedTime = 0f;
         while (elapsedTime < boostDuration)
         {
-            // Increase both Speed and MaxSpeed
+            // Adjust speed based on boost acceleration
             Speed += boostAcceleration * Time.deltaTime;
-            MaxSpeed = Mathf.Max(MaxSpeed, Speed);
+
+            // Ensure speed doesn't exceed boostMaxSpeed
+            Speed = Mathf.Min(Speed, boostMaxSpeed);
 
             elapsedTime += Time.deltaTime;
             yield return null;
@@ -137,5 +157,6 @@ public class MoveTrashBox : MonoBehaviour
         // Reset coroutine reference
         boostCoroutine = null;
     }
+
 
 }
