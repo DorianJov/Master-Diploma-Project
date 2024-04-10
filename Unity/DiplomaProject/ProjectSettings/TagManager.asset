@@ -7,6 +7,9 @@ TagManager:
   - sunFlowers
   - PlayerLighting
   - Flock
+  - TrashBin
+  - InvertSpeed
+  - Booster
   layers:
   - Default
   - TransparentFX
