@@ -6,6 +6,8 @@ public class playSwitchAudio : MonoBehaviour
 {
     AudioSource switchSounds;
     ParticleSystem particleSystem;
+
+    public MoveTrashBox MoveTrashBox;
     // Start is called before the first frame update
     private Animator animator;
     void Start()
@@ -13,6 +15,7 @@ public class playSwitchAudio : MonoBehaviour
         switchSounds = GetComponent<AudioSource>();
         particleSystem = GetComponent<ParticleSystem>();
         animator = GetComponentInChildren<Animator>();
+        MoveTrashBox.onBoosterActivated.AddListener(ActivateBoost);
     }
 
     // Update is called once per frame
@@ -34,6 +37,15 @@ public class playSwitchAudio : MonoBehaviour
             animator.SetBool("switch", true);
             StartCoroutine(turnOFFAnimation(0.1f));
         }
+    }
+
+    void ActivateBoost()
+    {
+        // Existing code...
+
+        // Start the boost coroutine
+        animator.SetBool("switch", true);
+        StartCoroutine(turnOFFAnimation(0.1f));
     }
 
 
