@@ -235,6 +235,12 @@
       },
       "url": "https://packages.unity.com"
     },
+    "de.secretlab.hdrplensflares": {
+      "version": "file:C:/Users/vudor/Downloads/Unity-HDRP-LensFlares-master/Unity-HDRP-LensFlares-master",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {}
+    },
     "jp.keijiro.kino.aqua": {
       "version": "3.0.0",
       "depth": 1,

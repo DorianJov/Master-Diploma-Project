@@ -72,6 +72,10 @@ MonoBehaviour:
     Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   - UnityEngine.Rendering.HighDefinition.Compositor.AlphaInjection, Unity.RenderPipelines.HighDefinition.Runtime,
     Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - SecretLab.PostProcessing.RadialWarpAndGhosts, Secretlab.HDRPLensFlares, Version=0.0.0.0,
+    Culture=neutral, PublicKeyToken=null
+  - SecretLab.PostProcessing.Anamorphic, Secretlab.HDRPLensFlares, Version=0.0.0.0,
+    Culture=neutral, PublicKeyToken=null
   afterPostProcessBlursCustomPostProcesses: []
   afterPostProcessCustomPostProcesses:
   - Kino.PostProcessing.Utility, Kino.Postprocessing, Version=0.0.0.0, Culture=neutral,
