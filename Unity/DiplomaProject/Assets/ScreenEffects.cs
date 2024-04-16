@@ -28,18 +28,24 @@ public class ScreenEffects : MonoBehaviour
     public float minBloomThresholdIntensity = 4.13f;
     public float maxBloomThresholdIntensity = 0f;
 
+    [Header("Shake")]
+    public MoveTrashBox MoveTrashBox;
+
     // Start is called before the first frame update
     private void Start()
     {
         flock = GameObject.FindGameObjectWithTag("Flock").GetComponent<Flock>();
+        MoveTrashBox.onBoosterActivated.AddListener(ActivateBoost);
         volume = GetComponent<Volume>();
         volume.profile.TryGet(out glitch);
         volume.profile.TryGet(out bloom);
+
     }
 
     // Update is called once per frame
     private void Update()
     {
+
         if (flock != null & flock.averageDistance < 1)
         {
             Debug.Log("Average Distance: " + flock.averageDistance);
@@ -62,13 +68,35 @@ public class ScreenEffects : MonoBehaviour
             bloom.intensity.Override(0.026f);
             glitch.drift.Override(0);
             glitch.jitter.Override(0);
+
         }
 
+    }
+
+    void ActivateBoost()
+    {
+        //print("CACA");
+        //StartCoroutine(ShakeCamera(0.1f, 0.2f));
+        //glitch.shake.Override(1f);
     }
 
     float Map(float value, float inMin, float inMax, float outMin, float outMax)
     {
         return Mathf.Lerp(outMin, outMax, Mathf.InverseLerp(inMin, inMax, value));
+    }
+
+    IEnumerator ShakeCamera(float intensity, float duration)
+    {
+        float elapsedTime = 0f;
+        while (elapsedTime < duration)
+        {
+            float shakeIntensity = Mathf.Lerp(intensity, 0f, elapsedTime / duration);
+            glitch.shake.Override(shakeIntensity);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        // Ensure the shake is completely turned off after the duration
+        glitch.shake.Override(0f);
     }
 
 }

@@ -166,7 +166,7 @@ MonoBehaviour:
   active: 0
   intensity:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
   blur:
     m_OverrideState: 1
     m_Value: 0
@@ -176,16 +176,16 @@ MonoBehaviour:
     dimension: 1
   radialWarpIntensity:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 0.021
   radialWarpLength:
     m_OverrideState: 1
     m_Value: 0
   chromaticAberrationMultiplier:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 20
   ghostIntensity:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 0
   factor:
     m_OverrideState: 1
     m_Value: 4
@@ -263,7 +263,7 @@ MonoBehaviour:
   active: 1
   intensity:
     m_OverrideState: 1
-    m_Value: 0.014
+    m_Value: 0.001
   threshold:
     m_OverrideState: 0
     m_Value: 10
@@ -272,7 +272,7 @@ MonoBehaviour:
     m_Value: 0
   stretch:
     m_OverrideState: 1
-    m_Value: 0.408
+    m_Value: 0.275
   fade:
     m_OverrideState: 0
     m_Value: 0
@@ -767,11 +767,11 @@ MonoBehaviour:
     m_OverrideState: 0
     m_Value: {r: 1, g: 1, b: 1, a: 1}
   dirtTexture:
-    m_OverrideState: 0
-    m_Value: {fileID: 0}
+    m_OverrideState: 1
+    m_Value: {fileID: 2800000, guid: 83a925a38ea275748919f84e4cabcf08, type: 3}
   dirtIntensity:
-    m_OverrideState: 0
-    m_Value: 4.84
+    m_OverrideState: 1
+    m_Value: 1
   anamorphic:
     m_OverrideState: 0
     m_Value: 1
@@ -1094,8 +1094,8 @@ MonoBehaviour:
     m_OverrideState: 0
     m_Value: 0.057
   shake:
-    m_OverrideState: 0
-    m_Value: 0.03
+    m_OverrideState: 1
+    m_Value: 0
 --- !u!114 &6320869682178402757
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -1163,7 +1163,7 @@ MonoBehaviour:
     m_Value: 0
   depthBufferThickness:
     m_OverrideState: 0
-    m_Value: 0.01
+    m_Value: 0.001
   screenFadeDistance:
     m_OverrideState: 0
     m_Value: 0.1

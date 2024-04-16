@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using System.Collections;
 public class CameraFollow : MonoBehaviour
 {
     public Transform target;
@@ -15,6 +15,13 @@ public class CameraFollow : MonoBehaviour
     public float maxY = 0.75f;
 
     public bool FollowTargetOne = true;
+
+    public MoveTrashBox MoveTrashBox;
+
+    private void Start()
+    {
+        MoveTrashBox.onBoosterActivated.AddListener(ActivateBoost);
+    }
 
     void LateUpdate()
     {
@@ -46,6 +53,26 @@ public class CameraFollow : MonoBehaviour
 
         Vector3 smoothedPosition = Vector3.SmoothDamp(transform.position, desiredPosition, ref velocity, smoothSpeed);
         transform.position = smoothedPosition;
+    }
+
+    void ActivateBoost()
+    {
+        StartCoroutine(SmoothSpeedTransition(0.3f, 0.125f, 0.5f)); // Start speed: 1, End speed: 0.125, Duration: 1 second
+
+    }
+
+    IEnumerator SmoothSpeedTransition(float startSpeed, float endSpeed, float duration)
+    {
+        float elapsedTime = 0f;
+        while (elapsedTime < duration)
+        {
+            float smoothSpeed = Mathf.Lerp(startSpeed, endSpeed, elapsedTime / duration);
+            this.smoothSpeed = smoothSpeed;
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        // Ensure the smoothSpeed is set to the end value after the duration
+        this.smoothSpeed = endSpeed;
     }
 }
 
