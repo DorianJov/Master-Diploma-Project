@@ -40,6 +40,14 @@ public class MoveSphere : MonoBehaviour
     ParticleSystem myParticleSystem2;
     ParticleSystem.EmissionModule emissionModule2;
 
+    [Header("Audio Parameters")]
+    // Define minimum and maximum speeds for the audio volume mapping
+    AudioSource movementXAudio;
+    AudioSource movementYAudio;
+    public float minSpeed = 0f;
+    public float maxSpeed = 2f;
+    public float minVolume = 0f; // Minimum volume when speed is 0
+    public float maxVolume = 1f; // Maximum volume when speed is at MaxSpeed
 
     void Start()
     {
@@ -52,7 +60,9 @@ public class MoveSphere : MonoBehaviour
         //var emission = ps.emission;
 
         myParticleSystem2 = GetComponent<ParticleSystem>();
-
+        AudioSource[] audios = GetComponents<AudioSource>();
+        movementXAudio = audios[0];
+        movementYAudio = audios[1];
 
     }
 
@@ -161,6 +171,14 @@ public class MoveSphere : MonoBehaviour
         m_Rigidbody.MovePosition(transform.position += transform.right * Mathf.Sin(speedUpDown * Time.time) * Time.deltaTime * distanceUpDown);
         m_Rigidbody.MovePosition(transform.position += transform.up * Mathf.Sin(speedUpDownUP * Time.time) * Time.deltaTime * distanceUpDownUP);
         m_Rigidbody.velocity = Vector3.zero;
+
+        // Map the current speed to the volume of the audio
+        float volume = Mathf.Lerp(minVolume, maxVolume, Mathf.InverseLerp(minSpeed, maxSpeed, Mathf.Abs(Speed)));
+        float volume2 = Mathf.Lerp(minVolume, maxVolume, Mathf.InverseLerp(minSpeed, maxSpeed, Mathf.Abs(Speed2)));
+
+        // Set the volume of the audio source
+        movementXAudio.volume = volume;
+        movementYAudio.volume = volume2;
 
         //Debug.Log("Current Speed: " + Speed);
     }
