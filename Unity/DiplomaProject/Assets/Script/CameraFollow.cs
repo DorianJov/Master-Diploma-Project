@@ -18,6 +18,11 @@ public class CameraFollow : MonoBehaviour
 
     public MoveTrashBox MoveTrashBox;
 
+    // FOV transition parameters
+    public float fovTargetOne = 75f; // FOV value for target one
+    public float fovTargetTwo = 100f; // FOV value for target two
+    public float fovTransitionDuration = 1.0f; // Duration of FOV transition
+
     private void Start()
     {
         MoveTrashBox.onBoosterActivated.AddListener(ActivateBoost);
@@ -29,6 +34,7 @@ public class CameraFollow : MonoBehaviour
         if (FollowTargetOne)
         {
             FollowTarget(target);
+            SmoothTransitionFOV(fovTargetOne);
             offset = new Vector3(0, 0.1f, -0.69f);
             minY = 0.28f;
             maxY = 0.75f;
@@ -36,6 +42,7 @@ public class CameraFollow : MonoBehaviour
         else
         {
             FollowTarget(target2);
+            SmoothTransitionFOV(fovTargetTwo);
             offset = new Vector3(0.12f, 0.3f, -1.37f);
             minY = 0.28f;
             maxY = 1f;
@@ -73,6 +80,12 @@ public class CameraFollow : MonoBehaviour
         }
         // Ensure the smoothSpeed is set to the end value after the duration
         this.smoothSpeed = endSpeed;
+    }
+
+
+    void SmoothTransitionFOV(float targetFOV)
+    {
+        Camera.main.fieldOfView = Mathf.Lerp(Camera.main.fieldOfView, targetFOV, Time.deltaTime / fovTransitionDuration);
     }
 }
 

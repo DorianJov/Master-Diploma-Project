@@ -45,22 +45,32 @@ public class ScreenEffects : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-
-        if (flock != null & flock.averageDistance < 1)
+        if (flock.darkillonsAreTargetingPlayer)
         {
-            Debug.Log("Average Distance: " + flock.averageDistance);
-            float glitchIntensity = Map(flock.averageDistance, maxDarkillonsDistance, minDarkillonsDistance, minGlitchIntensity, maxGlitchIntensity);
-            glitch.drift.Override(glitchIntensity);
-            glitch.jitter.Override(glitchIntensity);
+            if (flock != null & flock.averageDistance < 1)
+            {
+                Debug.Log("Average Distance: " + flock.averageDistance);
+                float glitchIntensity = Map(flock.averageDistance, maxDarkillonsDistance, minDarkillonsDistance, minGlitchIntensity, maxGlitchIntensity);
+                glitch.drift.Override(glitchIntensity);
+                glitch.jitter.Override(glitchIntensity);
 
-            float bloomIntensity = Map(flock.averageDistance, maxDarkillonsDistance / 2, minDarkillonsDistance, minBloomIntensity, maxBloomIntensity);
-            bloom.intensity.Override(bloomIntensity);
+                float bloomIntensity = Map(flock.averageDistance, maxDarkillonsDistance / 2, minDarkillonsDistance, minBloomIntensity, maxBloomIntensity);
+                bloom.intensity.Override(bloomIntensity);
 
-            float bloomThresholdIntensity = Map(flock.averageDistance, maxDarkillonsDistance / 2, minDarkillonsDistance, minBloomIntensity, maxBloomIntensity);
-            bloom.threshold.Override(bloomThresholdIntensity);
+                float bloomThresholdIntensity = Map(flock.averageDistance, maxDarkillonsDistance / 2, minDarkillonsDistance, minBloomIntensity, maxBloomIntensity);
+                bloom.threshold.Override(bloomThresholdIntensity);
 
 
 
+            }
+            else
+            {
+                bloom.threshold.Override(4.13f);
+                bloom.intensity.Override(0.026f);
+                glitch.drift.Override(0);
+                glitch.jitter.Override(0);
+
+            }
         }
         else
         {
@@ -68,7 +78,6 @@ public class ScreenEffects : MonoBehaviour
             bloom.intensity.Override(0.026f);
             glitch.drift.Override(0);
             glitch.jitter.Override(0);
-
         }
 
     }

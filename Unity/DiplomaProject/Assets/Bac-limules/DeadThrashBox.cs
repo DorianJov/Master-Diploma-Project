@@ -40,6 +40,8 @@ public class DeadThrashBox : MonoBehaviour
     public float minVolume = 0f; // Minimum volume when speed is 0
     public float maxVolume = 1f; // Maximum volume when speed is at MaxSpeed
 
+    private bool canDoBoost = false;
+
     void Start()
     {
         m_Rigidbody = GetComponent<Rigidbody>();
@@ -89,6 +91,11 @@ public class DeadThrashBox : MonoBehaviour
             Speed = Speed * -0.8f;
         }
 
+        if (other.CompareTag("TrashBin"))
+        {
+            canDoBoost = true;
+        }
+
         /* if (other.CompareTag("Booster"))
          {
              if (boostCoroutine != null)
@@ -105,8 +112,10 @@ public class DeadThrashBox : MonoBehaviour
         // Start the boost coroutine
         if (boostCoroutine != null)
             StopCoroutine(boostCoroutine);
-
-        boostCoroutine = StartCoroutine(BoostSpeed());
+        if (canDoBoost)
+        {
+            boostCoroutine = StartCoroutine(BoostSpeed());
+        }
     }
 
     IEnumerator BoostSpeed()
@@ -150,7 +159,9 @@ public class DeadThrashBox : MonoBehaviour
         MaxSpeed = initialMaxSpeed;
 
         // Reset coroutine reference
+        canDoBoost = false;
         boostCoroutine = null;
+
     }
 
 

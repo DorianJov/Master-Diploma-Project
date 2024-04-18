@@ -97,6 +97,7 @@ public class Flock : MonoBehaviour
 
 
     public int howManyAreFollowing = 0;
+    public bool darkillonsAreTargetingPlayer = false;
 
     public float interval = 3;
     float timer;
