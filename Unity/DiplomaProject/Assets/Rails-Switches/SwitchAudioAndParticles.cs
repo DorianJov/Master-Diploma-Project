@@ -5,6 +5,9 @@ using UnityEngine;
 public class playSwitchAudio : MonoBehaviour
 {
     AudioSource switchSounds;
+
+    AudioSource noteAudio;
+
     ParticleSystem particleSystem;
 
     public MoveTrashBox MoveTrashBox;
@@ -12,16 +15,21 @@ public class playSwitchAudio : MonoBehaviour
     private Animator animator;
     void Start()
     {
+        //AudioSource[] audios = GetComponents<AudioSource>();
         switchSounds = GetComponent<AudioSource>();
         particleSystem = GetComponent<ParticleSystem>();
         animator = GetComponentInChildren<Animator>();
         MoveTrashBox.onBoosterActivated.AddListener(ActivateBoost);
+
+        //switchSounds = audios[0];
+        //noteAudio = audios[1];
     }
 
     // Update is called once per frame
     public void play_sound()
     {
         switchSounds.Play();
+        //noteAudio.Play();
     }
 
     public void PlayParticle()
