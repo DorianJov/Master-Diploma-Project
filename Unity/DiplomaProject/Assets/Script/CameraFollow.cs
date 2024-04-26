@@ -15,6 +15,7 @@ public class CameraFollow : MonoBehaviour
     public float maxY = 0.75f;
 
     public bool FollowTargetOne = true;
+    public int currentTargetNumber = 0;
 
     public MoveTrashBox MoveTrashBox;
 
@@ -30,23 +31,27 @@ public class CameraFollow : MonoBehaviour
 
     void LateUpdate()
     {
+        switch (currentTargetNumber)
+        {
+            case 0:
+                //followNothing
+                break;
+            case 1:
+                FollowTarget(target);
+                SmoothTransitionFOV(fovTargetOne);
+                offset = new Vector3(0, 0.1f, -0.69f);
+                minY = 0.28f;
+                maxY = 0.75f;
+                break;
+            case 2:
+                FollowTarget(target2);
+                SmoothTransitionFOV(fovTargetTwo);
+                offset = new Vector3(0.12f, 0.3f, -1.37f);
+                minY = 0.28f;
+                maxY = 1f;
+                break;
+        }
 
-        if (FollowTargetOne)
-        {
-            FollowTarget(target);
-            SmoothTransitionFOV(fovTargetOne);
-            offset = new Vector3(0, 0.1f, -0.69f);
-            minY = 0.28f;
-            maxY = 0.75f;
-        }
-        else
-        {
-            FollowTarget(target2);
-            SmoothTransitionFOV(fovTargetTwo);
-            offset = new Vector3(0.12f, 0.3f, -1.37f);
-            minY = 0.28f;
-            maxY = 1f;
-        }
     }
 
     void FollowTarget(Transform target)
