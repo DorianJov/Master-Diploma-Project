@@ -10,6 +10,7 @@ TagManager:
   - TrashBin
   - InvertSpeed
   - Booster
+  - FollowCamCollider
   layers:
   - Default
   - TransparentFX

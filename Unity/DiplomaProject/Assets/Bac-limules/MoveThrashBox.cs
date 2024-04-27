@@ -9,6 +9,7 @@ public class MoveTrashBox : MonoBehaviour
     Rigidbody m_Rigidbody;
     AudioSource audioSource;
     public UnityEvent onBoosterActivated = new UnityEvent();
+    public UnityEvent CamFollowBacLimule = new UnityEvent();
 
     [Header("Movement Parameters")]
     public float MaxSpeed = 1f;
@@ -21,8 +22,6 @@ public class MoveTrashBox : MonoBehaviour
     public float IdleMaxSpeedRange = 0.05f;
     public float IdleRotationAmplitude = 10f;
     public float IdleRotationFrequency = 2f;
-
-    public bool invertspeed = false;
 
     private Coroutine boostCoroutine;
     private float originalMaxSpeed;
@@ -39,42 +38,47 @@ public class MoveTrashBox : MonoBehaviour
     public float minVolume = 0f; // Minimum volume when speed is 0
     public float maxVolume = 1f; // Maximum volume when speed is at MaxSpeed
 
+    public bool gameHasStarted = true;
+
     void Start()
     {
         m_Rigidbody = GetComponent<Rigidbody>();
         originalMaxSpeed = MaxSpeed;
         audioSource = GetComponent<AudioSource>();
+
     }
 
     void Update()
     {
-        if (invertspeed)
-        {
-            Speed = Speed * -1;
-        }
 
-        if (Speed != 0)
+        if (gameHasStarted & Input.anyKey)
         {
-            //emissionModule.enabled = true;
+            if (boostCoroutine != null)
+                StopCoroutine(boostCoroutine);
+
+            onBoosterActivated.Invoke();
+            boostCoroutine = StartCoroutine(BoostSpeed());
+            gameHasStarted = false;
         }
         else
         {
-            //emissionModule.enabled = false;
-        }
 
-        if (Input.GetKey("a"))
-        {
-            if (Speed > -MaxSpeed) Speed -= Acceleration * Time.deltaTime;
-        }
-        else if (Input.GetKey("d"))
-        {
-            if (Speed < MaxSpeed) Speed += Acceleration * Time.deltaTime;
-        }
-        else
-        {
-            if (Speed > Deceleration * Time.deltaTime) Speed -= Deceleration * Time.deltaTime;
-            else if (Speed < -Deceleration * Time.deltaTime) Speed += Deceleration * Time.deltaTime;
-            else Speed = 0;
+            if (Input.GetKey("a"))
+            {
+
+                if (Speed > -MaxSpeed) Speed -= Acceleration * Time.deltaTime;
+            }
+            else if (Input.GetKey("d"))
+            {
+                if (Speed < MaxSpeed) Speed += Acceleration * Time.deltaTime;
+            }
+            else
+            {
+                if (Speed > Deceleration * Time.deltaTime) Speed -= Deceleration * Time.deltaTime;
+                else if (Speed < -Deceleration * Time.deltaTime) Speed += Deceleration * Time.deltaTime;
+                else Speed = 0;
+            }
+
         }
 
         float baseRotationAngle = Mathf.Lerp(-MaxRotation, MaxRotation, Mathf.InverseLerp(-MaxSpeed, MaxSpeed, Speed));
@@ -98,7 +102,7 @@ public class MoveTrashBox : MonoBehaviour
         // Set the volume of the audio source
         audioSource.volume = volume;
 
-        Debug.Log("Current Speed: " + Speed);
+        //Debug.Log("Current Speed: " + Speed);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -108,8 +112,14 @@ public class MoveTrashBox : MonoBehaviour
             Speed = Speed * -0.8f;
         }
 
+        if (other.CompareTag("FollowCamCollider"))
+        {
+            CamFollowBacLimule.Invoke();
+        }
+
         if (other.CompareTag("Booster"))
         {
+
             if (boostCoroutine != null)
                 StopCoroutine(boostCoroutine);
 

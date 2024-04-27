@@ -27,6 +27,8 @@ public class CameraFollow : MonoBehaviour
     private void Start()
     {
         MoveTrashBox.onBoosterActivated.AddListener(ActivateBoost);
+        MoveTrashBox.CamFollowBacLimule.AddListener(() => SwitchCamTarget(2));
+        transform.position = new Vector3(-70.608f, 0.871462f, 0.179736f);
     }
 
     void LateUpdate()
@@ -70,6 +72,12 @@ public class CameraFollow : MonoBehaviour
     void ActivateBoost()
     {
         StartCoroutine(SmoothSpeedTransition(0.3f, 0.125f, 0.5f)); // Start speed: 1, End speed: 0.125, Duration: 1 second
+
+    }
+
+    void SwitchCamTarget(int target)
+    {
+        currentTargetNumber = target;
 
     }
 
