@@ -8,7 +8,6 @@ public class GlowingFlower : MonoBehaviour
     // Start is called before the first frame update
     private Animator animator;
     public bool active = false;
-    bool turnOFFLight = true;
 
     public float LookAtSpeed = 0.1f;
 

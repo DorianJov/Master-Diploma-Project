@@ -22,10 +22,6 @@ public class FlockUnit : MonoBehaviour
 	private Vector3 currentVelocity;
 	private Vector3 currentObstacleAvoidanceVector;
 	private float speed;
-
-	private bool checking = true;
-	private bool isAlive = true;
-
 	public bool playIdleSound = true;
 
 	public Material crevetteMaterialFollowing;
@@ -36,9 +32,6 @@ public class FlockUnit : MonoBehaviour
 	Vector3 goalPos = Vector3.zero;
 
 	public bool amIFollowingPlayer = false;
-
-	private float noiseFrequency = 1f; // Adjust this to control the frequency of noise
-	private float noiseMagnitude = 0.1f;
 
 	public float distance = 0f;
 

@@ -10,13 +10,11 @@ public class MoveSphere : MonoBehaviour
     float Speed = 0.0f; //Don’t touch this
     float Speed2 = 0.0f; //Don’t touch this
 
-    float dash = 0f; //Don’t touch this
     float t = 0;
 
     Rigidbody m_Rigidbody;
     public float MaxDashSpeed = 5f;
     public float DashsmoothSpeed = 0.5f;
-    private float dashVelocity = 0.0f; //Don’t touch this
     private float dashSpeed = 1f; //Don’t touch this
     public float MaxSpeed = 0.5f; //This is the maximum speed that the object will achieve
     public float Acceleration = 0.1f; //How fast will object reach a maximum speed

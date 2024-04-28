@@ -3,28 +3,28 @@ using System.Collections.Generic;
 using UnityEngine.Rendering.HighDefinition;
 using UnityEngine;
 
-public class playSwitchAudio : MonoBehaviour
+public class SwitchAudioAndParticles : MonoBehaviour
 {
     AudioSource switchSounds;
 
     AudioSource noteAudio;
 
-    ParticleSystem particleSystem;
+    //ParticleSystem particleSystem;
 
     public Material newEmissiveMaterial; // Drag the Material149 here in the Inspector
     public Renderer planeRenderer; // Drag the Plane Renderer component here in the Inspector
 
-
-    //public MoveTrashBox MoveTrashBox;
+    public bool oppositeRails = false;
+    public MoveTrashBox MoveTrashBox;
     // Start is called before the first frame update
     private Animator animator;
     void Start()
     {
         //AudioSource[] audios = GetComponents<AudioSource>();
         switchSounds = GetComponent<AudioSource>();
-        particleSystem = GetComponent<ParticleSystem>();
+        //particleSystem = GetComponent<ParticleSystem>();
         animator = GetComponentInChildren<Animator>();
-        //MoveTrashBox.onBoosterActivated.AddListener(ActivateBoost);
+        MoveTrashBox.onBoosterActivated.AddListener(ActivateBoost);
 
 
 
@@ -42,7 +42,7 @@ public class playSwitchAudio : MonoBehaviour
     public void PlayParticle()
     {
         // Play the particle system
-        particleSystem.Play();
+        //particleSystem.Play();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -82,7 +82,10 @@ public class playSwitchAudio : MonoBehaviour
         // Check if the renderer and new material are assigned
 
         // Change the material of the plane renderer
-        planeRenderer.material = newEmissiveMaterial;
+        if (!oppositeRails)
+        {
+            planeRenderer.material = newEmissiveMaterial;
+        }
 
     }
 

@@ -102,7 +102,6 @@ public class Flock : MonoBehaviour
     public float interval = 3;
     float timer;
     //int count = -1;
-    bool doneChecking = false;
 
 
     public float averageDistance = 0f;

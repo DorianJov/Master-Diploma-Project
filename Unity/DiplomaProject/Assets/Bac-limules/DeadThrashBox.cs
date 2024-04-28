@@ -73,7 +73,7 @@ public class DeadThrashBox : MonoBehaviour
         Vector3 controlKeysMovement = new(Speed * Time.deltaTime, 0f, 0f);
         m_Rigidbody.MovePosition(transform.position += controlKeysMovement);
 
-        m_Rigidbody.velocity = Vector3.zero;
+        //m_Rigidbody.velocity = Vector3.zero;
 
         // Map the current speed to the volume of the audio
         float volume = Mathf.Lerp(minVolume, maxVolume, Mathf.InverseLerp(minSpeed, maxSpeed, Mathf.Abs(Speed)));
