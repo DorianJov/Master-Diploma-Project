@@ -59,7 +59,7 @@ public class SwitchAudioAndParticles : MonoBehaviour
         // Existing code...
 
         // Start the boost coroutine
-        animator.SetBool("switch", true);
+        //animator.SetBool("switch", true);
         StartCoroutine(turnOFFAnimation(0.1f));
     }
 

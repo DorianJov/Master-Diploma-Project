@@ -8,13 +8,18 @@ public class FadeTitle : MonoBehaviour
     public TextMeshPro text2;
     public float fadeDuration = 5f; // Duration of the fade in seconds
     public float startingAlpha = 1f; // Starting alpha value of the text
+    bool firstTime = true;
 
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("TrashBin"))
         {
             // Start the fade effect
-            StartCoroutine(FadeText());
+            if (firstTime)
+            {
+                StartCoroutine(FadeText());
+            }
+            firstTime = false;
         }
     }
 

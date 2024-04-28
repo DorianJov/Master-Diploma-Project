@@ -14,6 +14,9 @@ public class CameraFollow : MonoBehaviour
     public float minY = 0.28f;
     public float maxY = 0.75f;
 
+    public float minX = -Mathf.Infinity; // Minimum X value (no restriction)
+    public float maxX = Mathf.Infinity; // Maximum X value (no restriction)
+
     public bool FollowTargetOne = true;
     public int currentTargetNumber = 0;
 
@@ -58,12 +61,27 @@ public class CameraFollow : MonoBehaviour
 
     void FollowTarget(Transform target)
     {
+        //before setting x max position
+
+        /*Vector3 desiredPosition = target.position + offset;
+        // Add the zOffset to the desired position's z-coordinate
+        desiredPosition.z += zOffset;
+        // Clamp the desired position along the Y-axis
+        desiredPosition.y = Mathf.Clamp(desiredPosition.y, minY, maxY);
+
+        Vector3 smoothedPosition = Vector3.SmoothDamp(transform.position, desiredPosition, ref velocity, smoothSpeed);
+        transform.position = smoothedPosition;
+        */
+
+        //after setting x max pos
 
         Vector3 desiredPosition = target.position + offset;
         // Add the zOffset to the desired position's z-coordinate
         desiredPosition.z += zOffset;
         // Clamp the desired position along the Y-axis
         desiredPosition.y = Mathf.Clamp(desiredPosition.y, minY, maxY);
+        // Clamp the desired position along the X-axis
+        desiredPosition.x = Mathf.Clamp(desiredPosition.x, minX, maxX); // Add this line
 
         Vector3 smoothedPosition = Vector3.SmoothDamp(transform.position, desiredPosition, ref velocity, smoothSpeed);
         transform.position = smoothedPosition;
