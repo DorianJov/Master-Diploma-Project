@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Rendering.HighDefinition;
 using UnityEngine;
 
 public class playSwitchAudio : MonoBehaviour
@@ -10,7 +11,11 @@ public class playSwitchAudio : MonoBehaviour
 
     ParticleSystem particleSystem;
 
-    public MoveTrashBox MoveTrashBox;
+    public Material newEmissiveMaterial; // Drag the Material149 here in the Inspector
+    public Renderer planeRenderer; // Drag the Plane Renderer component here in the Inspector
+
+
+    //public MoveTrashBox MoveTrashBox;
     // Start is called before the first frame update
     private Animator animator;
     void Start()
@@ -19,7 +24,9 @@ public class playSwitchAudio : MonoBehaviour
         switchSounds = GetComponent<AudioSource>();
         particleSystem = GetComponent<ParticleSystem>();
         animator = GetComponentInChildren<Animator>();
-        MoveTrashBox.onBoosterActivated.AddListener(ActivateBoost);
+        //MoveTrashBox.onBoosterActivated.AddListener(ActivateBoost);
+
+
 
         //switchSounds = audios[0];
         //noteAudio = audios[1];
@@ -65,5 +72,19 @@ public class playSwitchAudio : MonoBehaviour
         animator.SetBool("switch", false);
 
     }
+
+
+
+    // Function to change emissive map to 149.png
+    // Function to change emissive map to 149.png
+    public void ChangeEmissive()
+    {
+        // Check if the renderer and new material are assigned
+
+        // Change the material of the plane renderer
+        planeRenderer.material = newEmissiveMaterial;
+
+    }
+
 
 }
