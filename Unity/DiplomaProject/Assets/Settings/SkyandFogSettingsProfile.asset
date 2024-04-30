@@ -15,7 +15,7 @@ MonoBehaviour:
   active: 1
   mode:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 0
   meteringMode:
     m_OverrideState: 0
     m_Value: 2
@@ -23,8 +23,8 @@ MonoBehaviour:
     m_OverrideState: 0
     m_Value: 1
   fixedExposure:
-    m_OverrideState: 0
-    m_Value: 0
+    m_OverrideState: 1
+    m_Value: -1
   compensation:
     m_OverrideState: 0
     m_Value: 80.34
@@ -690,8 +690,6 @@ MonoBehaviour:
   - {fileID: -7323215151886928354}
   - {fileID: -557843083385190552}
   - {fileID: 8503408478526223250}
-  - {fileID: -8189238579807762050}
-  - {fileID: -5340710926236124553}
 --- !u!114 &840434903752460072
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -971,7 +969,7 @@ MonoBehaviour:
     m_Value: 12
   multiplier:
     m_OverrideState: 1
-    m_Value: 3.05
+    m_Value: 0.14
   upperHemisphereLuxValue:
     m_OverrideState: 1
     m_Value: 0.46607146

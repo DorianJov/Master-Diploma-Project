@@ -4,6 +4,9 @@ public class CameraFollow : MonoBehaviour
 {
     public Transform target;
     public Transform target2;
+
+    public Transform target3;
+
     public float smoothSpeed = 0.5f;
 
     public Vector3 offset;
@@ -18,13 +21,15 @@ public class CameraFollow : MonoBehaviour
     public float maxX = Mathf.Infinity; // Maximum X value (no restriction)
 
     public bool FollowTargetOne = true;
-    public int currentTargetNumber = 0;
+    public int currentTargetNumber = 3;
 
     public MoveTrashBox MoveTrashBox;
 
     // FOV transition parameters
     public float fovTargetOne = 75f; // FOV value for target one
     public float fovTargetTwo = 100f; // FOV value for target two
+
+    public float fovTargetThree = 170f; // FOV value for target two
     public float fovTransitionDuration = 1.0f; // Duration of FOV transition
 
     private void Start()
@@ -53,6 +58,14 @@ public class CameraFollow : MonoBehaviour
                 SmoothTransitionFOV(fovTargetTwo);
                 offset = new Vector3(0.12f, 0.3f, -1.37f);
                 minY = 0.28f;
+                maxY = 1f;
+                break;
+
+            case 3:
+                FollowTarget(target3);
+                SmoothTransitionFOV(fovTargetThree);
+                offset = new Vector3(0.12f, 0.3f, -1.37f);
+                minY = -1.2f;
                 maxY = 1f;
                 break;
         }

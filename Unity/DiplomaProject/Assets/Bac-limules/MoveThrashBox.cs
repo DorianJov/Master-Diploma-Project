@@ -45,6 +45,7 @@ public class MoveTrashBox : MonoBehaviour
         m_Rigidbody = GetComponent<Rigidbody>();
         originalMaxSpeed = MaxSpeed;
         audioSource = GetComponent<AudioSource>();
+        transform.position = new Vector3(-72.892f, 0.356f, 1.529f);
 
     }
 
