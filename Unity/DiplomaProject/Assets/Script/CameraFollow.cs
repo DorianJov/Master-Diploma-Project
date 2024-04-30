@@ -58,7 +58,7 @@ public class CameraFollow : MonoBehaviour
                 SmoothTransitionFOV(fovTargetTwo);
                 offset = new Vector3(0.12f, 0.3f, -1.37f);
                 minY = 0.28f;
-                maxY = 1f;
+                maxY = 3f;
                 break;
 
             case 3:
