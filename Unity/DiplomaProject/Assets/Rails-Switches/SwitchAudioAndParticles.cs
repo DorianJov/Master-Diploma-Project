@@ -18,6 +18,9 @@ public class SwitchAudioAndParticles : MonoBehaviour
     public MoveTrashBox MoveTrashBox;
     // Start is called before the first frame update
     private Animator animator;
+
+    public GameObject childObject;
+    public Transform newParent;
     void Start()
     {
         //AudioSource[] audios = GetComponents<AudioSource>();
@@ -61,6 +64,25 @@ public class SwitchAudioAndParticles : MonoBehaviour
         // Start the boost coroutine
         //animator.SetBool("switch", true);
         StartCoroutine(turnOFFAnimation(0.1f));
+    }
+
+    public void SetParent()
+    {
+        if (childObject != null && newParent != null)
+        {
+            // Store the original scale of the childObject
+            //Vector3 originalScale = childObject.transform.localScale;
+
+            // Set the childObject's parent to the newParent
+            childObject.transform.parent = newParent;
+
+            // Reset the scale of the childObject to its original scale
+            //childObject.transform.localScale = originalScale;
+        }
+        else
+        {
+            Debug.LogError("One or both GameObjects are not assigned. Cannot set parent.");
+        }
     }
 
 

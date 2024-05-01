@@ -11,6 +11,7 @@ TagManager:
   - InvertSpeed
   - Booster
   - FollowCamCollider
+  - stopper-switch
   layers:
   - Default
   - TransparentFX

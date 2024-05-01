@@ -40,17 +40,28 @@ public class MoveTrashBox : MonoBehaviour
 
     public bool gameHasStarted = true;
 
+    public bool stopperActive = false;
+    private float rotationBackDuration = 1.0f;
+    public float rotationToZDuration = 0.06f;
+    private Quaternion initialRotation;
+
+    private bool canRotatetoX = false;
+
+
+
     void Start()
     {
         m_Rigidbody = GetComponent<Rigidbody>();
         originalMaxSpeed = MaxSpeed;
         audioSource = GetComponent<AudioSource>();
         transform.position = new Vector3(-72.892f, 0.356f, 1.529f);
+        initialRotation = rectangle.localRotation;
 
     }
 
     void Update()
     {
+
 
         if (gameHasStarted & Input.anyKey)
         {
@@ -64,12 +75,13 @@ public class MoveTrashBox : MonoBehaviour
         else
         {
 
-            if (Input.GetKey("a"))
+
+            if (Input.GetKey("a") & !stopperActive)
             {
 
                 if (Speed > -MaxSpeed) Speed -= Acceleration * Time.deltaTime;
             }
-            else if (Input.GetKey("d"))
+            else if (Input.GetKey("d") & !stopperActive)
             {
                 if (Speed < MaxSpeed) Speed += Acceleration * Time.deltaTime;
             }
@@ -80,17 +92,37 @@ public class MoveTrashBox : MonoBehaviour
                 else Speed = 0;
             }
 
+
         }
 
-        float baseRotationAngle = Mathf.Lerp(-MaxRotation, MaxRotation, Mathf.InverseLerp(-MaxSpeed, MaxSpeed, Speed));
 
-        float idleRotationOffset = 0f;
-        if (Mathf.Abs(Speed) >= (MaxSpeed - IdleMaxSpeedRange) && Mathf.Abs(Speed) <= (MaxSpeed + IdleMaxSpeedRange))
+        if (!stopperActive)
         {
-            idleRotationOffset = Mathf.Sin(Time.time * IdleRotationFrequency) * IdleRotationAmplitude;
-        }
+            canRotatetoX = false;
+            //rotate bac idle + speed related
+            float baseRotationAngle = Mathf.Lerp(-MaxRotation, MaxRotation, Mathf.InverseLerp(-MaxSpeed, MaxSpeed, Speed));
 
-        rectangle.localRotation = Quaternion.Euler(-baseRotationAngle + idleRotationOffset, 90f, 0f);
+            float idleRotationOffset = 0f;
+            if (Mathf.Abs(Speed) >= (MaxSpeed - IdleMaxSpeedRange) && Mathf.Abs(Speed) <= (MaxSpeed + IdleMaxSpeedRange))
+            {
+                idleRotationOffset = Mathf.Sin(Time.time * IdleRotationFrequency) * IdleRotationAmplitude;
+            }
+
+            rectangle.localRotation = Quaternion.Euler(-baseRotationAngle + idleRotationOffset, 90f, 0f);
+        }
+        else
+        {
+            // Stopper is active, rotating idle frequency is stop and rotating based on speed.
+            //Now The rectangle.localrotation should return to rotation 0 in seconds. So its not stuck with a random rotation since activestopper is true.
+
+
+            StartCoroutine(RotateBackToInitialRotation());
+
+
+
+
+
+        }
 
         Vector3 controlKeysMovement = new(Speed * Time.deltaTime, 0f, 0f);
         m_Rigidbody.MovePosition(transform.position += controlKeysMovement);
@@ -111,6 +143,12 @@ public class MoveTrashBox : MonoBehaviour
         if (other.CompareTag("InvertSpeed"))
         {
             Speed = Speed * -0.8f;
+        }
+
+        if (other.CompareTag("stopper-switch"))
+        {
+            Speed = Speed * -0.05f;
+            stopperActive = true;
         }
 
         if (other.CompareTag("FollowCamCollider"))
@@ -171,6 +209,80 @@ public class MoveTrashBox : MonoBehaviour
         // Reset coroutine reference
         boostCoroutine = null;
     }
+
+
+    IEnumerator RotateBackToInitialRotation()
+    {
+        float elapsedTime = 0f;
+        Quaternion currentRotation = rectangle.localRotation;
+
+        while (elapsedTime < rotationBackDuration)
+        {
+            // Calculate the interpolation factor
+            float t = elapsedTime / rotationBackDuration;
+
+            // Interpolate between the current rotation and the initial rotation
+            Quaternion targetRotation = Quaternion.Lerp(currentRotation, initialRotation, t);
+
+            // Apply the interpolated rotation
+            rectangle.localRotation = targetRotation;
+
+            // Increment the elapsed time
+            elapsedTime += Time.deltaTime;
+
+            yield return null; // Wait for the next frame
+        }
+
+        // Ensure the object reaches the initial rotation precisely
+        rectangle.localRotation = initialRotation;
+        // StartCoroutine(WaitForFrames(60));
+
+    }
+
+    IEnumerator WaitForFrames(int frameCount)
+    {
+        for (int i = 0; i < frameCount; i++)
+        {
+            yield return null; // Wait for the next frame
+        }
+
+        // Code after waiting for the specified number of frames
+        //StartCoroutine(RotateParentToZRotation(-90f));
+        //Debug.Log("Waited for " + frameCount + " frames.");
+    }
+
+
+    IEnumerator RotateParentToZRotation(float targetZRotation)
+    {
+        float elapsedTime = 0f;
+        Quaternion currentRotation = transform.parent.localRotation; // Access the parent's rotation
+
+        // Calculate the target rotation based on the specified Z rotation
+        Quaternion targetRotation = Quaternion.Euler(currentRotation.eulerAngles.x, currentRotation.eulerAngles.y, targetZRotation);
+
+        while (elapsedTime < rotationToZDuration)
+        {
+            // Calculate the interpolation factor
+            float t = elapsedTime / rotationToZDuration;
+
+            // Interpolate between the current rotation and the target rotation
+            Quaternion interpolatedRotation = Quaternion.Lerp(currentRotation, targetRotation, t);
+
+            // Apply the interpolated rotation to the parent's transform
+            transform.parent.localRotation = interpolatedRotation;
+
+            // Increment the elapsed time
+            elapsedTime += Time.deltaTime;
+
+            yield return null; // Wait for the next frame
+        }
+
+        // Ensure the object reaches the target rotation precisely
+        transform.parent.localRotation = targetRotation;
+    }
+
+
+
 
 
 }
