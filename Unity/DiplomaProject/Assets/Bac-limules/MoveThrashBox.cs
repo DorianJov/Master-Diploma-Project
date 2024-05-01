@@ -46,6 +46,7 @@ public class MoveTrashBox : MonoBehaviour
     private Quaternion initialRotation;
 
     private bool canRotatetoX = false;
+    private float volume = 0f;
 
 
 
@@ -129,8 +130,20 @@ public class MoveTrashBox : MonoBehaviour
 
         m_Rigidbody.velocity = Vector3.zero;
 
-        // Map the current speed to the volume of the audio
-        float volume = Mathf.Lerp(minVolume, maxVolume, Mathf.InverseLerp(minSpeed, maxSpeed, Mathf.Abs(Speed)));
+
+        //if stopper active == true
+        if (stopperActive)
+        {
+            StartCoroutine(FadeVolume(0f, 1f)); // Fade to volume 0 over 1 second
+                                                // Map the current speed to the volume of the audio
+        }
+        else
+        {
+
+            //if stopper active == false
+            //fade the volume slowly in 1 seconds to 0;
+            volume = Mathf.Lerp(minVolume, maxVolume, Mathf.InverseLerp(minSpeed, maxSpeed, Mathf.Abs(Speed)));
+        }
 
         // Set the volume of the audio source
         audioSource.volume = volume;
@@ -279,6 +292,29 @@ public class MoveTrashBox : MonoBehaviour
 
         // Ensure the object reaches the target rotation precisely
         transform.parent.localRotation = targetRotation;
+    }
+
+    IEnumerator FadeVolume(float targetVolume, float duration)
+    {
+        float startVolume = audioSource.volume;
+        float startTime = Time.time;
+
+        while (Time.time < startTime + duration)
+        {
+            // Calculate the interpolation factor
+            float t = (Time.time - startTime) / duration;
+
+            // Interpolate between the start volume and the target volume
+            float newVolume = Mathf.Lerp(startVolume, targetVolume, t);
+
+            // Set the volume of the audio source
+            audioSource.volume = newVolume;
+
+            yield return null; // Wait for the next frame
+        }
+
+        // Ensure the volume reaches the target volume precisely
+        audioSource.volume = targetVolume;
     }
 
 

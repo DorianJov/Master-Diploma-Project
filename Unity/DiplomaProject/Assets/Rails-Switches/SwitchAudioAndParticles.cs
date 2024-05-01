@@ -6,9 +6,6 @@ using UnityEngine;
 public class SwitchAudioAndParticles : MonoBehaviour
 {
     AudioSource switchSounds;
-
-    AudioSource noteAudio;
-
     //ParticleSystem particleSystem;
 
     public Material newEmissiveMaterial; // Drag the Material149 here in the Inspector
@@ -23,16 +20,12 @@ public class SwitchAudioAndParticles : MonoBehaviour
     public Transform newParent;
     void Start()
     {
-        //AudioSource[] audios = GetComponents<AudioSource>();
+
         switchSounds = GetComponent<AudioSource>();
         //particleSystem = GetComponent<ParticleSystem>();
         animator = GetComponentInChildren<Animator>();
         MoveTrashBox.onBoosterActivated.AddListener(ActivateBoost);
 
-
-
-        //switchSounds = audios[0];
-        //noteAudio = audios[1];
     }
 
     // Update is called once per frame
@@ -41,6 +34,7 @@ public class SwitchAudioAndParticles : MonoBehaviour
         switchSounds.Play();
         //noteAudio.Play();
     }
+
 
     public void PlayParticle()
     {
