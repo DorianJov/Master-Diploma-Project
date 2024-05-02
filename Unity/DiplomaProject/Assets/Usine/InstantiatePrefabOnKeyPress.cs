@@ -4,15 +4,21 @@ public class InstantiatePrefabOnKeyPress : MonoBehaviour
 {
     public GameObject prefab;
     public GameObject prefabSound;
-    public float speed = 2f;
+    public float Minspeed = 5f;
+    public float Maxspeed = 10f;
     public int spawnCount = 1;
     public float lifeDuration = 1.2f;
     public float minYOffset = 0.1f;
     public float maxYOffset = 0.2f;
-    //AudioSource[] audioSources;
+
+    ParticleSystem myParticleSystem;
+
+
+    AudioSource[] audioSources;
     void Start()
     {
-        //audioSources = GetComponents<AudioSource>();
+        audioSources = GetComponents<AudioSource>();
+        myParticleSystem = GetComponentInChildren<ParticleSystem>();
 
     }
     void Update()
@@ -37,15 +43,17 @@ public class InstantiatePrefabOnKeyPress : MonoBehaviour
                 if (rb != null)
                 {
                     // Set velocity to move in the positive x direction
-                    rb.velocity = transform.right * speed;
+                    float randomSpeed = Random.Range(Minspeed, Maxspeed);
+                    rb.velocity = transform.right * randomSpeed;
                 }
 
                 // Destroy the prefab after a certain duration
+                myParticleSystem.Play();
                 Destroy(newObject, lifeDuration);
             }
 
 
-            /*if (audioSources != null && audioSources.Length > 0)
+            if (audioSources != null && audioSources.Length > 0)
             {
                 int randomIndex = Random.Range(0, audioSources.Length);
                 AudioSource selectedAudioSource = audioSources[randomIndex];
@@ -62,7 +70,7 @@ public class InstantiatePrefabOnKeyPress : MonoBehaviour
             else
             {
                 Debug.LogError("No AudioSource components assigned to the array.");
-            }*/
+            }
 
         }
     }

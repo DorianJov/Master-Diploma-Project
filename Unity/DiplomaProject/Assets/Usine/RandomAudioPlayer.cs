@@ -18,7 +18,8 @@ public class RandomAudioPlayer : MonoBehaviour
                 float audioClipLength = selectedAudioSource.clip.length;
 
                 // Destroy the GameObject after the duration of the audio clip
-                Destroy(gameObject, audioClipLength);
+                //Destroy(gameObject, audioClipLength);
+                Destroy(gameObject, 3f);
             }
             else
             {
