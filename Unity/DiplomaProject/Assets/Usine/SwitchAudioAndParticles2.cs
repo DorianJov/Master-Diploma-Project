@@ -11,7 +11,7 @@ public class SwitchAudioAndParticles2 : MonoBehaviour
 
 
 
-
+    public GameObject pinceObject;
     //ParticleSystem particleSystem;
 
     public Material newEmissiveMaterial; // Drag the Material149 here in the Inspector
@@ -128,6 +128,27 @@ public class SwitchAudioAndParticles2 : MonoBehaviour
             planeRenderer.material = newEmissiveMaterial;
         }
 
+    }
+
+    public void TriggerCanRotateTrue()
+    {
+        // Check if pinceObject is not null and has the pinceScript component
+        if (pinceObject != null)
+        {
+            pinceScript pince = pinceObject.GetComponent<pinceScript>();
+            if (pince != null)
+            {
+                pince.canRotateTrue();
+            }
+            else
+            {
+                Debug.LogError("pinceScript component not found on pinceObject.");
+            }
+        }
+        else
+        {
+            Debug.LogError("pinceObject is null.");
+        }
     }
 
 
