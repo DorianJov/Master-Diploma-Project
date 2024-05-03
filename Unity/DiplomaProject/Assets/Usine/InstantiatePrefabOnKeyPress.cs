@@ -11,6 +11,8 @@ public class InstantiatePrefabOnKeyPress : MonoBehaviour
     public float minYOffset = 0.1f;
     public float maxYOffset = 0.2f;
 
+    public bool spawnerIsActive = false;
+
     ParticleSystem myParticleSystem;
 
 
@@ -24,7 +26,7 @@ public class InstantiatePrefabOnKeyPress : MonoBehaviour
     void Update()
     {
         // Check for key press
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.D) && spawnerIsActive)
         {
             for (int i = 0; i < spawnCount; i++)
             {
@@ -34,7 +36,7 @@ public class InstantiatePrefabOnKeyPress : MonoBehaviour
 
                 // Instantiate the prefab at the calculated position
                 GameObject newObject = Instantiate(prefab, spawnPosition, Quaternion.identity);
-                GameObject newObjectSound = Instantiate(prefabSound, spawnPosition, Quaternion.identity);
+                //GameObject newObjectSound = Instantiate(prefabSound, spawnPosition, Quaternion.identity);
 
                 // Get the rigidbody component of the instantiated object
                 Rigidbody rb = newObject.GetComponent<Rigidbody>();
@@ -73,5 +75,11 @@ public class InstantiatePrefabOnKeyPress : MonoBehaviour
             }
 
         }
+    }
+
+    public void TriggerSpawner()
+    {
+        // Check if pinceObject is not null and has the pinceScript component
+        spawnerIsActive = true;
     }
 }

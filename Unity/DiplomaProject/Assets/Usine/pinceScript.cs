@@ -12,7 +12,17 @@ public class pinceScript : MonoBehaviour
     public GameObject spotlightToTurnOff; // Reference to the other GameObject to rotate
     public GameObject spotlightToTurnOff2; // Reference to the other GameObject to rotate
 
+    public GameObject limulesSpawner;
+
+    public GameObject MainCamera;
+
     public Renderer planeRendererOFF; // Drag the Plane Renderer component here in the Inspector
+
+    public Renderer lit00; // Drag the Plane Renderer component here in the Inspector
+
+    public Renderer lit01; // Drag the Plane Renderer component here in the Inspector
+
+    public Renderer lit02; // Drag the Plane Renderer component here in the Inspector
 
     private bool rotateClockwise = false;
     private bool rotateCounterClockwise = false;
@@ -20,7 +30,10 @@ public class pinceScript : MonoBehaviour
     private float minRotationInterval = 0.001f; // Minimum time interval between rotations
     public bool canRotate = false;
 
-    float currenteuleurAngles = 0f;
+    int counter = 0;
+    public int counterModulo = 2;
+
+    public float currenteuleurAngles = 0f;
     private bool rotationLightsOffAudioPlayed = false;
 
 
@@ -67,6 +80,20 @@ public class pinceScript : MonoBehaviour
                 //RotateClockwise(otherObjectToRotate.transform);
                 nextRotationTime = Time.time + Mathf.Max(rotationSpeed, minRotationInterval); // Update next rotation time
                 PlayRotationSound();
+                counter++;
+                if (counter % counterModulo == 0)
+                {
+                    Switchlit00(true);
+                    Switchlit01(true);
+                    Switchlit02(true);
+                }
+                else
+                {
+                    Switchlit00(false);
+                    Switchlit01(false);
+                    Switchlit02(false);
+
+                }
             }
             else if (rotateCounterClockwise && Time.time >= nextRotationTime)
             {
@@ -74,7 +101,23 @@ public class pinceScript : MonoBehaviour
                 //RotateCounterClockwise(otherObjectToRotate.transform);
                 nextRotationTime = Time.time + Mathf.Max(rotationSpeed, minRotationInterval); // Update next rotation time
                 PlayRotationSound();
+                counter++;
+                if (counter % counterModulo == 0)
+                {
+                    Switchlit00(true);
+                    Switchlit01(true);
+                    Switchlit02(true);
+                }
+                else
+                {
+                    Switchlit00(false);
+                    Switchlit01(false);
+                    Switchlit02(false);
+
+                }
             }
+
+
         }
         //Debug.Log("currenteuleurAngles" + currenteuleurAngles);
 
@@ -85,6 +128,11 @@ public class pinceScript : MonoBehaviour
             TurnOffSpotlight2();
             TurnOffPlaneRenderer();
             PlayRotationLightsOFF();
+            ActivateLimuleSpawner();
+            CamTargetLimuleSpawner();
+            Switchlit00(false);
+            Switchlit01(false);
+            Switchlit02(false);
         }
     }
 
@@ -215,4 +263,114 @@ public class pinceScript : MonoBehaviour
             Debug.LogError("planeRendererOFF is null.");
         }
     }
+
+    private void Switchlit00(bool activate)
+    {
+        // Check if the planeRendererOFF is not null
+        if (lit00 != null)
+        {
+            // Disable the renderer
+            if (!activate)
+            {
+                lit00.enabled = false;
+            }
+            else
+            {
+                lit00.enabled = true;
+            }
+        }
+        else
+        {
+            Debug.LogError("planeRendererOFF is null.");
+        }
+    }
+
+    private void Switchlit01(bool activate)
+    {
+        // Check if the planeRendererOFF is not null
+        if (lit01 != null)
+        {
+            // Disable the renderer
+            if (!activate)
+            {
+                lit01.enabled = false;
+            }
+            else
+            {
+                lit01.enabled = true;
+            }
+        }
+        else
+        {
+            Debug.LogError("planeRendererOFF is null.");
+        }
+    }
+
+
+    private void Switchlit02(bool activate)
+    {
+        // Check if the planeRendererOFF is not null
+        if (lit02 != null)
+        {
+            // Disable the renderer
+            if (!activate)
+            {
+                lit02.enabled = false;
+            }
+            else
+            {
+                lit02.enabled = true;
+            }
+        }
+        else
+        {
+            Debug.LogError("planeRendererOFF is null.");
+        }
+    }
+
+
+
+
+    public void ActivateLimuleSpawner()
+    {
+        // Check if pinceObject is not null and has the pinceScript component
+        if (limulesSpawner != null)
+        {
+            InstantiatePrefabOnKeyPress spawner = limulesSpawner.GetComponent<InstantiatePrefabOnKeyPress>();
+            if (spawner != null)
+            {
+                spawner.TriggerSpawner();
+            }
+            else
+            {
+                Debug.LogError("InstantiatePrefabOnKeyPress component not found on pinceObject.");
+            }
+        }
+        else
+        {
+            Debug.LogError("limulesSpawner is null.");
+        }
+    }
+
+    public void CamTargetLimuleSpawner()
+    {
+        // Check if pinceObject is not null and has the pinceScript component
+        if (MainCamera != null)
+        {
+            CameraFollow target = MainCamera.GetComponent<CameraFollow>();
+            if (target != null)
+            {
+                target.SwitchCamTarget(4);
+            }
+            else
+            {
+                Debug.LogError("CameraFollow component not found on pinceObject.");
+            }
+        }
+        else
+        {
+            Debug.LogError("MainCamera is null.");
+        }
+    }
+
 }

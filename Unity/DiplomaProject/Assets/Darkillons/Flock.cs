@@ -170,7 +170,7 @@ public class Flock : MonoBehaviour
             allUnits.Add(tempVariable);
         }
 
-        Debug.Log(allUnits.Count);
+        //Debug.Log(allUnits.Count);
 
 
     }

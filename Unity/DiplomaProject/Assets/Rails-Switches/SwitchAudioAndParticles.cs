@@ -83,7 +83,7 @@ public class SwitchAudioAndParticles : MonoBehaviour
     IEnumerator turnOFFAnimation(float seconds)
     {
         // wait for 1 second
-        Debug.Log("turnOFFSwitch in 1 sec");
+        //Debug.Log("turnOFFSwitch in 1 sec");
         yield return new WaitForSeconds(seconds);
         animator.SetBool("switch", false);
 

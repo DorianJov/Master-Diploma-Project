@@ -9,6 +9,8 @@ public class SwitchAudioAndParticles2 : MonoBehaviour
     AudioSource pinceMove;
     AudioSource PinceRot;
 
+    AudioSource grabbedfinished;
+
 
 
     public GameObject pinceObject;
@@ -29,7 +31,7 @@ public class SwitchAudioAndParticles2 : MonoBehaviour
         // AudioSource[] audios = GetComponents<AudioSource>();
         //AudioSource[] audios = GetComponents<AudioSource>();
         AudioSource[] audios = GetComponents<AudioSource>();
-        Debug.Log("Number of AudioSource components found: " + audios.Length);
+        //Debug.Log("Number of AudioSource components found: " + audios.Length);
         switchSounds = GetComponent<AudioSource>();
         //particleSystem = GetComponent<ParticleSystem>();
         animator = GetComponentInChildren<Animator>();
@@ -40,6 +42,7 @@ public class SwitchAudioAndParticles2 : MonoBehaviour
         switchSounds = audios[0];
         pinceMove = audios[1];
         PinceRot = audios[2];
+        grabbedfinished = audios[3];
     }
 
     // Update is called once per frame
@@ -58,6 +61,12 @@ public class SwitchAudioAndParticles2 : MonoBehaviour
     public void play_soundPinceRot()
     {
         PinceRot.Play();
+        //noteAudio.Play();
+    }
+
+    public void play_grabbed_finished()
+    {
+        grabbedfinished.Play();
         //noteAudio.Play();
     }
 
@@ -108,7 +117,7 @@ public class SwitchAudioAndParticles2 : MonoBehaviour
     IEnumerator turnOFFAnimation(float seconds)
     {
         // wait for 1 second
-        Debug.Log("turnOFFSwitch in 1 sec");
+        //Debug.Log("turnOFFSwitch in 1 sec");
         yield return new WaitForSeconds(seconds);
         animator.SetBool("switch", false);
 

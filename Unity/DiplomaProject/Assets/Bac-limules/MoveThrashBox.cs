@@ -41,8 +41,8 @@ public class MoveTrashBox : MonoBehaviour
     public bool gameHasStarted = true;
 
     public bool stopperActive = false;
-    private float rotationBackDuration = 1.0f;
-    public float rotationToZDuration = 0.06f;
+    public float rotationBackDuration = 0.5f;
+    //public float rotationToZDuration = 0.06f;
     private Quaternion initialRotation;
 
     private bool canRotatetoX = false;
@@ -265,7 +265,7 @@ public class MoveTrashBox : MonoBehaviour
     }
 
 
-    IEnumerator RotateParentToZRotation(float targetZRotation)
+    /*IEnumerator RotateParentToZRotation(float targetZRotation)
     {
         float elapsedTime = 0f;
         Quaternion currentRotation = transform.parent.localRotation; // Access the parent's rotation
@@ -293,7 +293,7 @@ public class MoveTrashBox : MonoBehaviour
         // Ensure the object reaches the target rotation precisely
         transform.parent.localRotation = targetRotation;
     }
-
+*/
     IEnumerator FadeVolume(float targetVolume, float duration)
     {
         float startVolume = audioSource.volume;

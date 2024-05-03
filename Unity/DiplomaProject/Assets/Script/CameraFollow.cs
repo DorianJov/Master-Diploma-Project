@@ -4,8 +4,11 @@ public class CameraFollow : MonoBehaviour
 {
     public Transform target;
     public Transform target2;
+    public GameObject bacParentRotation;
 
     public Transform target3;
+
+    public Transform target4;
 
     public float smoothSpeed = 0.5f;
 
@@ -28,10 +31,13 @@ public class CameraFollow : MonoBehaviour
     // FOV transition parameters
     public float fovTargetOne = 75f; // FOV value for target one
     public float fovTargetTwo = 100f; // FOV value for target two
+    public float fovTargetThree = 170f; // FOV value for target three
+    public float fovTargetFour = 60f; // FOV value for target four
 
-    public float fovTargetThree = 170f; // FOV value for target two
     public float fovTransitionDuration = 1.0f; // Duration of FOV transition
 
+    float fovValueAnim = 0f;
+    bool animationFOV = false;
     private void Start()
     {
         MoveTrashBox.onBoosterActivated.AddListener(ActivateBoost);
@@ -55,6 +61,7 @@ public class CameraFollow : MonoBehaviour
                 break;
             case 2:
                 FollowTarget(target2);
+                controlFOV();
                 SmoothTransitionFOV(fovTargetTwo);
                 offset = new Vector3(0.12f, 0.3f, -1.37f);
                 minY = 0.28f;
@@ -64,6 +71,14 @@ public class CameraFollow : MonoBehaviour
             case 3:
                 FollowTarget(target3);
                 SmoothTransitionFOV(fovTargetThree);
+                offset = new Vector3(0.12f, 0.3f, -1.37f);
+                minY = -1.2f;
+                maxY = 1f;
+                break;
+
+            case 4:
+                FollowTarget(target4);
+                SmoothTransitionFOV(fovTargetFour);
                 offset = new Vector3(0.12f, 0.3f, -1.37f);
                 minY = -1.2f;
                 maxY = 1f;
@@ -106,7 +121,7 @@ public class CameraFollow : MonoBehaviour
 
     }
 
-    void SwitchCamTarget(int target)
+    public void SwitchCamTarget(int target)
     {
         currentTargetNumber = target;
 
@@ -131,6 +146,50 @@ public class CameraFollow : MonoBehaviour
     {
         Camera.main.fieldOfView = Mathf.Lerp(Camera.main.fieldOfView, targetFOV, Time.deltaTime / fovTransitionDuration);
     }
+
+    private void controlFOV()
+    {
+        // Check if the spotlightToTurnOff is not null and has a Light component
+        if (bacParentRotation != null)
+        {
+            pinceScript pinceScript = bacParentRotation.GetComponent<pinceScript>();
+
+            // Check if the spotlight has a Light component
+            if (pinceScript != null)
+            {
+                if (pinceScript.currenteuleurAngles >= 1)
+                {
+                    animationFOV = true;
+                }
+                // Disable the light component
+                fovTargetTwo = MapValue(pinceScript.currenteuleurAngles, oldMin, oldMax, newMin, newMax);
+                Debug.Log("fovTargetTwoMapped =  " + fovTargetTwo);
+                //Camera.main.fieldOfView = fovValueAnim;
+            }
+            else
+            {
+                Debug.LogError("No pinceScript component found on bacParentRotation GameObject.");
+            }
+        }
+        else
+        {
+            Debug.LogError("bacParentRotation GameObject is null.");
+        }
+    }
+
+    // Assuming currenteuleurAngles is in the range of 0 to 90
+    // Define the ranges
+    float oldMin = 0f;
+    float oldMax = 90f;
+    float newMin = 100f;
+    float newMax = 60f;
+
+    // MapValue function to map a value from one range to another
+    float MapValue(float value, float oldMin, float oldMax, float newMin, float newMax)
+    {
+        return newMin + (value - oldMin) * (newMax - newMin) / (oldMax - oldMin);
+    }
+
 }
 
 
