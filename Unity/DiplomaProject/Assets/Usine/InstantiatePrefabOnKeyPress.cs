@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class InstantiatePrefabOnKeyPress : MonoBehaviour
 {
@@ -16,11 +17,16 @@ public class InstantiatePrefabOnKeyPress : MonoBehaviour
     ParticleSystem myParticleSystem;
 
 
-    AudioSource[] audioSources;
+    public AudioSource[] audioSources;
+
+    private List<int> shuffledIndexes = new List<int>();
+    private int currentIndex = 0;
     void Start()
     {
         audioSources = GetComponents<AudioSource>();
         myParticleSystem = GetComponentInChildren<ParticleSystem>();
+        // Shuffle the indexes initially
+        ShuffleIndexes();
 
     }
     void Update()
@@ -55,14 +61,26 @@ public class InstantiatePrefabOnKeyPress : MonoBehaviour
             }
 
 
+            // Check if all sounds have been played
+            if (currentIndex >= audioSources.Length)
+            {
+                // Reshuffle the indexes
+                ShuffleIndexes();
+                // Reset currentIndex to start playing sounds from the beginning
+                currentIndex = 0;
+            }
+
+            // Play the sound at the current index
             if (audioSources != null && audioSources.Length > 0)
             {
-                int randomIndex = Random.Range(0, audioSources.Length);
-                AudioSource selectedAudioSource = audioSources[randomIndex];
+                int indexToPlay = shuffledIndexes[currentIndex];
+                AudioSource selectedAudioSource = audioSources[indexToPlay];
 
                 if (selectedAudioSource != null)
                 {
                     selectedAudioSource.Play();
+                    Debug.Log("Playing sound: " + selectedAudioSource.clip.name); // Print the name of the played audio clip
+                    currentIndex++; // Move to the next index for the next frame
                 }
                 else
                 {
@@ -74,6 +92,27 @@ public class InstantiatePrefabOnKeyPress : MonoBehaviour
                 Debug.LogError("No AudioSource components assigned to the array.");
             }
 
+        }
+
+
+    }
+
+    private void ShuffleIndexes()
+    {
+        // Populate shuffledIndexes with numbers from 0 to audioSources.Length - 1
+        shuffledIndexes.Clear();
+        for (int i = 0; i < audioSources.Length; i++)
+        {
+            shuffledIndexes.Add(i);
+        }
+
+        // Shuffle the indexes
+        for (int i = 0; i < shuffledIndexes.Count; i++)
+        {
+            int temp = shuffledIndexes[i];
+            int randomIndex = Random.Range(i, shuffledIndexes.Count);
+            shuffledIndexes[i] = shuffledIndexes[randomIndex];
+            shuffledIndexes[randomIndex] = temp;
         }
     }
 

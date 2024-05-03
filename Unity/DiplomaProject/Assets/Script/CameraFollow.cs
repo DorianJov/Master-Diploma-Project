@@ -81,7 +81,7 @@ public class CameraFollow : MonoBehaviour
                 SmoothTransitionFOV(fovTargetFour);
                 offset = new Vector3(0.12f, 0.3f, -1.37f);
                 minY = -1.2f;
-                maxY = 1f;
+                maxY = 3f;
                 break;
         }
 
@@ -163,7 +163,7 @@ public class CameraFollow : MonoBehaviour
                 }
                 // Disable the light component
                 fovTargetTwo = MapValue(pinceScript.currenteuleurAngles, oldMin, oldMax, newMin, newMax);
-                Debug.Log("fovTargetTwoMapped =  " + fovTargetTwo);
+                //Debug.Log("fovTargetTwoMapped =  " + fovTargetTwo);
                 //Camera.main.fieldOfView = fovValueAnim;
             }
             else

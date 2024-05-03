@@ -35,7 +35,7 @@ public class pinceScript : MonoBehaviour
 
     public float currenteuleurAngles = 0f;
     private bool rotationLightsOffAudioPlayed = false;
-
+    bool doItonce = true;
 
     private void Start()
     {
@@ -129,7 +129,11 @@ public class pinceScript : MonoBehaviour
             TurnOffPlaneRenderer();
             PlayRotationLightsOFF();
             ActivateLimuleSpawner();
-            CamTargetLimuleSpawner();
+            if (doItonce)
+            {
+                CamTargetLimuleSpawner();
+                doItonce = false;
+            }
             Switchlit00(false);
             Switchlit01(false);
             Switchlit02(false);

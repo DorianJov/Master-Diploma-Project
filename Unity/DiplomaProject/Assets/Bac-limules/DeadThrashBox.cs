@@ -115,6 +115,7 @@ public class DeadThrashBox : MonoBehaviour
         if (canDoBoost)
         {
             boostCoroutine = StartCoroutine(BoostSpeed());
+            Destroy(gameObject, 1.5f);
         }
     }
 
