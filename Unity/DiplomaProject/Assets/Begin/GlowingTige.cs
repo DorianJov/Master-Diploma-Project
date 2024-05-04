@@ -144,7 +144,7 @@ public class GlowingTige : MonoBehaviour
                 StartCoroutine(LookAtSmoothly(target));
                 //StartCoroutine(LookAtSmoothly(target, xPercentage, yPercentage, zPercentage));
                 animator.SetBool("switch", true);
-                sources[0].Play();
+                //sources[0].Play();
 
             }
             else

@@ -32,8 +32,12 @@ Material:
     serializedVersion: 3
     m_TexEnvs: []
     m_Ints: []
-    m_Floats: []
+    m_Floats:
+    - _1_Diffuse_hue: 0
     m_Colors:
+    - _BaseColor: {r: 0.26415092, g: 0.26415092, b: 0.26415092, a: 1}
+    - _Color: {r: 0.2641509, g: 0.2641509, b: 0.2641509, a: 1}
+    - _ColorGlobal: {r: 1, g: 1, b: 1, a: 0}
     - _UV_Tiling: {r: 3, g: 3, b: 0, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &5801165969284703164
