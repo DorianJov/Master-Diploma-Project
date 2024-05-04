@@ -202,6 +202,7 @@ public class pinceScript : MonoBehaviour
         if (!rotationLightsOffAudioPlayed && audioSources != null && audioSources.Length >= 2 && audioSources[1] != null)
         {
             audioSources[1].Play();
+            //audioSources[2].Play();
             rotationLightsOffAudioPlayed = true; // Set the flag to true to indicate that the audio has been played
         }
     }

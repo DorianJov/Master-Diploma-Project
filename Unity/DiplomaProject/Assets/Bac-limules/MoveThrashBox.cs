@@ -5,7 +5,7 @@ using UnityEngine.Events; // Added to use UnityEvents
 
 public class MoveTrashBox : MonoBehaviour
 {
-    float Speed = 0.0f;
+    public float Speed = 0.0f;
     Rigidbody m_Rigidbody;
     AudioSource audioSource;
     public UnityEvent onBoosterActivated = new UnityEvent();

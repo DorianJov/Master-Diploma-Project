@@ -11,6 +11,10 @@ public class SwitchAudioAndParticles2 : MonoBehaviour
 
     AudioSource grabbedfinished;
 
+    AudioSource grabbedIsActivated;
+
+    AudioSource canMove;
+
 
 
     public GameObject pinceObject;
@@ -43,18 +47,22 @@ public class SwitchAudioAndParticles2 : MonoBehaviour
         pinceMove = audios[1];
         PinceRot = audios[2];
         grabbedfinished = audios[3];
+        grabbedIsActivated = audios[4];
+        canMove = audios[5];
     }
 
     // Update is called once per frame
     public void play_sound()
     {
         switchSounds.Play();
-        //noteAudio.Play();
+        grabbedIsActivated.Play();
     }
 
     public void play_soundPinceMove()
     {
         pinceMove.Play();
+        canMove.Play();
+
         //noteAudio.Play();
     }
 
