@@ -18,7 +18,7 @@ public class GlowingTige : MonoBehaviour
 
     Transform circleChild;
     //Transform lightChild;
-
+    public int prevrandomIndex = 0;
     public Transform target;
     public Transform RestTarget;
     public bool lookingAtGenerator = false;
@@ -180,13 +180,13 @@ public class GlowingTige : MonoBehaviour
     {
         // Get all AudioSource components attached to this GameObject
         AudioSource[] sources = GetComponents<AudioSource>();
-
+        sources[prevrandomIndex].Stop();
         // Check if there are AudioSource components
         if (sources.Length > 0)
         {
             // Generate a random index within the range of AudioSource array
             int randomIndex = Random.Range(0, sources.Length);
-
+            prevrandomIndex = randomIndex;
             // Play the audio clip at the randomly selected index
             sources[randomIndex].Play();
             // Print the name of the currently played audio clip
