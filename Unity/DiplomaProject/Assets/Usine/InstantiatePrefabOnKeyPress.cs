@@ -27,10 +27,19 @@ public class InstantiatePrefabOnKeyPress : MonoBehaviour
     [Header("Limules Counter")]
     public GameObject prefabToSpawn;
     public Transform spawnPoint;
-    public float circleRadius = 0.01f;
+
     //public int numberOfPrefabs = 12; // Number of prefabs to spawn
     public float angleIncrement = 10f; // Angle increment between prefabs
-    public int circleOffset = 0;
+    public float circleRadiusX = 0f;
+    public float circleRadiusY = 0f;
+    public float circleRadiusZ = 0f;
+
+    public float rotationAngleX = 0f;
+    public float rotationAngleY = 0f;
+    public float rotationAngleZ = 0f;
+    public int singleCountRot = 0;
+
+    public int prefabsSpawns = 1;
 
     void Start()
     {
@@ -42,6 +51,11 @@ public class InstantiatePrefabOnKeyPress : MonoBehaviour
     }
     void Update()
     {
+        //if (Input.GetKeyDown(KeyCode.D))
+        //{
+        //LimuleCounter(prefabsSpawns);
+        //}
+        // LimuleCounter(prefabsSpawns);
         // Check for key press
         if (Input.GetKeyDown(KeyCode.D) && spawnerIsActive)
         {
@@ -67,7 +81,7 @@ public class InstantiatePrefabOnKeyPress : MonoBehaviour
                 }
 
                 // Destroy the prefab after a certain duration
-                LimuleCounter(i);
+                LimuleCounter(prefabsSpawns);
 
                 myParticleSystem.Play();
                 Destroy(newObject, lifeDuration);
@@ -135,23 +149,44 @@ public class InstantiatePrefabOnKeyPress : MonoBehaviour
         spawnerIsActive = true;
     }
 
-    private void LimuleCounter(int i)
+    private void LimuleCounter(int unit)
     {
 
+        for (int i = 0; i < unit; i++)
+        {
 
-        float angle = limuleCounter * angleIncrement;
 
-        // Calculate the position of the prefab around the circle using trigonometry
-        float spawnX = spawnPoint.position.x + circleRadius * Mathf.Cos(angle * Mathf.Deg2Rad);
-        float spawnY = spawnPoint.position.y + circleRadius * Mathf.Sin(angle * Mathf.Deg2Rad);
+            float angle = limuleCounter * angleIncrement;
 
-        // Create a rotation based on the current angle
-        Quaternion rotation = Quaternion.Euler(0f, 0f, -angle);
+            //float radialeffect = 0.02f;
 
-        // Spawn the prefab at the calculated position and rotation
-        Instantiate(prefabToSpawn, new Vector3(spawnX, spawnY, spawnPoint.position.z), rotation);
 
-        limuleCounter++;
+            circleRadiusX += 0.0001f;
+            circleRadiusY += 0.0001f;
+
+            // Calculate the position of the prefab around the circle using trigonometry
+            float spawnX = spawnPoint.position.x + circleRadiusX * Mathf.Cos(angle * Mathf.Deg2Rad);
+            float spawnY = spawnPoint.position.y + circleRadiusY * Mathf.Sin(angle * Mathf.Deg2Rad);
+            float spawnZ = spawnPoint.position.z + circleRadiusZ * Mathf.Sin(angle * Mathf.Deg2Rad);
+
+            // Create a rotation based on the current angle
+            Quaternion rotation = Quaternion.Euler(0f, 0f, -angle + singleCountRot);
+
+            // Create an empty GameObject as a child of spawnPoint
+            GameObject rot = new GameObject("rot");
+            rot.transform.SetParent(spawnPoint);
+            // Set the position of the rot GameObject to (0, 0, 0) relative to its parent
+            rot.transform.localPosition = Vector3.zero;
+
+            // Spawn the prefab at the calculated position and rotation
+            GameObject counterObj = Instantiate(prefabToSpawn, new Vector3(spawnX, spawnY, spawnPoint.position.z), rotation, rot.transform);
+            // Rotate the rot GameObject
+            rot.transform.Rotate(new Vector3(rotationAngleX, rotationAngleY, rotationAngleZ));
+
+            //Destroy(rot, 0.1f);
+
+            limuleCounter++;
+        }
 
 
     }
