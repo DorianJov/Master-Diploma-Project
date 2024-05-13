@@ -4,7 +4,7 @@ using System.Collections.Generic;
 public class InstantiatePrefabOnKeyPress : MonoBehaviour
 {
     public GameObject prefab;
-    public GameObject prefabSound;
+    //public GameObject prefabSound;
     public float Minspeed = 5f;
     public float Maxspeed = 10f;
     public int spawnCount = 1;
@@ -16,11 +16,22 @@ public class InstantiatePrefabOnKeyPress : MonoBehaviour
 
     ParticleSystem myParticleSystem;
 
+    public int limuleCounter = 0;
+
 
     public AudioSource[] audioSources;
 
     private List<int> shuffledIndexes = new List<int>();
     private int currentIndex = 0;
+
+    [Header("Limules Counter")]
+    public GameObject prefabToSpawn;
+    public Transform spawnPoint;
+    public float circleRadius = 0.01f;
+    //public int numberOfPrefabs = 12; // Number of prefabs to spawn
+    public float angleIncrement = 10f; // Angle increment between prefabs
+    public int circleOffset = 0;
+
     void Start()
     {
         audioSources = GetComponents<AudioSource>();
@@ -56,6 +67,8 @@ public class InstantiatePrefabOnKeyPress : MonoBehaviour
                 }
 
                 // Destroy the prefab after a certain duration
+                LimuleCounter(i);
+
                 myParticleSystem.Play();
                 Destroy(newObject, lifeDuration);
             }
@@ -120,5 +133,26 @@ public class InstantiatePrefabOnKeyPress : MonoBehaviour
     {
         // Check if pinceObject is not null and has the pinceScript component
         spawnerIsActive = true;
+    }
+
+    private void LimuleCounter(int i)
+    {
+
+
+        float angle = limuleCounter * angleIncrement;
+
+        // Calculate the position of the prefab around the circle using trigonometry
+        float spawnX = spawnPoint.position.x + circleRadius * Mathf.Cos(angle * Mathf.Deg2Rad);
+        float spawnY = spawnPoint.position.y + circleRadius * Mathf.Sin(angle * Mathf.Deg2Rad);
+
+        // Create a rotation based on the current angle
+        Quaternion rotation = Quaternion.Euler(0f, 0f, -angle);
+
+        // Spawn the prefab at the calculated position and rotation
+        Instantiate(prefabToSpawn, new Vector3(spawnX, spawnY, spawnPoint.position.z), rotation);
+
+        limuleCounter++;
+
+
     }
 }
