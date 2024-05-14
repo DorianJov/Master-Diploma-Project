@@ -5,6 +5,9 @@ public class InstantiatePrefabOnKeyPress : MonoBehaviour
 {
     public GameObject prefab;
     //public GameObject prefabSound;
+    public GameObject MainCamera;
+
+    public GameObject tunnelLimule;
     public float Minspeed = 5f;
     public float Maxspeed = 10f;
     public int spawnCount = 1;
@@ -25,6 +28,8 @@ public class InstantiatePrefabOnKeyPress : MonoBehaviour
     private int currentIndex = 0;
 
     [Header("Limules Counter")]
+
+    public int limuleNumberTrigger = 75;
     public GameObject prefabToSpawn;
     public Transform spawnPoint;
 
@@ -40,6 +45,10 @@ public class InstantiatePrefabOnKeyPress : MonoBehaviour
     public int singleCountRot = 0;
 
     public int prefabsSpawns = 1;
+
+
+
+    bool doItOnce = true;
 
     void Start()
     {
@@ -59,69 +68,88 @@ public class InstantiatePrefabOnKeyPress : MonoBehaviour
         // Check for key press
         if (Input.GetKeyDown(KeyCode.D) && spawnerIsActive)
         {
-            for (int i = 0; i < spawnCount; i++)
+            if (limuleCounter <= limuleNumberTrigger)
             {
-                // Calculate a random Y position within the specified range
-                float randomYOffset = Random.Range(minYOffset, maxYOffset);
-                Vector3 spawnPosition = transform.position + new Vector3(0f, randomYOffset, 0f);
-
-                // Instantiate the prefab at the calculated position
-                GameObject newObject = Instantiate(prefab, spawnPosition, Quaternion.identity);
-                //GameObject newObjectSound = Instantiate(prefabSound, spawnPosition, Quaternion.identity);
-
-                // Get the rigidbody component of the instantiated object
-                Rigidbody rb = newObject.GetComponent<Rigidbody>();
-
-                // Check if the Rigidbody component exists
-                if (rb != null)
+                for (int i = 0; i < spawnCount; i++)
                 {
-                    // Set velocity to move in the positive x direction
-                    float randomSpeed = Random.Range(Minspeed, Maxspeed);
-                    rb.velocity = transform.right * randomSpeed;
-                }
+                    // Calculate a random Y position within the specified range
+                    float randomYOffset = Random.Range(minYOffset, maxYOffset);
+                    Vector3 spawnPosition = transform.position + new Vector3(0f, randomYOffset, 0f);
 
-                // Destroy the prefab after a certain duration
-                LimuleCounter(prefabsSpawns);
+                    // Instantiate the prefab at the calculated position
+                    GameObject newObject = Instantiate(prefab, spawnPosition, Quaternion.identity);
+                    //GameObject newObjectSound = Instantiate(prefabSound, spawnPosition, Quaternion.identity);
 
-                myParticleSystem.Play();
-                Destroy(newObject, lifeDuration);
-            }
+                    // Get the rigidbody component of the instantiated object
+                    Rigidbody rb = newObject.GetComponent<Rigidbody>();
+
+                    // Check if the Rigidbody component exists
+                    if (rb != null)
+                    {
+                        // Set velocity to move in the positive x direction
+                        float randomSpeed = Random.Range(Minspeed, Maxspeed);
+                        rb.velocity = transform.right * randomSpeed;
+                    }
+
+                    // Destroy the prefab after a certain duration
+                    LimuleCounter(prefabsSpawns);
+                    playRandomAudio();
+
+                    myParticleSystem.Play();
+                    Destroy(newObject, lifeDuration);
 
 
-            // Check if all sounds have been played
-            if (currentIndex >= audioSources.Length)
-            {
-                // Reshuffle the indexes
-                ShuffleIndexes();
-                // Reset currentIndex to start playing sounds from the beginning
-                currentIndex = 0;
-            }
-
-            // Play the sound at the current index
-            if (audioSources != null && audioSources.Length > 0)
-            {
-                int indexToPlay = shuffledIndexes[currentIndex];
-                AudioSource selectedAudioSource = audioSources[indexToPlay];
-
-                if (selectedAudioSource != null)
-                {
-                    selectedAudioSource.Play();
-                    Debug.Log("Playing sound: " + selectedAudioSource.clip.name); // Print the name of the played audio clip
-                    currentIndex++; // Move to the next index for the next frame
-                }
-                else
-                {
-                    Debug.LogError("One of the AudioSource components in the array is null.");
                 }
             }
             else
             {
-                Debug.LogError("No AudioSource components assigned to the array.");
+                if (doItOnce)
+                {
+                    CamTargetLimuleTunnel();
+                    TriggerLimuleTunnelSpawn();
+                    doItOnce = false;
+                }
             }
+
+
 
         }
 
 
+    }
+
+    private void playRandomAudio()
+    {
+        // Check if all sounds have been played
+        if (currentIndex >= audioSources.Length)
+        {
+            // Reshuffle the indexes
+            ShuffleIndexes();
+            // Reset currentIndex to start playing sounds from the beginning
+            currentIndex = 0;
+        }
+
+        // Play the sound at the current index
+        if (audioSources != null && audioSources.Length > 0)
+        {
+            int indexToPlay = shuffledIndexes[currentIndex];
+            AudioSource selectedAudioSource = audioSources[indexToPlay];
+
+            if (selectedAudioSource != null)
+            {
+                selectedAudioSource.Play();
+                Debug.Log("Playing sound: " + selectedAudioSource.clip.name); // Print the name of the played audio clip
+                currentIndex++; // Move to the next index for the next frame
+            }
+            else
+            {
+                Debug.LogError("One of the AudioSource components in the array is null.");
+            }
+        }
+        else
+        {
+            Debug.LogError("No AudioSource components assigned to the array.");
+        }
     }
 
     private void ShuffleIndexes()
@@ -161,8 +189,8 @@ public class InstantiatePrefabOnKeyPress : MonoBehaviour
             //float radialeffect = 0.02f;
 
 
-            circleRadiusX += 0.0001f;
-            circleRadiusY += 0.0001f;
+            //circleRadiusX += 0.0001f;
+            //circleRadiusY += 0.0001f;
 
             // Calculate the position of the prefab around the circle using trigonometry
             float spawnX = spawnPoint.position.x + circleRadiusX * Mathf.Cos(angle * Mathf.Deg2Rad);
@@ -189,5 +217,49 @@ public class InstantiatePrefabOnKeyPress : MonoBehaviour
         }
 
 
+
+    }
+
+    public void CamTargetLimuleTunnel()
+    {
+        // Check if pinceObject is not null and has the pinceScript component
+        if (MainCamera != null)
+        {
+            CameraFollow target = MainCamera.GetComponent<CameraFollow>();
+            if (target != null)
+            {
+                //set target to limuleTunnel
+                target.SwitchCamTarget(3);
+            }
+            else
+            {
+                Debug.LogError("CameraFollow component not found on pinceObject.");
+            }
+        }
+        else
+        {
+            Debug.LogError("MainCamera is null.");
+        }
+    }
+
+    public void TriggerLimuleTunnelSpawn()
+    {
+        // Check if pinceObject is not null and has the pinceScript component
+        if (tunnelLimule != null)
+        {
+            tunnelLimuleSpawn LimuleSpawnScript = tunnelLimule.GetComponent<tunnelLimuleSpawn>();
+            if (LimuleSpawnScript != null)
+            {
+                LimuleSpawnScript.ActivateLimuleSpawn();
+            }
+            else
+            {
+                Debug.LogError("tunnelLimuleSpawn component not found on tunnelLimule.");
+            }
+        }
+        else
+        {
+            Debug.LogError("tunnelLimule is null.");
+        }
     }
 }

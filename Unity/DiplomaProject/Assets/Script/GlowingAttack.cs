@@ -38,7 +38,7 @@ public class GlowingAttack : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("LIGHT");
+        //Debug.Log("LIGHT");
         if (other.tag == "sunFlowers")
         {
             //AudioSource[] sources = this.gameObject.GetComponents<AudioSource>();

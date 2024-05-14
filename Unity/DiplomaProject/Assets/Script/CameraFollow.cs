@@ -11,6 +11,7 @@ public class CameraFollow : MonoBehaviour
     public Transform target4;
 
     public float smoothSpeed = 0.5f;
+    public float smoothSpeed2 = 0.5f;
 
     public Vector3 offset;
     public float zOffset = 0f; // Additional offset for the z-axis
@@ -31,7 +32,7 @@ public class CameraFollow : MonoBehaviour
     // FOV transition parameters
     public float fovTargetOne = 75f; // FOV value for target one
     public float fovTargetTwo = 100f; // FOV value for target two
-    public float fovTargetThree = 170f; // FOV value for target three
+    public float fovTargetThree = 80f; // FOV value for target three
     public float fovTargetFour = 60f; // FOV value for target four
 
     public float fovTransitionDuration = 1.0f; // Duration of FOV transition
@@ -53,14 +54,14 @@ public class CameraFollow : MonoBehaviour
                 //followNothing
                 break;
             case 1:
-                FollowTarget(target);
+                FollowTarget(target, smoothSpeed);
                 SmoothTransitionFOV(fovTargetOne);
                 offset = new Vector3(0, 0.1f, -0.69f);
                 minY = 0.28f;
                 maxY = 0.75f;
                 break;
             case 2:
-                FollowTarget(target2);
+                FollowTarget(target2, smoothSpeed);
                 controlFOV();
                 SmoothTransitionFOV(fovTargetTwo);
                 offset = new Vector3(0.12f, 0.3f, -1.37f);
@@ -69,15 +70,15 @@ public class CameraFollow : MonoBehaviour
                 break;
 
             case 3:
-                FollowTarget(target3);
+                FollowTarget(target3, smoothSpeed2);
                 SmoothTransitionFOV(fovTargetThree);
                 offset = new Vector3(0.12f, 0.3f, -1.37f);
-                minY = -1.2f;
-                maxY = 1f;
+                minY = -20f;
+                maxY = 3f;
                 break;
 
             case 4:
-                FollowTarget(target4);
+                FollowTarget(target4, smoothSpeed);
                 SmoothTransitionFOV(fovTargetFour);
                 offset = new Vector3(0.12f, 0.3f, -1.37f);
                 minY = -1.2f;
@@ -87,7 +88,7 @@ public class CameraFollow : MonoBehaviour
 
     }
 
-    void FollowTarget(Transform target)
+    void FollowTarget(Transform target, float smoothSpeed)
     {
         //before setting x max position
 
