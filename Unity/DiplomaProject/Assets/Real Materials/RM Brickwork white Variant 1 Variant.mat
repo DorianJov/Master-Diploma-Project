@@ -27,7 +27,7 @@ Material:
   m_Shader: {fileID: -6465566751694194690, guid: 4a8461f1683e0ec4696c345af17d4278,
     type: 3}
   m_Parent: {fileID: 2100000, guid: 31a49b8b21f9ad1449131071ef6ed1cf, type: 2}
-  m_ModifiedSerializedProperties: 0
+  m_ModifiedSerializedProperties: 16
   m_ValidKeywords:
   - _DISABLE_SSR_TRANSPARENT
   m_InvalidKeywords:
@@ -35,7 +35,7 @@ Material:
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
+  m_CustomRenderQueue: 2225
   stringTagMap:
     MotionVector: User
   disabledShaderPasses:
@@ -49,7 +49,34 @@ Material:
     serializedVersion: 3
     m_TexEnvs: []
     m_Ints: []
-    m_Floats: []
+    m_Floats:
+    - _1_Occlusion_from_smoothness: 1
+    - _1_Occlusion_in_diffuse_A: 0
+    - _1_Smoothness_inverted: 0
+    - _2_Diffuse_from_metalness: 0
+    - _2_FADE_IN_BY_DISTANCE: 1
+    - _2_Occlusion_from_smoothness: 0
+    - _2_Smoothness_inverted: 0
+    - _2_USE_DIFFUSE: 1
+    - _3_REDUCE_OCCLUSION: 0.464
+    - _3_SMOOTHNESS_OPACITY: 1
+    - _3_Smoothness_inverted: 0
+    - _ConservativeDepthOffsetEnable: 0
+    - _DepthOffsetEnable: 0
+    - _Metalness: 1
+    - _Metalness_contrast: 1
+    - _Normals: 1.9
+    - _POM_height: 1
+    - _ReceivesSSR: 1
+    - _Smoothness: 0.39
+    - _Smoothness_contrast: 0.79
+    - _StencilRefDepth: 8
+    - _StencilRefGBuffer: 10
+    - _StencilRefMV: 40
+    - _SupportDecals: 1
+    - _USE_LAYER_2: 1
+    - _USE_LAYER_3: 1
+    - _UV_Tiling_uniform: 0.1
     m_Colors:
-    - _UV_Tiling: {r: 30, g: 20, b: 0, a: 0}
+    - _UV_Tiling: {r: 230, g: 20, b: 0, a: 0}
   m_BuildTextureStacks: []

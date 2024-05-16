@@ -11,6 +11,11 @@ public class tunnelLimuleSpawn : MonoBehaviour
 
     private AudioSource tunnelCamSwitch;
 
+    //detroy all previous gameobject.
+    public GameObject Begin;
+    public GameObject Intro;
+    public GameObject UsineDeversing;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -56,6 +61,11 @@ public class tunnelLimuleSpawn : MonoBehaviour
 
             limuleSpawned = false;
             PlayAudio();
+            Destroy(Intro, 1f);
+            Destroy(Begin, 1f);
+            Destroy(UsineDeversing, 6f);
+            // Start a coroutine to unload unused assets after the delay
+            StartCoroutine(UnloadAssetsCoroutine(6.1f));
         }
     }
 
@@ -76,5 +86,14 @@ public class tunnelLimuleSpawn : MonoBehaviour
         {
             tunnelCamSwitch.Play();
         }
+    }
+
+    IEnumerator UnloadAssetsCoroutine(float delay)
+    {
+        // Wait for the specified delay
+        yield return new WaitForSeconds(delay);
+
+        // Unload unused assets after the delay
+        Resources.UnloadUnusedAssets();
     }
 }

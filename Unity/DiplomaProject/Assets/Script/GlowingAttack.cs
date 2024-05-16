@@ -7,12 +7,36 @@ using UnityEngine;
 public class GlowingAttack : MonoBehaviour
 {
     private Animator animator;
+    private AudioSource reverseSnare;
+    private AudioSource endTunnel;
+    private AudioSource fallingSound;
+
+    private AudioSource impactSound;
+    public GameObject MainCamera;
+
+    public float offseteffect = 1f;
+
+    bool impactSoundPlayed = false;
+
+    bool triggerColliderMoveSphereOnce = true;
+
+
 
     void Start()
     {
         //Get default Parameters
         animator = GetComponentInChildren<Animator>();
+        AudioSource[] audios = GetComponents<AudioSource>();
         //gameObject.tag = "Player";
+        reverseSnare = audios[6];
+        endTunnel = audios[7];
+        fallingSound = audios[8];
+        impactSound = audios[9];
+
+        endTunnel.Play();
+        endTunnel.Stop();
+        fallingSound.Play();
+        fallingSound.Stop();
     }
 
     // Update is called once per frame
@@ -53,8 +77,42 @@ public class GlowingAttack : MonoBehaviour
         {
             //AudioSource[] sources = this.gameObject.GetComponents<AudioSource>();
             //sources[0].Play();
+            endTunnel.Play();
+            fallingSound.Play();
+            if (!impactSoundPlayed)
+            {
+                impactSound.Play();
+                impactSoundPlayed = true;
+            }
             animator.SetBool("PlayAnim", true);
             StartCoroutine(turnOFFLightIn(0.1f));
+            CamSakeEffect();
+            //animator.SetBool("PlayAnim", false);
+            //this.gameObject.tag = "Lamp";
+        }
+
+        if (other.tag == "reverseSnare")
+        {
+            //AudioSource[] sources = this.gameObject.GetComponents<AudioSource>();
+            //sources[0].Play();
+            reverseSnare.Play();
+            //animator.SetBool("PlayAnim", false);
+            //this.gameObject.tag = "Lamp";
+        }
+
+        if (other.tag == "MoveSphere")
+        {
+            //AudioSource[] sources = this.gameObject.GetComponents<AudioSource>();
+            //sources[0].Play();
+            //endTunnel.Stop();
+            //fallingSound.Stop();
+            if (triggerColliderMoveSphereOnce)
+            {
+                CamAddFOV();
+                animator.SetBool("PlayAnimShort", true);
+                StartCoroutine(turnOFFLightIn(0.1f));
+                triggerColliderMoveSphereOnce = false;
+            }
             //animator.SetBool("PlayAnim", false);
             //this.gameObject.tag = "Lamp";
         }
@@ -71,11 +129,74 @@ public class GlowingAttack : MonoBehaviour
     IEnumerator turnOFFLightIn(float seconds)
     {
         // wait for 1 second
-        Debug.Log("turnOFFLight in 1 sec");
+        // Debug.Log("turnOFFLight in 1 sec");
         yield return new WaitForSeconds(seconds);
         animator.SetBool("PlayAnim", false);
+        animator.SetBool("PlayAnimShort", false);
 
-        Debug.Log("coroutine has stopped");
+        //Debug.Log("coroutine has stopped");
+    }
+
+    public void CamSakeEffect()
+    {
+        // Check if pinceObject is not null and has the pinceScript component
+        if (MainCamera != null)
+        {
+            CameraFollow target = MainCamera.GetComponent<CameraFollow>();
+            if (target != null)
+            {
+                //set target to limuleTunnel
+                //target.fovTargetThree += 20f;
+                target.smoothSpeed2 = 0.05f;
+                //target.offset = new Vector3(0.12f, 0.3f, -1.0f);
+                //target.target3.position = new Vector3(target.target3.position.x + offseteffect, target.target3.position.y, target.target3.position.z);
+                target.offset = new Vector3(0.12f + offseteffect, 0.3f, -1.37f);
+                StartCoroutine(restoreOffset(0.1f));
+            }
+            else
+            {
+                Debug.LogError("CameraFollow component not found on pinceObject.");
+            }
+        }
+        else
+        {
+            Debug.LogError("MainCamera is null.");
+        }
+    }
+
+    public void CamAddFOV()
+    {
+        // Check if pinceObject is not null and has the pinceScript component
+        if (MainCamera != null)
+        {
+            CameraFollow target = MainCamera.GetComponent<CameraFollow>();
+            if (target != null)
+            {
+                //set target to limuleTunnel
+                target.fovTargetThree += 30f;
+                //target.smoothSpeed2 = 0.05f;
+            }
+            else
+            {
+                Debug.LogError("CameraFollow component not found on pinceObject.");
+            }
+        }
+        else
+        {
+            Debug.LogError("MainCamera is null.");
+        }
+    }
+
+    IEnumerator restoreOffset(float delay)
+    {
+        // Wait for the specified delay
+        yield return new WaitForSeconds(delay);
+        CameraFollow target = MainCamera.GetComponent<CameraFollow>();
+        target.smoothSpeed2 = 0.2f;
+        target.offset = new Vector3(0.12f, 0.3f, -1.37f);
+        //target.offset = new Vector3(0, 0.1f, -1.37f);
+
+
     }
 
 }

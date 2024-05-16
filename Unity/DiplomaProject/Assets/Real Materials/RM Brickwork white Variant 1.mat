@@ -49,7 +49,9 @@ Material:
     serializedVersion: 3
     m_TexEnvs: []
     m_Ints: []
-    m_Floats: []
+    m_Floats:
+    - _Normals: -10
+    - _UV_Tiling_uniform: 1.94
     m_Colors:
-    - _UV_Tiling: {r: 2, g: 8, b: 0, a: 0}
+    - _UV_Tiling: {r: 30, g: 40, b: 0, a: 0}
   m_BuildTextureStacks: []

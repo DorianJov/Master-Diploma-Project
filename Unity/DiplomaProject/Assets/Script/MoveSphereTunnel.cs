@@ -63,10 +63,19 @@ public class MoveSphereTunnel : MonoBehaviour
     bool maxSpeedwasReached = false;
     bool keywasreleased = false;
 
+    bool AudioCanReplay = false;
+
+    bool LimuleCanMoveFreely = false;
+
+    bool smoothTransitionPlayed = false;
+
+    bool triggerColliderMoveSphereOnce = true;
+
     void Start()
     {
 
         m_Rigidbody = GetComponent<Rigidbody>();
+
 
         // Get the system and the emission module.
         myParticleSystem = GetComponentInChildren<ParticleSystem>();
@@ -81,28 +90,40 @@ public class MoveSphereTunnel : MonoBehaviour
         AccerelationTunnelAudio = audios[4];
         limulemaxSpeedSound = audios[5];
 
+        AccerelationTunnelAudio.Play();
+        AccerelationTunnelAudio.Stop();
+
+
     }
 
 
     void Update()
     {
-        if (SphereCanSpawn)
+        if (SphereCanSpawn & !SpeedwasAt0)
         {
             MoveSphereBeginTunnel();
         }
 
-        if (Input.GetKeyUp("d"))
+        if (SpeedwasAt0)
         {
-            keywasreleased = true;
+            if (Input.GetKeyUp("d"))
+            {
+                keywasreleased = true;
+            }
         }
-        if (!SphereCanSpawn & SpeedwasAt0 & !falling & keywasreleased)
+        if (SpeedwasAt0 & !falling)
         {
             MoveSphereSlidingTunnel();
         }
 
-        if (falling)
+        if (falling & !LimuleCanMoveFreely)
         {
             MoveSphereFalling();
+        }
+
+        if (LimuleCanMoveFreely)
+        {
+            MoveSphere();
         }
 
 
@@ -113,6 +134,7 @@ public class MoveSphereTunnel : MonoBehaviour
 
     void MoveSphereBeginTunnel()
     {
+        print("MoveSphereBeginTunnel" + Speed);
         if (boostOnSpawn)
         {
             Speed = 0.5f;
@@ -126,11 +148,13 @@ public class MoveSphereTunnel : MonoBehaviour
         }
         else
         {
+            //keywasreleased = true;
             Deceleration = 2f;
+            //Deceleration = 0.1f;
             Acceleration = 0.1f;
             MaxSpeed = 0.6f;
             SpeedwasAt0 = true;
-            SphereCanSpawn = false;
+            //SphereCanSpawn = false;
         }
 
         if (Speed > Deceleration * Time.deltaTime) Speed -= Deceleration * Time.deltaTime;
@@ -167,6 +191,7 @@ public class MoveSphereTunnel : MonoBehaviour
     {
 
 
+        print("MoveSphereSlidingTunnel" + Speed);
         if (Speed != 0 || Speed2 != 0)
         {
             emissionModule.enabled = true;
@@ -177,7 +202,7 @@ public class MoveSphereTunnel : MonoBehaviour
         }
 
 
-        if (Input.GetKey("d") & SpeedwasAt0 & !maxSpeedwasReached)
+        if (Input.GetKey("d") & SpeedwasAt0 & !maxSpeedwasReached & keywasreleased)
         {
             if (Speed < MaxSpeed) Speed += Acceleration * Time.deltaTime;
 
@@ -215,8 +240,16 @@ public class MoveSphereTunnel : MonoBehaviour
 
         if (Speed == 0 & SpeedwasAt0)
         {
-            AccerelationTunnelAudio.Play();
+
+            AudioCanReplay = true;
             AccerelationTunnelAudio.pitch = 1f;
+        }
+
+        if (Speed > 0 & AudioCanReplay)
+        {
+            AccerelationTunnelAudio.Play();
+            print("PROUUUUT");
+            AudioCanReplay = false;
         }
 
         if (AccerelationTunnelAudio.pitch < 2.4f)
@@ -241,7 +274,7 @@ public class MoveSphereTunnel : MonoBehaviour
 
             if (!maxSpeedwasReached)
             {
-                animator.SetBool("PlayAnim", true);
+                animator.SetBool("PlayAnimShort", true);
                 StartCoroutine(turnOFFLightIn(0.05f));
                 limulemaxSpeedSound.Play();
             }
@@ -250,41 +283,29 @@ public class MoveSphereTunnel : MonoBehaviour
 
         }
 
-        print(Speed);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        //print(Speed);
         AccerelationTunnelAudio.volume += pitchIncreaseRate * Time.deltaTime;
-
-
-
-
         movementYAudio.volume = volume2;
 
         //Debug.Log("Current Speed: " + Speed);
+
     }
 
     void MoveSphereFalling()
     {
+        print("MoveSphereFalling");
         emissionModule.enabled = true;
         Deceleration = 0.5f;
+        Speed = 0;
+        //Speed2 = -0.1f;
+        AccerelationTunnelAudio.Stop();
 
         if (Speed > Deceleration * Time.deltaTime) Speed -= Deceleration * Time.deltaTime;
         else if (Speed < -Deceleration * Time.deltaTime) Speed += Deceleration * Time.deltaTime;
         else
             Speed = 0;
 
+        //Speed2 = -0.2f;
 
         if (Speed2 > Deceleration * Time.deltaTime) Speed2 -= Deceleration * Time.deltaTime;
         else if (Speed2 < -Deceleration * Time.deltaTime) Speed2 += Deceleration * Time.deltaTime;
@@ -309,27 +330,19 @@ public class MoveSphereTunnel : MonoBehaviour
         movementYAudio.volume = volume2;
 
         //Debug.Log("Current Speed: " + Speed);
+
     }
 
 
     void MoveSphere()
     {
-        if (falling)
+        if (!smoothTransitionPlayed)
         {
-            //No inputs can be triggered
+            m_Rigidbody.useGravity = false;
+            Speed2 = -0.05f;
+            smoothTransitionPlayed = true;
         }
 
-        if (slidingTunnel)
-        {
-            //only d key can be pressed
-        }
-        //Only Once when camera follow.
-        if (boostOnSpawn)
-        {
-            Speed = 0.5f;
-            Deceleration = 0.1f;
-            boostOnSpawn = false;
-        }
 
         if (Speed != 0 || Speed2 != 0)
         {
@@ -337,99 +350,83 @@ public class MoveSphereTunnel : MonoBehaviour
         }
         else
         {
-            SpeedwasAt0 = true;
-            Deceleration = 2f;
-            if (falling)
-            {
-                emissionModule.enabled = true;
-            }
-            else
-            {
-                emissionModule.enabled = false;
-            }
+            emissionModule.enabled = false;
+
         }
 
-        if (SpeedwasAt0 & slidingTunnel)
+
+
+        if (Input.GetKey("a"))
         {
-            Acceleration = 0.2f;
-            MaxSpeed = 0.6f;
-        }
+            if (Speed > -MaxSpeed) Speed -= Acceleration * Time.deltaTime;
 
-        if (CanTouchInputs)
+        }
+        else if (Input.GetKey("d"))
         {
-            if (Input.GetKey("a") & SpeedwasAt0 & !falling)
+            if (Speed < MaxSpeed) Speed += Acceleration * Time.deltaTime;
+
+        }
+
+        else
+        {
+            if (Speed > Deceleration * Time.deltaTime) Speed -= Deceleration * Time.deltaTime;
+            else if (Speed < -Deceleration * Time.deltaTime) Speed += Deceleration * Time.deltaTime;
+            else
+                Speed = 0;
+
+        }
+
+        if (Input.GetKey("s"))
+        {
+            if (Speed2 > -MaxSpeed) Speed2 -= Acceleration * Time.deltaTime;
+
+        }
+        else if (Input.GetKey("w"))
+        {
+            if (Speed2 < MaxSpeed) Speed2 += Acceleration * Time.deltaTime;
+
+        }
+
+        else
+        {
+            if (Speed2 > Deceleration * Time.deltaTime) Speed2 -= Deceleration * Time.deltaTime;
+            else if (Speed2 < -Deceleration * Time.deltaTime) Speed2 += Deceleration * Time.deltaTime;
+            else
+                Speed2 = 0;
+
+        }
+
+        if (Input.GetKeyDown(KeyCode.Mouse0) & dashSpeed == 1)
+        {
+
+            dashSpeed = MaxDashSpeed;
+            //Debug.Log("CLICKEDCLICKEDCLICKEDCLICKEDCLICKEDCLICKEDCLICKEDCLICKED");
+        }
+        else
+        {
+            //Debug.Log("dashSpeed : " + dashSpeed);
+            if (dashSpeed != 1)
             {
-                if (Speed > -MaxSpeed) Speed -= Acceleration * Time.deltaTime;
-
+                dashSpeed = Mathf.Lerp(5, 1, t += DashsmoothSpeed * Time.deltaTime);
             }
-            else if (Input.GetKey("d") & SpeedwasAt0)
-            {
-                if (Speed < MaxSpeed) Speed += Acceleration * Time.deltaTime;
-
-            }
-
             else
             {
-                if (Speed > Deceleration * Time.deltaTime) Speed -= Deceleration * Time.deltaTime;
-                else if (Speed < -Deceleration * Time.deltaTime) Speed += Deceleration * Time.deltaTime;
-                else
-                    Speed = 0;
-
-            }
-
-            if (Input.GetKey("s") & SpeedwasAt0 & !falling)
-            {
-                if (Speed2 > -MaxSpeed) Speed2 -= Acceleration * Time.deltaTime;
-
-            }
-            else if (Input.GetKey("w") & SpeedwasAt0 & !falling)
-            {
-                if (Speed2 < MaxSpeed) Speed2 += Acceleration * Time.deltaTime;
-
-            }
-
-            else
-            {
-                if (Speed2 > Deceleration * Time.deltaTime) Speed2 -= Deceleration * Time.deltaTime;
-                else if (Speed2 < -Deceleration * Time.deltaTime) Speed2 += Deceleration * Time.deltaTime;
-                else
-                    Speed2 = 0;
-
-            }
-
-            if (Input.GetKeyDown(KeyCode.Mouse0) & dashSpeed == 1)
-            {
-
-                dashSpeed = MaxDashSpeed;
-                //Debug.Log("CLICKEDCLICKEDCLICKEDCLICKEDCLICKEDCLICKEDCLICKEDCLICKED");
-            }
-            else
-            {
-                //Debug.Log("dashSpeed : " + dashSpeed);
-                if (dashSpeed != 1)
-                {
-                    dashSpeed = Mathf.Lerp(5, 1, t += DashsmoothSpeed * Time.deltaTime);
-                }
-                else
-                {
-                    t = 0;
-                }
+                t = 0;
             }
         }
+
 
 
         Vector3 controlKeysMovement = new(Speed * Time.deltaTime * dashSpeed, Speed2 * Time.deltaTime * dashSpeed, 0f);
         m_Rigidbody.MovePosition(transform.position += controlKeysMovement);
 
-        if (!falling)
-        {
-            m_Rigidbody.MovePosition(transform.position += transform.right * Mathf.Sin(speedUpDown * Time.time) * Time.deltaTime * distanceUpDown);
-            m_Rigidbody.MovePosition(transform.position += transform.up * Mathf.Sin(speedUpDownUP * Time.time) * Time.deltaTime * distanceUpDownUP);
-        }
-        if (TouchedWall >= 1)
-        {
-            m_Rigidbody.velocity = Vector3.zero;
-        }
+
+        m_Rigidbody.MovePosition(transform.position += transform.right * Mathf.Sin(speedUpDown * Time.time) * Time.deltaTime * distanceUpDown);
+        m_Rigidbody.MovePosition(transform.position += transform.up * Mathf.Sin(speedUpDownUP * Time.time) * Time.deltaTime * distanceUpDownUP);
+
+
+        m_Rigidbody.velocity = Vector3.zero;
+
 
         // Map the current speed to the volume of the audio
         float volume = Mathf.Lerp(minVolume, maxVolume, Mathf.InverseLerp(minSpeed, maxSpeed, Mathf.Abs(Speed)));
@@ -455,16 +452,30 @@ public class MoveSphereTunnel : MonoBehaviour
             falling = true;
         }
 
+        if (other.CompareTag("MoveSphere"))
+        {
+            //TouchedWall++;
+            if (triggerColliderMoveSphereOnce)
+            {
+                limulemaxSpeedSound.Play();
+                LimuleCanMoveFreely = true;
+                MaxSpeed = 0.3f;
+                Acceleration = 2f;
+                Deceleration = 2f;
+                triggerColliderMoveSphereOnce = false;
+            }
+        }
+
     }
 
     IEnumerator turnOFFLightIn(float seconds)
     {
         // wait for 1 second
-        Debug.Log("turnOFFLight in 1 sec");
+        //Debug.Log("turnOFFLight in 1 sec");
         yield return new WaitForSeconds(seconds);
-        animator.SetBool("PlayAnim", false);
+        animator.SetBool("PlayAnimShort", false);
 
-        Debug.Log("coroutine has stopped");
+        //Debug.Log("coroutine has stopped");
     }
 
 

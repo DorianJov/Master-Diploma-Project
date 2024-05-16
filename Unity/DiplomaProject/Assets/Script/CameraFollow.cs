@@ -39,6 +39,8 @@ public class CameraFollow : MonoBehaviour
 
     float fovValueAnim = 0f;
     bool animationFOV = false;
+
+    bool applyoffsetOnceTarget3 = true;
     private void Start()
     {
         MoveTrashBox.onBoosterActivated.AddListener(ActivateBoost);
@@ -72,7 +74,11 @@ public class CameraFollow : MonoBehaviour
             case 3:
                 FollowTarget(target3, smoothSpeed2);
                 SmoothTransitionFOV(fovTargetThree);
-                offset = new Vector3(0.12f, 0.3f, -1.37f);
+                if (applyoffsetOnceTarget3)
+                {
+                    offset = new Vector3(0.12f, 0.3f, -1.37f);
+                    applyoffsetOnceTarget3 = false;
+                }
                 minY = -20f;
                 maxY = 3f;
                 break;
