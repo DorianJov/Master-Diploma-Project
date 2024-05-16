@@ -9,6 +9,8 @@ public class tunnelLimuleSpawn : MonoBehaviour
 
     private MoveSphereTunnel moveSphereTunnel; // Reference to the other script
 
+    private AudioSource tunnelCamSwitch;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -29,6 +31,17 @@ public class tunnelLimuleSpawn : MonoBehaviour
         {
             Debug.LogError("limuleMoveTunnel component not found on the GameObject.");
         }
+
+        // Get the AudioSource component attached to the GameObject
+        AudioSource[] audios = GetComponents<AudioSource>();
+        tunnelCamSwitch = audios[3];
+
+
+        // Check if the AudioSource component is found
+        if (tunnelCamSwitch == null)
+        {
+            Debug.LogError("AudioSource component is missing from the GameObject.");
+        }
     }
 
     // Update is called once per frame
@@ -42,6 +55,7 @@ public class tunnelLimuleSpawn : MonoBehaviour
             rb.useGravity = true;
 
             limuleSpawned = false;
+            PlayAudio();
         }
     }
 
@@ -51,8 +65,16 @@ public class tunnelLimuleSpawn : MonoBehaviour
         // Set canMove to true in the limuleMoveTunnel script
         if (moveSphereTunnel != null)
         {
-            moveSphereTunnel.SphereCanMove = true;
+            moveSphereTunnel.SphereCanSpawn = true;
         }
 
+    }
+
+    public void PlayAudio()
+    {
+        if (tunnelCamSwitch != null)
+        {
+            tunnelCamSwitch.Play();
+        }
     }
 }

@@ -13,6 +13,7 @@ TagManager:
   - FollowCamCollider
   - stopper-switch
   - tunnel
+  - falling
   layers:
   - Default
   - TransparentFX

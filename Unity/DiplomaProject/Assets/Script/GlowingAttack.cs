@@ -48,6 +48,16 @@ public class GlowingAttack : MonoBehaviour
             //animator.SetBool("PlayAnim", false);
             //this.gameObject.tag = "Lamp";
         }
+
+        if (other.tag == "falling")
+        {
+            //AudioSource[] sources = this.gameObject.GetComponents<AudioSource>();
+            //sources[0].Play();
+            animator.SetBool("PlayAnim", true);
+            StartCoroutine(turnOFFLightIn(0.1f));
+            //animator.SetBool("PlayAnim", false);
+            //this.gameObject.tag = "Lamp";
+        }
     }
 
     private void OnTriggerExit(Collider other)

@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class MoveSphereTunnel : MonoBehaviour
 {
     // Start is called before the first frame update
 
-
+    private Animator animator;
     float Speed = 0.0f; //Don’t touch this
     float Speed2 = 0.0f; //Don’t touch this
 
@@ -38,19 +39,29 @@ public class MoveSphereTunnel : MonoBehaviour
     // Define minimum and maximum speeds for the audio volume mapping
     AudioSource movementXAudio;
     AudioSource movementYAudio;
+
+    AudioSource AccerelationTunnelAudio;
+
+    AudioSource limulemaxSpeedSound;
     public float minSpeed = 0f;
     public float maxSpeed = 2f;
     public float minVolume = 0f; // Minimum volume when speed is 0
     public float maxVolume = 1f; // Maximum volume when speed is at MaxSpeed
 
-    public bool SphereCanMove = false;
-    public bool falling = true;
+    public bool SphereCanSpawn = false;
+    public bool falling = false;
 
+    public bool slidingTunnel = true;
     public int TouchedWall = 0;
 
     bool boostOnSpawn = true;
     bool SpeedwasAt0 = false;
     bool CanTouchInputs = true;
+
+    public float pitchIncreaseRate = 0.1f;
+
+    bool maxSpeedwasReached = false;
+    bool keywasreleased = false;
 
     void Start()
     {
@@ -61,31 +72,257 @@ public class MoveSphereTunnel : MonoBehaviour
         myParticleSystem = GetComponentInChildren<ParticleSystem>();
         emissionModule = myParticleSystem.emission;
         //var emission = ps.emission;
+        animator = GetComponentInChildren<Animator>();
 
         myParticleSystem2 = GetComponent<ParticleSystem>();
         AudioSource[] audios = GetComponents<AudioSource>();
         movementXAudio = audios[0];
         movementYAudio = audios[1];
+        AccerelationTunnelAudio = audios[4];
+        limulemaxSpeedSound = audios[5];
 
     }
 
 
     void Update()
     {
-        if (SphereCanMove)
+        if (SphereCanSpawn)
         {
-            MoveSphere();
+            MoveSphereBeginTunnel();
+        }
+
+        if (Input.GetKeyUp("d"))
+        {
+            keywasreleased = true;
+        }
+        if (!SphereCanSpawn & SpeedwasAt0 & !falling & keywasreleased)
+        {
+            MoveSphereSlidingTunnel();
+        }
+
+        if (falling)
+        {
+            MoveSphereFalling();
+        }
+
+
+        //MoveSphereOnlyD
+        //deceleration
+
+    }
+
+    void MoveSphereBeginTunnel()
+    {
+        if (boostOnSpawn)
+        {
+            Speed = 0.5f;
+            Deceleration = 0.1f;
+            boostOnSpawn = false;
+        }
+
+        if (Speed != 0 || Speed2 != 0)
+        {
+            emissionModule.enabled = true;
         }
         else
         {
+            Deceleration = 2f;
+            Acceleration = 0.1f;
+            MaxSpeed = 0.6f;
+            SpeedwasAt0 = true;
+            SphereCanSpawn = false;
+        }
+
+        if (Speed > Deceleration * Time.deltaTime) Speed -= Deceleration * Time.deltaTime;
+        else if (Speed < -Deceleration * Time.deltaTime) Speed += Deceleration * Time.deltaTime;
+        else
+            Speed = 0;
+
+
+        if (Speed2 > Deceleration * Time.deltaTime) Speed2 -= Deceleration * Time.deltaTime;
+        else if (Speed2 < -Deceleration * Time.deltaTime) Speed2 += Deceleration * Time.deltaTime;
+        else
+            Speed2 = 0;
+
+        Vector3 controlKeysMovement = new(Speed * Time.deltaTime * dashSpeed, Speed2 * Time.deltaTime * dashSpeed, 0f);
+        m_Rigidbody.MovePosition(transform.position += controlKeysMovement);
+
+        if (TouchedWall >= 1)
+        {
+            m_Rigidbody.velocity = Vector3.zero;
+        }
+
+        // Map the current speed to the volume of the audio
+        float volume = Mathf.Lerp(minVolume, maxVolume, Mathf.InverseLerp(minSpeed, maxSpeed, Mathf.Abs(Speed)));
+        float volume2 = Mathf.Lerp(minVolume, maxVolume, Mathf.InverseLerp(minSpeed, maxSpeed, Mathf.Abs(Speed2)));
+
+        // Set the volume of the audio source
+        movementXAudio.volume = volume;
+        movementYAudio.volume = volume2;
+
+        //Debug.Log("Current Speed: " + Speed);
+    }
+
+    void MoveSphereSlidingTunnel()
+    {
+
+
+        if (Speed != 0 || Speed2 != 0)
+        {
+            emissionModule.enabled = true;
+        }
+        else
+        {
+            emissionModule.enabled = false;
+        }
+
+
+        if (Input.GetKey("d") & SpeedwasAt0 & !maxSpeedwasReached)
+        {
+            if (Speed < MaxSpeed) Speed += Acceleration * Time.deltaTime;
+
+        }
+        else
+        {
+            if (Speed > Deceleration * Time.deltaTime) Speed -= Deceleration * Time.deltaTime;
+            else if (Speed < -Deceleration * Time.deltaTime) Speed += Deceleration * Time.deltaTime;
+            else
+                Speed = 0;
 
         }
 
+
+        if (Speed2 > Deceleration * Time.deltaTime) Speed2 -= Deceleration * Time.deltaTime;
+        else if (Speed2 < -Deceleration * Time.deltaTime) Speed2 += Deceleration * Time.deltaTime;
+        else
+            Speed2 = 0;
+
+
+        Vector3 controlKeysMovement = new(Speed * Time.deltaTime * dashSpeed, Speed2 * Time.deltaTime * dashSpeed, 0f);
+        m_Rigidbody.MovePosition(transform.position += controlKeysMovement);
+
+        if (TouchedWall >= 1)
+        {
+            m_Rigidbody.velocity = Vector3.zero;
+        }
+
+        // Map the current speed to the volume of the audio
+        float volume = Mathf.Lerp(minVolume, maxVolume, Mathf.InverseLerp(minSpeed, maxSpeed, Mathf.Abs(Speed)));
+        float volume2 = Mathf.Lerp(minVolume, maxVolume, Mathf.InverseLerp(minSpeed, maxSpeed, Mathf.Abs(Speed2)));
+
+        // Set the volume of the audio source
+        movementXAudio.volume = volume;
+
+        if (Speed == 0 & SpeedwasAt0)
+        {
+            AccerelationTunnelAudio.Play();
+            AccerelationTunnelAudio.pitch = 1f;
+        }
+
+        if (AccerelationTunnelAudio.pitch < 2.4f)
+        {
+
+            AccerelationTunnelAudio.pitch += pitchIncreaseRate * Time.deltaTime;
+        }
+
+        if (AccerelationTunnelAudio.pitch > 1.15f)
+        {
+            AccerelationTunnelAudio.volume += (pitchIncreaseRate / 2) * Time.deltaTime;
+        }
+        else
+        {
+            AccerelationTunnelAudio.volume = volume * 200;
+        }
+
+        if (Speed >= MaxSpeed)
+        {
+            Speed = MaxSpeed;
+            Deceleration = 0;
+
+            if (!maxSpeedwasReached)
+            {
+                animator.SetBool("PlayAnim", true);
+                StartCoroutine(turnOFFLightIn(0.05f));
+                limulemaxSpeedSound.Play();
+            }
+            maxSpeedwasReached = true;
+
+
+        }
+
+        print(Speed);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        AccerelationTunnelAudio.volume += pitchIncreaseRate * Time.deltaTime;
+
+
+
+
+        movementYAudio.volume = volume2;
+
+        //Debug.Log("Current Speed: " + Speed);
+    }
+
+    void MoveSphereFalling()
+    {
+        emissionModule.enabled = true;
+        Deceleration = 0.5f;
+
+        if (Speed > Deceleration * Time.deltaTime) Speed -= Deceleration * Time.deltaTime;
+        else if (Speed < -Deceleration * Time.deltaTime) Speed += Deceleration * Time.deltaTime;
+        else
+            Speed = 0;
+
+
+        if (Speed2 > Deceleration * Time.deltaTime) Speed2 -= Deceleration * Time.deltaTime;
+        else if (Speed2 < -Deceleration * Time.deltaTime) Speed2 += Deceleration * Time.deltaTime;
+        else
+            Speed2 = 0;
+
+
+        Vector3 controlKeysMovement = new(Speed * Time.deltaTime * dashSpeed, Speed2 * Time.deltaTime * dashSpeed, 0f);
+        m_Rigidbody.MovePosition(transform.position += controlKeysMovement);
+
+        if (TouchedWall >= 1)
+        {
+            m_Rigidbody.velocity = Vector3.zero;
+        }
+
+        // Map the current speed to the volume of the audio
+        float volume = Mathf.Lerp(minVolume, maxVolume, Mathf.InverseLerp(minSpeed, maxSpeed, Mathf.Abs(Speed)));
+        float volume2 = Mathf.Lerp(minVolume, maxVolume, Mathf.InverseLerp(minSpeed, maxSpeed, Mathf.Abs(Speed2)));
+
+        // Set the volume of the audio source
+        movementXAudio.volume = volume;
+        movementYAudio.volume = volume2;
+
+        //Debug.Log("Current Speed: " + Speed);
     }
 
 
     void MoveSphere()
     {
+        if (falling)
+        {
+            //No inputs can be triggered
+        }
+
+        if (slidingTunnel)
+        {
+            //only d key can be pressed
+        }
         //Only Once when camera follow.
         if (boostOnSpawn)
         {
@@ -112,15 +349,15 @@ public class MoveSphereTunnel : MonoBehaviour
             }
         }
 
-        if (SpeedwasAt0 & falling)
+        if (SpeedwasAt0 & slidingTunnel)
         {
-            Acceleration = 0.3f;
-            MaxSpeed = 0.5f;
+            Acceleration = 0.2f;
+            MaxSpeed = 0.6f;
         }
 
         if (CanTouchInputs)
         {
-            if (Input.GetKey("a") & SpeedwasAt0)
+            if (Input.GetKey("a") & SpeedwasAt0 & !falling)
             {
                 if (Speed > -MaxSpeed) Speed -= Acceleration * Time.deltaTime;
 
@@ -212,7 +449,25 @@ public class MoveSphereTunnel : MonoBehaviour
             TouchedWall++;
         }
 
+        if (other.CompareTag("falling"))
+        {
+            //TouchedWall++;
+            falling = true;
+        }
+
     }
+
+    IEnumerator turnOFFLightIn(float seconds)
+    {
+        // wait for 1 second
+        Debug.Log("turnOFFLight in 1 sec");
+        yield return new WaitForSeconds(seconds);
+        animator.SetBool("PlayAnim", false);
+
+        Debug.Log("coroutine has stopped");
+    }
+
+
 }
 
 
