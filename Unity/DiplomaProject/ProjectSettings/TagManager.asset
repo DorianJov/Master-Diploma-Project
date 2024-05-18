@@ -16,6 +16,7 @@ TagManager:
   - falling
   - reverseSnare
   - MoveSphere
+  - floorbutton
   layers:
   - Default
   - TransparentFX

@@ -16,6 +16,8 @@ public class GlowingFollower : MonoBehaviour
 
     bool impactSoundPlayed = false;
 
+    public bool FollowerWithLightComponent = true;
+
     void Start()
     {
         //Get default Parameters
@@ -91,7 +93,10 @@ public class GlowingFollower : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        animator.SetBool("PlayAnim", false);
+        if (FollowerWithLightComponent)
+        {
+            animator.SetBool("PlayAnim", false);
+        }
         //this.gameObject.tag = "Lamp";
     }
 

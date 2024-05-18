@@ -35,7 +35,7 @@ public class CameraFollow : MonoBehaviour
     public float fovTargetThree = 80f; // FOV value for target three
     public float fovTargetFour = 60f; // FOV value for target four
 
-    public float fovTransitionDuration = 1.0f; // Duration of FOV transition
+    public float fovTransitionDuration = 0.5f; // Duration of FOV transition
 
     float fovValueAnim = 0f;
     bool animationFOV = false;
@@ -77,10 +77,13 @@ public class CameraFollow : MonoBehaviour
                 if (applyoffsetOnceTarget3)
                 {
                     offset = new Vector3(0.12f, 0.3f, -1.37f);
+                    fovTransitionDuration = 0.5f;
+                    minY = -20f;
+                    maxY = 3f;
                     applyoffsetOnceTarget3 = false;
                 }
-                minY = -20f;
-                maxY = 3f;
+
+
                 break;
 
             case 4:
@@ -113,10 +116,39 @@ public class CameraFollow : MonoBehaviour
         Vector3 desiredPosition = target.position + offset;
         // Add the zOffset to the desired position's z-coordinate
         desiredPosition.z += zOffset;
-        // Clamp the desired position along the Y-axis
-        desiredPosition.y = Mathf.Clamp(desiredPosition.y, minY, maxY);
-        // Clamp the desired position along the X-axis
-        desiredPosition.x = Mathf.Clamp(desiredPosition.x, minX, maxX); // Add this line
+
+        /* //before try changing for negatives values
+            // Clamp the desired position along the Y-axis
+            desiredPosition.y = Mathf.Clamp(desiredPosition.y, minY, maxY);
+            // Clamp the desired position along the X-axis
+            desiredPosition.x = Mathf.Clamp(desiredPosition.x, minX, maxX); // Add this line
+            
+    */
+        // Check if Y values are negative
+        if (minY < 0 && maxY < 0)
+        {
+            // Clamp the desired position along the Y-axis for negative values
+            desiredPosition.y = Mathf.Clamp(desiredPosition.y, maxY, minY);
+        }
+        else
+        {
+            // Clamp the desired position along the Y-axis for positive values
+            desiredPosition.y = Mathf.Clamp(desiredPosition.y, minY, maxY);
+        }
+
+        // Check if X values are negative
+        if (minX < 0 && maxX < 0)
+        {
+            // Clamp the desired position along the X-axis for negative values
+            desiredPosition.x = Mathf.Clamp(desiredPosition.x, maxX, minX);
+        }
+        else
+        {
+            // Clamp the desired position along the X-axis for positive values
+            desiredPosition.x = Mathf.Clamp(desiredPosition.x, minX, maxX);
+        }
+
+
 
         Vector3 smoothedPosition = Vector3.SmoothDamp(transform.position, desiredPosition, ref velocity, smoothSpeed);
         transform.position = smoothedPosition;

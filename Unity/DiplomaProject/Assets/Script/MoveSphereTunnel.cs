@@ -27,6 +27,8 @@ public class MoveSphereTunnel : MonoBehaviour
     public float speedUpDownUP = 1;
     public float distanceUpDownUP = 1;
 
+    private tunnelLimuleSpawn tunnelLimuleSpawnScript;
+
 
 
     ParticleSystem myParticleSystem;
@@ -71,10 +73,18 @@ public class MoveSphereTunnel : MonoBehaviour
 
     bool triggerColliderMoveSphereOnce = true;
 
+    public bool dev = false;
+
     void Start()
     {
 
         m_Rigidbody = GetComponent<Rigidbody>();
+
+        tunnelLimuleSpawnScript = GetComponent<tunnelLimuleSpawn>();
+        if (tunnelLimuleSpawnScript == null)
+        {
+            Debug.LogError("tunnelLimuleSpawn script not found on the same GameObject.");
+        }
 
 
         // Get the system and the emission module.
@@ -99,29 +109,47 @@ public class MoveSphereTunnel : MonoBehaviour
 
     void Update()
     {
-        if (SphereCanSpawn & !SpeedwasAt0)
+
+        if (Input.GetKeyUp("f"))
         {
-            MoveSphereBeginTunnel();
+            dev = true;
+            m_Rigidbody.useGravity = false;
+            tunnelLimuleSpawnScript.DestroyGameObjects();
+
+            this.transform.position = new Vector3(-17.40f, -4.86f, 0.996f);
+        }
+        else
+        {
+
         }
 
-        if (SpeedwasAt0)
+        if (!dev)
         {
-            if (Input.GetKeyUp("d"))
+            if (SphereCanSpawn & !SpeedwasAt0)
             {
-                keywasreleased = true;
+                MoveSphereBeginTunnel();
             }
-        }
-        if (SpeedwasAt0 & !falling)
-        {
-            MoveSphereSlidingTunnel();
+
+            if (SpeedwasAt0)
+            {
+                if (Input.GetKeyUp("d"))
+                {
+                    keywasreleased = true;
+                }
+            }
+            if (SpeedwasAt0 & !falling)
+            {
+                MoveSphereSlidingTunnel();
+            }
+
+            if (falling & !LimuleCanMoveFreely)
+            {
+                MoveSphereFalling();
+            }
+
         }
 
-        if (falling & !LimuleCanMoveFreely)
-        {
-            MoveSphereFalling();
-        }
-
-        if (LimuleCanMoveFreely)
+        if (LimuleCanMoveFreely || dev)
         {
             MoveSphere();
         }

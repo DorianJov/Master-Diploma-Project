@@ -57,7 +57,8 @@ public class MoveTrashBox : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
 
         //start position
-        //transform.position = new Vector3(-72.892f, 0.356f, 1.529f);
+        transform.position = new Vector3(-72.892f, 0.356f, 1.529f);
+        //transform.rotation = Quaternion.Euler(0, 0, 0);
         initialRotation = rectangle.localRotation;
 
     }
@@ -73,6 +74,8 @@ public class MoveTrashBox : MonoBehaviour
 
             onBoosterActivated.Invoke();
             boostCoroutine = StartCoroutine(BoostSpeed());
+            //transform.rotation = Quaternion.Euler(0, 0, 0);
+
             gameHasStarted = false;
         }
         else

@@ -20,6 +20,8 @@ public class GlowingAttack : MonoBehaviour
 
     bool triggerColliderMoveSphereOnce = true;
 
+    public GameObject InsideUsineSpotLight01; // Reference to the other GameObject to rotate
+
 
 
     void Start()
@@ -108,6 +110,7 @@ public class GlowingAttack : MonoBehaviour
             //fallingSound.Stop();
             if (triggerColliderMoveSphereOnce)
             {
+                //TurnONSpotlightInsideUsine();
                 CamAddFOV();
                 animator.SetBool("PlayAnimShort", true);
                 StartCoroutine(turnOFFLightIn(0.1f));
@@ -115,6 +118,13 @@ public class GlowingAttack : MonoBehaviour
             }
             //animator.SetBool("PlayAnim", false);
             //this.gameObject.tag = "Lamp";
+        }
+
+
+        if (other.tag == "floorbutton")
+        {
+
+            StartCoroutine(lauchShakeEffect(1.3f));
         }
     }
 
@@ -148,8 +158,6 @@ public class GlowingAttack : MonoBehaviour
                 //set target to limuleTunnel
                 //target.fovTargetThree += 20f;
                 target.smoothSpeed2 = 0.05f;
-                //target.offset = new Vector3(0.12f, 0.3f, -1.0f);
-                //target.target3.position = new Vector3(target.target3.position.x + offseteffect, target.target3.position.y, target.target3.position.z);
                 target.offset = new Vector3(0.12f + offseteffect, 0.3f, -1.37f);
                 StartCoroutine(restoreOffset(0.1f));
             }
@@ -173,7 +181,11 @@ public class GlowingAttack : MonoBehaviour
             if (target != null)
             {
                 //set target to limuleTunnel
-                target.fovTargetThree += 30f;
+                target.fovTransitionDuration = 5f;
+                target.fovTargetThree += 50f;
+                //change max Y:
+                target.minY = -4.2f;
+                target.maxY = -6f;
                 //target.smoothSpeed2 = 0.05f;
             }
             else
@@ -194,9 +206,82 @@ public class GlowingAttack : MonoBehaviour
         CameraFollow target = MainCamera.GetComponent<CameraFollow>();
         target.smoothSpeed2 = 0.2f;
         target.offset = new Vector3(0.12f, 0.3f, -1.37f);
+        //StartCoroutine(testfalling(0.2f));
         //target.offset = new Vector3(0, 0.1f, -1.37f);
 
 
+    }
+
+    IEnumerator testfalling(float delay)
+    {
+        // Wait for the specified delay
+        yield return new WaitForSeconds(delay);
+        CameraFollow target = MainCamera.GetComponent<CameraFollow>();
+        target.smoothSpeed2 = 1f;
+        target.offset = new Vector3(0.0f, 0.0f, -1f);
+        //target.offset = new Vector3(0, 0.1f, -1.37f);
+
+
+    }
+
+    IEnumerator lauchShakeEffect(float delay)
+    {
+        // Wait for the specified delay
+        yield return new WaitForSeconds(delay);
+        CamSakeEffectZ();
+        TurnONSpotlightInsideUsine();
+
+
+    }
+
+
+    public void CamSakeEffectZ()
+    {
+        // Check if pinceObject is not null and has the pinceScript component
+        if (MainCamera != null)
+        {
+            CameraFollow target = MainCamera.GetComponent<CameraFollow>();
+            if (target != null)
+            {
+                //set target to limuleTunnel
+                //target.fovTargetThree += 20f;
+                target.smoothSpeed2 = 0.05f;
+                target.offset = new Vector3(0.12f - offseteffect / 10, 0.3f - offseteffect / 10, -1.37f - offseteffect / 10);
+                StartCoroutine(restoreOffset(0.1f));
+            }
+            else
+            {
+                Debug.LogError("CameraFollow component not found on pinceObject.");
+            }
+        }
+        else
+        {
+            Debug.LogError("MainCamera is null.");
+        }
+    }
+
+    private void TurnONSpotlightInsideUsine()
+    {
+        // Check if the spotlightToTurnOff2 is not null and has a Light component
+        if (InsideUsineSpotLight01 != null)
+        {
+            Light spotlightLight = InsideUsineSpotLight01.GetComponent<Light>();
+
+            // Check if the spotlight has a Light component
+            if (spotlightLight != null)
+            {
+                // Disable the light component
+                spotlightLight.enabled = true;
+            }
+            else
+            {
+                Debug.LogError("No Light component found on InsideUsineSpotLight01 GameObject.");
+            }
+        }
+        else
+        {
+            Debug.LogError("InsideUsineSpotLight01 GameObject is null.");
+        }
     }
 
 }

@@ -163,7 +163,7 @@ public class Flock : MonoBehaviour
             assignedBasicPos = spawnPosition;
 
 
-            FlockUnit tempVariable = Instantiate(flockUnitPrefab, spawnPosition, rotation);
+            FlockUnit tempVariable = Instantiate(flockUnitPrefab, spawnPosition, rotation, this.transform);
             tempVariable.AssignFlock(this);
             tempVariable.InitializeSpeed(UnityEngine.Random.Range(minSpeed, maxSpeed));
 

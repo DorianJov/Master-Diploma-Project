@@ -61,11 +61,10 @@ public class tunnelLimuleSpawn : MonoBehaviour
 
             limuleSpawned = false;
             PlayAudio();
-            Destroy(Intro, 1f);
-            Destroy(Begin, 1f);
-            Destroy(UsineDeversing, 6f);
+            DestroyGameObjects();
+
             // Start a coroutine to unload unused assets after the delay
-            StartCoroutine(UnloadAssetsCoroutine(6.1f));
+
         }
     }
 
@@ -95,5 +94,13 @@ public class tunnelLimuleSpawn : MonoBehaviour
 
         // Unload unused assets after the delay
         Resources.UnloadUnusedAssets();
+    }
+
+    public void DestroyGameObjects()
+    {
+        Destroy(Intro, 1f);
+        Destroy(Begin, 1f);
+        Destroy(UsineDeversing, 6f);
+        StartCoroutine(UnloadAssetsCoroutine(6.1f));
     }
 }
