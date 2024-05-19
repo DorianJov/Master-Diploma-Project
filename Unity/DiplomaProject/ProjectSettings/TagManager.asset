@@ -18,6 +18,7 @@ TagManager:
   - MoveSphere
   - floorbutton
   - secondfloorbutton
+  - specialPadButton
   layers:
   - Default
   - TransparentFX

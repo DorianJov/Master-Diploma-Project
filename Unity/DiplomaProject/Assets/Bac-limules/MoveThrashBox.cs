@@ -49,6 +49,11 @@ public class MoveTrashBox : MonoBehaviour
     private float volume = 0f;
 
 
+    void Awake()
+    {
+        transform.position = new Vector3(-72.892f, 0.356f, 1.529f);
+
+    }
 
     void Start()
     {
@@ -57,15 +62,15 @@ public class MoveTrashBox : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
 
         //start position
-        transform.position = new Vector3(-72.892f, 0.356f, 1.529f);
-        //transform.rotation = Quaternion.Euler(0, 0, 0);
+
+
         initialRotation = rectangle.localRotation;
 
     }
 
     void Update()
     {
-
+        //transform.rotation = Quaternion.Euler(0, 0, 0);
 
         if (gameHasStarted & Input.anyKey)
         {
