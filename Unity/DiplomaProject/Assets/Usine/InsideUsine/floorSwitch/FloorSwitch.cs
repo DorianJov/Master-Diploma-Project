@@ -23,9 +23,12 @@ public class FloorSwitch : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            animator.SetBool("turnColor", true);
-            floorSwitchSound.Play();
-            //Once = false;
+            if (Once)
+            {
+                animator.SetBool("turnColor", true);
+                floorSwitchSound.Play();
+                Once = false;
+            }
         }
         //this.gameObject.tag = "Lamp";
     }
@@ -34,8 +37,8 @@ public class FloorSwitch : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            animator.SetBool("turnColor", false);
-            floorSwitchSound.Play();
+            //animator.SetBool("turnColor", false);
+            //floorSwitchSound.Play();
             //Once = false;
         }
         //this.gameObject.tag = "Lamp";

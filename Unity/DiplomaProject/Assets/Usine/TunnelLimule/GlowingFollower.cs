@@ -12,11 +12,17 @@ public class GlowingFollower : MonoBehaviour
 
     private AudioSource impactSound;
 
+    private AudioSource hitfloor;
+
     public GameObject MainCamera;
 
     bool impactSoundPlayed = false;
 
     public bool FollowerWithLightComponent = true;
+
+    public float TimeToPlaySoundAgain = 0.1f;
+
+    bool playtwoTimesFloor = true;
 
     void Start()
     {
@@ -27,28 +33,9 @@ public class GlowingFollower : MonoBehaviour
         //reverseSnare = audios[6];
         endTunnel = audios[3];
         impactSound = audios[4];
+        hitfloor = audios[5];
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-
-
-        if (Input.GetKey(KeyCode.Space))
-        {
-            animator.SetBool("PlayAnim", true);
-            //this.gameObject.tag = "Lamp";
-        }
-        else
-        {
-            //animator.SetBool("PlayAnim", false);
-            //this.gameObject.tag = "Untagged";
-        }
-
-
-
-    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -57,8 +44,9 @@ public class GlowingFollower : MonoBehaviour
         {
             //AudioSource[] sources = this.gameObject.GetComponents<AudioSource>();
             //sources[0].Play();
-            animator.SetBool("PlayAnim", true);
-            StartCoroutine(turnOFFLightIn(0.1f));
+
+            playAnim(true);
+
             //animator.SetBool("PlayAnim", false);
             //this.gameObject.tag = "Lamp";
         }
@@ -67,16 +55,16 @@ public class GlowingFollower : MonoBehaviour
         {
             //AudioSource[] sources = this.gameObject.GetComponents<AudioSource>();
             //sources[0].Play();
-            endTunnel.Play();
+            //endTunnel.Play();
             if (!impactSoundPlayed)
             {
-                impactSound.Play();
-                impactSoundPlayed = true;
+                //impactSound.Play();
+                //impactSoundPlayed = true;
             }
-            animator.SetBool("PlayAnim", true);
 
-            StartCoroutine(turnOFFLightIn(0.1f));
-            CamAddFov();
+            playAnim(true);
+
+            //CamAddFov();
             //animator.SetBool("PlayAnim", false);
             //this.gameObject.tag = "Lamp";
         }
@@ -89,28 +77,45 @@ public class GlowingFollower : MonoBehaviour
             //animator.SetBool("PlayAnim", false);
             //this.gameObject.tag = "Lamp";
         }
+
+        if (other.tag == "floorbutton")
+        {
+            playAnim(true);
+        }
+
+        if (other.tag == "MoveSphere")
+        {
+
+            if (playtwoTimesFloor)
+            {
+                playAnim(true);
+                hitfloor.Play();
+                hitfloor.pitch = 3;
+                hitfloor.volume = 0.01f;
+                StartCoroutine(playHitfloorAgainIn(TimeToPlaySoundAgain));
+                playtwoTimesFloor = false;
+            }
+        }
+    }
+
+    IEnumerator playHitfloorAgainIn(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        playAnim(true);
+        hitfloor.Play();
     }
 
     private void OnTriggerExit(Collider other)
     {
         if (FollowerWithLightComponent)
         {
-            animator.SetBool("PlayAnim", false);
+            //playAnim(true);
         }
         //this.gameObject.tag = "Lamp";
     }
 
 
 
-    IEnumerator turnOFFLightIn(float seconds)
-    {
-        // wait for 1 second
-        // Debug.Log("turnOFFLight in 1 sec");
-        yield return new WaitForSeconds(seconds);
-        animator.SetBool("PlayAnim", false);
-
-        //Debug.Log("coroutine has stopped");
-    }
 
     public void CamAddFov()
     {
@@ -132,6 +137,30 @@ public class GlowingFollower : MonoBehaviour
         {
             Debug.LogError("MainCamera is null.");
         }
+    }
+
+    void playAnim(bool Switch)
+    {
+        if (FollowerWithLightComponent)
+        {
+            animator.SetBool("PlayAnim", Switch);
+            if (Switch)
+            {
+                StartCoroutine(turnOFFLightIn(0.1f));
+            }
+        }
+
+    }
+
+
+    IEnumerator turnOFFLightIn(float seconds)
+    {
+        // wait for 1 second
+        // Debug.Log("turnOFFLight in 1 sec");
+        yield return new WaitForSeconds(seconds);
+        playAnim(false);
+
+        //Debug.Log("coroutine has stopped");
     }
 
 }

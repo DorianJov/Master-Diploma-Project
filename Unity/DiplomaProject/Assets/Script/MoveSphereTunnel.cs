@@ -8,7 +8,7 @@ public class MoveSphereTunnel : MonoBehaviour
     // Start is called before the first frame update
 
     private Animator animator;
-    float Speed = 0.0f; //Don’t touch this
+    public float Speed = 0.0f; //Don’t touch this
     float Speed2 = 0.0f; //Don’t touch this
 
     float t = 0;
@@ -45,11 +45,14 @@ public class MoveSphereTunnel : MonoBehaviour
     AudioSource AccerelationTunnelAudio;
 
     AudioSource limulemaxSpeedSound;
+
+    [Header("Speed")]
     public float minSpeed = 0f;
     public float maxSpeed = 2f;
     public float minVolume = 0f; // Minimum volume when speed is 0
     public float maxVolume = 1f; // Maximum volume when speed is at MaxSpeed
 
+    [Header("States")]
     public bool SphereCanSpawn = false;
     public bool falling = false;
 
@@ -73,7 +76,19 @@ public class MoveSphereTunnel : MonoBehaviour
 
     bool triggerColliderMoveSphereOnce = true;
 
+
+    [Header("Followers")]
+    public GameObject limuleFollowerPrefab; // The prefab to instantiate
+    public Transform defaultTarget; // The default target for all followers
+    public int numberOfFollowers = 10; // Number of followers to instantiate
+    public float delayIncrement = 0.45f; // Increment of delay for each follower
+    public float zOffsetIncrement = 0.7f; // Increment for the Z offset of each follower
+    private List<GameObject> followers = new List<GameObject>();
+
+    [Header("Teleport Inside Usine")]
     public bool dev = false;
+
+
 
     void Start()
     {
@@ -102,6 +117,10 @@ public class MoveSphereTunnel : MonoBehaviour
 
         AccerelationTunnelAudio.Play();
         AccerelationTunnelAudio.Stop();
+
+        SpawnFollowers();
+
+
 
 
     }
@@ -154,7 +173,8 @@ public class MoveSphereTunnel : MonoBehaviour
             MoveSphere();
         }
 
-
+        print("acceleration: " + Acceleration);
+        print("Decerelation: " + Deceleration);
         //MoveSphereOnlyD
         //deceleration
 
@@ -162,7 +182,7 @@ public class MoveSphereTunnel : MonoBehaviour
 
     void MoveSphereBeginTunnel()
     {
-        print("MoveSphereBeginTunnel" + Speed);
+        //print("MoveSphereBeginTunnel" + Speed);
         if (boostOnSpawn)
         {
             Speed = 0.5f;
@@ -219,7 +239,7 @@ public class MoveSphereTunnel : MonoBehaviour
     {
 
 
-        print("MoveSphereSlidingTunnel" + Speed);
+        //print("MoveSphereSlidingTunnel" + Speed);
         if (Speed != 0 || Speed2 != 0)
         {
             emissionModule.enabled = true;
@@ -276,7 +296,7 @@ public class MoveSphereTunnel : MonoBehaviour
         if (Speed > 0 & AudioCanReplay)
         {
             AccerelationTunnelAudio.Play();
-            print("PROUUUUT");
+            //print("PROUUUUT");
             AudioCanReplay = false;
         }
 
@@ -364,6 +384,21 @@ public class MoveSphereTunnel : MonoBehaviour
 
     void MoveSphere()
     {
+        //dev power
+        if (Input.GetMouseButton(0))
+        {
+            // Your code here to handle the left mouse button being held down
+            MaxSpeed = 1f;
+            Debug.Log("Left mouse button is being held down.");
+        }
+        else
+        {
+            MaxSpeed = 0.3f;
+        }
+
+        Acceleration = 2f;
+        Deceleration = 2f;
+
         if (!smoothTransitionPlayed)
         {
             m_Rigidbody.useGravity = false;
@@ -424,7 +459,9 @@ public class MoveSphereTunnel : MonoBehaviour
 
         }
 
-        if (Input.GetKeyDown(KeyCode.Mouse0) & dashSpeed == 1)
+        //disabled dash
+
+        /*if (Input.GetKeyDown(KeyCode.Mouse0) & dashSpeed == 1)
         {
 
             dashSpeed = MaxDashSpeed;
@@ -442,7 +479,7 @@ public class MoveSphereTunnel : MonoBehaviour
                 t = 0;
             }
         }
-
+        */
 
 
         Vector3 controlKeysMovement = new(Speed * Time.deltaTime * dashSpeed, Speed2 * Time.deltaTime * dashSpeed, 0f);
@@ -483,13 +520,25 @@ public class MoveSphereTunnel : MonoBehaviour
         if (other.CompareTag("MoveSphere"))
         {
             //TouchedWall++;
+
             if (triggerColliderMoveSphereOnce)
             {
                 limulemaxSpeedSound.Play();
-                LimuleCanMoveFreely = true;
+                limulemaxSpeedSound.pitch = 3;
+                limulemaxSpeedSound.volume = 0.01f;
+                //LimuleCanMoveFreely = true;
+
                 MaxSpeed = 0.3f;
                 Acceleration = 2f;
                 Deceleration = 2f;
+                StartCoroutine(LaunchIncrementationIN((numberOfFollowers - 1) * delayIncrement + 0.5f, 0.1f));
+                StartCoroutine(playHitfloorAgainIn(numberOfFollowers * delayIncrement + 0.1f));
+
+
+
+                //(numberOfFollowers - i) * delayIncrement + 0.1f - (i * 0.1f)
+                //animator.SetBool("PlayAnim", true);
+                //StartCoroutine(turnOFFLightIn(0.05f));
                 triggerColliderMoveSphereOnce = false;
             }
         }
@@ -502,10 +551,113 @@ public class MoveSphereTunnel : MonoBehaviour
         //Debug.Log("turnOFFLight in 1 sec");
         yield return new WaitForSeconds(seconds);
         animator.SetBool("PlayAnimShort", false);
+        animator.SetBool("PlayAnim", false);
 
         //Debug.Log("coroutine has stopped");
     }
 
+    void SpawnFollowers()
+    {
+        for (int i = 0; i < numberOfFollowers; i++)
+        {
+            // Instantiate the prefab
+            GameObject follower = Instantiate(limuleFollowerPrefab, transform.position, transform.rotation);
+
+            // Set the delay for the DelayedFollower script
+            DelayedFollower delayedFollower = follower.GetComponent<DelayedFollower>();
+            if (delayedFollower != null)
+            {
+                delayedFollower.delay = i * delayIncrement;
+                // Adjust zOffset based on the index
+                if (i == 0)
+                {
+                    delayedFollower.zOffset = -0.7f;
+                }
+                else if (i == 1)
+                {
+                    delayedFollower.zOffset = 0.7f;
+                }
+                else
+                {
+                    delayedFollower.zOffset = i * zOffsetIncrement;
+                }
+
+                delayedFollower.target = defaultTarget; // Set the default target
+            }
+
+            GlowingFollower glowingFollower = follower.GetComponent<GlowingFollower>();
+
+            if (glowingFollower != null)
+            {
+                //last follwershould have the first delay increment value which is 0.1
+                //float initialTimeToPlaySound = (numberOfFollowers - i) * delayIncrement + 0.1f + (i * 0.1f);
+                float initialTimeToPlaySound = (numberOfFollowers - i) * delayIncrement + 0.1f - (i * 0.05f);
+
+
+
+                //float initialTimeToPlaySound = (numberOfFollowers - i) * delayIncrement + 0.1f + (i * 0.1f);
+
+                glowingFollower.TimeToPlaySoundAgain = initialTimeToPlaySound;
+
+                // Deactivate the light component and "make me glow" script after the 5th follower
+                if (i >= 12)
+                {
+                    Light lightComponent = follower.GetComponentInChildren<Light>();
+                    if (lightComponent != null)
+                    {
+                        lightComponent.enabled = false;
+                    }
+
+                    glowingFollower.FollowerWithLightComponent = false;
+
+                }
+            }
+            // Add the follower to the list
+            followers.Add(follower);
+        }
+    }
+
+
+
+    IEnumerator LaunchIncrementationIN(float seconds, float incrementation)
+    {
+        // wait for 1 second
+
+        //Debug.Log("turnOFFLight in 1 sec");
+        yield return new WaitForSeconds(seconds);
+        UpdateDelayIncrement(incrementation);
+
+
+        //Debug.Log("coroutine has stopped");
+    }
+
+    // Function to update the delay increment
+    public void UpdateDelayIncrement(float newDelayIncrement)
+    {
+        delayIncrement = newDelayIncrement;
+
+        // Update the delay for each follower
+        for (int i = 0; i < followers.Count; i++)
+        {
+            DelayedFollower delayedFollower = followers[i].GetComponent<DelayedFollower>();
+            if (delayedFollower != null)
+            {
+                delayedFollower.delay = (i + 1) * delayIncrement;
+            }
+        }
+    }
+
+    IEnumerator playHitfloorAgainIn(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        limulemaxSpeedSound.Play();
+        //GlowingAttack glowingAttack = GetComponent<GlowingAttack>();
+        //glowingAttack.fallingSound.Stop();
+        LimuleCanMoveFreely = true;
+        animator.SetBool("PlayAnimShort", true);
+        StartCoroutine(turnOFFLightIn(0.05f));
+
+    }
 
 }
 

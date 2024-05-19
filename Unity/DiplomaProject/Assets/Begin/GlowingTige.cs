@@ -47,7 +47,7 @@ public class GlowingTige : MonoBehaviour
         {
             // Collider component found, you can now use it
             // For example, you can access its properties or call its methods
-            Debug.Log("Collider component found!");
+            //Debug.Log("Collider component found!");
         }
         else
         {

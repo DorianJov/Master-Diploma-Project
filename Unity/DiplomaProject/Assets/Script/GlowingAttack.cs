@@ -9,7 +9,7 @@ public class GlowingAttack : MonoBehaviour
     private Animator animator;
     private AudioSource reverseSnare;
     private AudioSource endTunnel;
-    private AudioSource fallingSound;
+    public AudioSource fallingSound;
 
     private AudioSource impactSound;
     public GameObject MainCamera;
@@ -19,6 +19,8 @@ public class GlowingAttack : MonoBehaviour
     bool impactSoundPlayed = false;
 
     bool triggerColliderMoveSphereOnce = true;
+
+    bool floorbuttonOnce = true;
 
     public GameObject InsideUsineSpotLight01; // Reference to the other GameObject to rotate
 
@@ -79,7 +81,7 @@ public class GlowingAttack : MonoBehaviour
         {
             //AudioSource[] sources = this.gameObject.GetComponents<AudioSource>();
             //sources[0].Play();
-            endTunnel.Play();
+            //endTunnel.Play();
             fallingSound.Play();
             if (!impactSoundPlayed)
             {
@@ -123,8 +125,11 @@ public class GlowingAttack : MonoBehaviour
 
         if (other.tag == "floorbutton")
         {
-
-            StartCoroutine(lauchShakeEffect(1.3f));
+            if (floorbuttonOnce)
+            {
+                StartCoroutine(lauchShakeEffect(1.6f));
+                floorbuttonOnce = false;
+            }
         }
     }
 
@@ -182,11 +187,11 @@ public class GlowingAttack : MonoBehaviour
             {
                 //set target to limuleTunnel
                 target.fovTransitionDuration = 5f;
-                target.fovTargetThree += 50f;
+                target.fovTargetThree += 20f;
                 //change max Y:
                 target.minY = -4.2f;
                 target.maxY = -6f;
-                //target.smoothSpeed2 = 0.05f;
+                target.smoothSpeed2 = 0.05f;
             }
             else
             {
@@ -244,7 +249,8 @@ public class GlowingAttack : MonoBehaviour
             if (target != null)
             {
                 //set target to limuleTunnel
-                //target.fovTargetThree += 20f;
+                target.fovTransitionDuration = 2f;
+                target.fovTargetThree += 20f;
                 target.smoothSpeed2 = 0.05f;
                 target.offset = new Vector3(0.12f - offseteffect / 10, 0.3f - offseteffect / 10, -1.37f - offseteffect / 10);
                 StartCoroutine(restoreOffset(0.1f));
@@ -266,16 +272,18 @@ public class GlowingAttack : MonoBehaviour
         if (InsideUsineSpotLight01 != null)
         {
             Light spotlightLight = InsideUsineSpotLight01.GetComponent<Light>();
+            LightAudio lightAudioScript = InsideUsineSpotLight01.GetComponent<LightAudio>();
 
             // Check if the spotlight has a Light component
-            if (spotlightLight != null)
+            if (spotlightLight != null & lightAudioScript != null)
             {
                 // Disable the light component
+                lightAudioScript.PlayAudioLight();
                 spotlightLight.enabled = true;
             }
             else
             {
-                Debug.LogError("No Light component found on InsideUsineSpotLight01 GameObject.");
+                Debug.LogError("No Light component or script LightAudio found on InsideUsineSpotLight01 GameObject.");
             }
         }
         else
