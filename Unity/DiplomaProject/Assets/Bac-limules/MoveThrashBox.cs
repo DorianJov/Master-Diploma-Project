@@ -8,6 +8,7 @@ public class MoveTrashBox : MonoBehaviour
     public float Speed = 0.0f;
     Rigidbody m_Rigidbody;
     AudioSource audioSource;
+    AudioSource Startaudio;
     public UnityEvent onBoosterActivated = new UnityEvent();
     public UnityEvent CamFollowBacLimule = new UnityEvent();
 
@@ -51,7 +52,7 @@ public class MoveTrashBox : MonoBehaviour
 
     void Awake()
     {
-        transform.position = new Vector3(-72.892f, 0.356f, 1.529f);
+        //transform.position = new Vector3(-72.892f, 0.356f, 1.529f);
 
     }
 
@@ -59,10 +60,11 @@ public class MoveTrashBox : MonoBehaviour
     {
         m_Rigidbody = GetComponent<Rigidbody>();
         originalMaxSpeed = MaxSpeed;
-        audioSource = GetComponent<AudioSource>();
+        AudioSource[] audioSources = GetComponents<AudioSource>();
 
         //start position
-
+        audioSource = audioSources[0];
+        Startaudio = audioSources[1];
 
         initialRotation = rectangle.localRotation;
 
@@ -78,6 +80,7 @@ public class MoveTrashBox : MonoBehaviour
                 StopCoroutine(boostCoroutine);
 
             onBoosterActivated.Invoke();
+            Startaudio.Play();
             boostCoroutine = StartCoroutine(BoostSpeed());
             //transform.rotation = Quaternion.Euler(0, 0, 0);
 

@@ -19,6 +19,8 @@ TagManager:
   - floorbutton
   - secondfloorbutton
   - specialPadButton
+  - tigeInsideUsine
+  - FollowerNoTrigger
   layers:
   - Default
   - TransparentFX

@@ -28,6 +28,8 @@ public class TigeInsideUsine : MonoBehaviour
     private BoxCollider colliderComponent;
 
 
+
+
     void Start()
     {
         //Get default Parameters
@@ -137,13 +139,15 @@ public class TigeInsideUsine : MonoBehaviour
 
 
     private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player") & CheckSpeed() > 0)
+    {   //other.CompareTag("Player") & CheckSpeed() > 0
+        //deleted check speed
+        if (other.CompareTag("Player"))
         {
             if (!active)
             {
                 //myParticleSystem.Play();
                 PlayRandomAudio();
+                //myParticleSystem.Play();
                 Debug.Log("ENTER");
                 active = true;
                 StartCoroutine(LookAtSmoothly(target));
@@ -175,7 +179,7 @@ public class TigeInsideUsine : MonoBehaviour
             {
                 yield break; // Exit the coroutine immediately
             }
-            print("volume down");
+            //print("volume down");
             sources[0].volume -= Time.deltaTime * 0.1f;
             yield return null;
         }
@@ -243,13 +247,13 @@ public class TigeInsideUsine : MonoBehaviour
             }
             else
             {
-                Debug.LogError("MoveTrashBox component not found on BacLimules.");
+                Debug.LogError("MoveSphereTunnel component not found on moveSphereTunnel.");
 
             }
         }
         else
         {
-            Debug.LogError("BacLimules is null.");
+            Debug.LogError("moveSphereTunnel is null.");
         }
         return 1;
     }

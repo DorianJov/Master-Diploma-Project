@@ -173,8 +173,8 @@ public class MoveSphereTunnel : MonoBehaviour
             MoveSphere();
         }
 
-        print("acceleration: " + Acceleration);
-        print("Decerelation: " + Deceleration);
+        //print("acceleration: " + Acceleration);
+        //print("Decerelation: " + Deceleration);
         //MoveSphereOnlyD
         //deceleration
 
@@ -341,7 +341,7 @@ public class MoveSphereTunnel : MonoBehaviour
 
     void MoveSphereFalling()
     {
-        print("MoveSphereFalling");
+        //print("MoveSphereFalling");
         emissionModule.enabled = true;
         Deceleration = 0.5f;
         Speed = 0;
@@ -388,7 +388,7 @@ public class MoveSphereTunnel : MonoBehaviour
         if (Input.GetMouseButton(0))
         {
             // Your code here to handle the left mouse button being held down
-            MaxSpeed = 1f;
+            MaxSpeed = 2f;
             Debug.Log("Left mouse button is being held down.");
         }
         else
@@ -543,6 +543,22 @@ public class MoveSphereTunnel : MonoBehaviour
             }
         }
 
+        if (other.CompareTag("tigeInsideUsine"))
+        {
+            //TouchedWall++;
+
+            UpdateDelayIncrementRandom(0.1f, 10f);
+        }
+
+        if (other.CompareTag("specialPadButton"))
+        {
+            //TouchedWall++;
+
+            ResetDelayIncrement(0.1f);
+
+        }
+
+
     }
 
     IEnumerator turnOFFLightIn(float seconds)
@@ -628,7 +644,7 @@ public class MoveSphereTunnel : MonoBehaviour
         UpdateDelayIncrement(incrementation);
 
 
-        //Debug.Log("coroutine has stopped");
+        Debug.Log("delay applystopped");
     }
 
     // Function to update the delay increment
@@ -642,7 +658,41 @@ public class MoveSphereTunnel : MonoBehaviour
             DelayedFollower delayedFollower = followers[i].GetComponent<DelayedFollower>();
             if (delayedFollower != null)
             {
+                delayedFollower.canInteractWithTige = true;
                 delayedFollower.delay = (i + 1) * delayIncrement;
+                delayedFollower.smoothTransitionSpeed = 5f;
+            }
+        }
+    }
+
+
+    public void ResetDelayIncrement(float newDelayIncrement)
+    {
+        delayIncrement = newDelayIncrement;
+
+        // Update the delay for each follower
+        for (int i = 0; i < followers.Count; i++)
+        {
+            DelayedFollower delayedFollower = followers[i].GetComponent<DelayedFollower>();
+            if (delayedFollower != null)
+            {
+                delayedFollower.canInteractWithTige = false;
+                delayedFollower.delay = (i + 1) * delayIncrement;
+                delayedFollower.smoothTransitionSpeed = 5f;
+            }
+        }
+    }
+
+    public void UpdateDelayIncrementRandom(float min, float max)
+    {
+        // Update the delay for each follower with a random value within the range
+        for (int i = 0; i < followers.Count; i++)
+        {
+            DelayedFollower delayedFollower = followers[i].GetComponent<DelayedFollower>();
+            if (delayedFollower != null)
+            {
+                delayedFollower.delay = Random.Range(min, max);
+                delayedFollower.smoothTransitionSpeed = 0.1f;
             }
         }
     }
