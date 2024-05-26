@@ -28,6 +28,7 @@ public class GlowingAttack : MonoBehaviour
 
     bool calledGuetteurOpenEye = false;
 
+    bool calledGuetteurOnce = false;
 
 
     void Start()
@@ -138,7 +139,11 @@ public class GlowingAttack : MonoBehaviour
 
         if (other.CompareTag("specialPadButton"))
         {
-            CallGuetteur();
+            if (!calledGuetteurOnce)
+            {
+                CallGuetteur();
+                calledGuetteurOnce = true;
+            }
 
         }
     }
@@ -152,13 +157,43 @@ public class GlowingAttack : MonoBehaviour
             {
                 //set target to limuleTunnel
                 //target.fovTargetThree += 20f;
-                if (!calledGuetteurOpenEye)
-                {
-                    guetteurSpawner.TurnONEveryGuetteur();
-                    print("TurnedONGuetteur");
-                    calledGuetteurOpenEye = true;
-                }
-                guetteurSpawner.LaunchHarmonicForAll(1.3f);
+                /* if (!calledGuetteurOpenEye)
+                 {
+                     guetteurSpawner.callTurnONEveryGuetteurRoutine(1.1f);
+                     print("TurnedONGuetteur");
+                     calledGuetteurOpenEye = true;
+                 }
+                 else
+                 {
+                     guetteurSpawner.LaunchHarmonicForAll(1.1f);
+                 }
+                 */
+                guetteurSpawner.LaunchHarmonicForAll(1.1f);
+
+
+            }
+            else
+            {
+                Debug.LogError("GuetteurSpawner component not found on GuetteurSpawner GameObject.");
+            }
+        }
+        else
+        {
+            Debug.LogError("GuetteurSpawner GameObject is null.");
+        }
+    }
+
+    void ResetAnimGuetteur()
+    {
+        if (GuetteurSpawner != null)
+        {
+            GuetteurSpawner guetteurSpawner = GuetteurSpawner.GetComponent<GuetteurSpawner>();
+            if (guetteurSpawner != null)
+            {
+                //set target to limuleTunnel
+
+                guetteurSpawner.ResetAnimGuetteurToFalse();
+
 
 
 
@@ -179,6 +214,12 @@ public class GlowingAttack : MonoBehaviour
     {
         animator.SetBool("PlayAnim", false);
         //this.gameObject.tag = "Lamp";
+
+        if (other.CompareTag("specialPadButton"))
+        {
+            //ResetAnimGuetteur();
+
+        }
     }
 
 

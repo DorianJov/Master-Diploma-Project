@@ -39,9 +39,11 @@ public class floorbuttSpawner : MonoBehaviour
                 rawcounter++;
             }
 
-            if (rawcounter % 3 == 0)
+            //here setup which row are straight
+            if (rawcounter % 1 == 0)
             {
-                randomXIncrement = 0.45f * rowCount;
+                //before change 0.45f 
+                randomXIncrement = 3f * rowCount;
             }
             // Calculate the new position for the prefab
 
@@ -61,7 +63,7 @@ public class floorbuttSpawner : MonoBehaviour
             {
                 specialButtonCount++;
 
-                if (specialButtonCount % 3 == 0)
+                if (specialButtonCount % 1 == 0)
                 {
                     newPrefab.tag = "specialPadButton";
                 }

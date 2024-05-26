@@ -50,9 +50,9 @@ public class Floorbuttpad : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            animator.SetBool("turnColor", false);
+            //animator.SetBool("turnColor", false);
             //floorSwitchSound.Play();
-            Once = true;
+            //Once = true;
         }
         //this.gameObject.tag = "Lamp";
     }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.ShaderGraph.Drawing.Inspector.PropertyDrawers;
 using UnityEngine;
 
 public class GuetterGuetApen : MonoBehaviour
@@ -11,15 +12,23 @@ public class GuetterGuetApen : MonoBehaviour
     AudioSource Harmonic03;
     AudioSource Harmonic04;
 
+    GuetteurSpawner guetteurSpawner;
+
     private Animator animator;
     private bool playedOpenEyeOnce = false;
+    private bool OpenEyeOnceAnimation = false;
     private bool isChosen = false; // Flag to determine if this prefab is the chosen one
+
+    private bool isLastPrefab = false; // Flag to determine if this prefab is the last one
+
+    int myID = 0;
+
 
     // Start is called before the first frame update
     void Start()
     {
         animator = GetComponent<Animator>();
-
+        guetteurSpawner = GetComponentInParent<GuetteurSpawner>();
         sources = GetComponents<AudioSource>();
         OpenEye = sources[0];
         Harmonic01 = sources[1];
@@ -70,11 +79,25 @@ public class GuetterGuetApen : MonoBehaviour
             if (randomHarmonic != null)
             {
                 randomHarmonic.Play();
+                CallCameraShake();
             }
             else
             {
                 Debug.LogError("Random harmonic AudioSource is not assigned.");
             }
+        }
+    }
+
+    public void CallCameraShake()
+    {
+
+        if (guetteurSpawner != null)
+        {
+            guetteurSpawner.CameraShake();
+        }
+        else
+        {
+            Debug.LogError("guetteurSpawner is null");
         }
     }
 
@@ -90,26 +113,28 @@ public class GuetterGuetApen : MonoBehaviour
 
     public void LaunchHarmonic(float timeToLaunch)
     {
-        print("LaunchHarmonic");
+        //print("LaunchHarmonic");
         StartCoroutine(LaunchHarmonicPhase(timeToLaunch));
     }
 
     IEnumerator LaunchHarmonicPhase(float seconds)
     {
-        print("LaunchHarmonicPhase");
+        // print("LaunchHarmonicPhase");
         yield return new WaitForSeconds(seconds);
-        print("Launched");
+        //print("Launched");
         LaunchHarmonicAnimation();
     }
 
     public void LaunchHarmonicAnimation()
     {
-        print("Guetteur IS BLINK White");
+        //print("Guetteur IS BLINK White");
         animator.SetBool("BlinkWhite", true);
+
     }
 
     public void TurnONOpenEye()
     {
+        print("IM LUNCH OpenEye:" + myID);
         animator.SetBool("OpenEye", true);
     }
 
@@ -124,14 +149,38 @@ public class GuetterGuetApen : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            animator.SetBool("OpenEye", true);
+            if (!OpenEyeOnceAnimation)
+            {
+                animator.SetBool("OpenEye", true);
+                if (isLastPrefab)
+                {
+                    print("LightUpSequence");
+                    guetteurSpawner.LightUpSequence();
+                }
+                OpenEyeOnceAnimation = true;
+            }
+        }
+    }
+
+    // Assign unique ID to each instance
+    public void ActivateOpenEye()
+    {
+        if (isLastPrefab)
+        {
+            print("LightUpSequence");
+            guetteurSpawner.LightUpSequence();
         }
     }
 
     // Assign unique ID to each instance
     public void SetID(int id)
     {
+        myID = id;
         gameObject.name = "Guetteur_" + id;
+        if (id == 9) // Assuming the last prefab has the ID of 0
+        {
+            isLastPrefab = true;
+        }
     }
 
     // Mark as chosen one

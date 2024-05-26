@@ -129,7 +129,8 @@ public class MoveSphereTunnel : MonoBehaviour
     void Update()
     {
 
-        if (Input.GetKeyUp("f"))
+
+        if (Input.GetKeyUp("t"))
         {
             dev = true;
             m_Rigidbody.useGravity = false;
@@ -140,6 +141,14 @@ public class MoveSphereTunnel : MonoBehaviour
         else
         {
 
+        }
+
+        if (dev)
+        {
+            if (Input.GetKeyUp("g"))
+            {
+                this.transform.position = new Vector3(0.29f, -4.77f, 0.996f);
+            }
         }
 
         if (!dev)

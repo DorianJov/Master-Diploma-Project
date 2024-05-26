@@ -11,11 +11,15 @@ public class GuetteurSpawner : MonoBehaviour
     private List<GameObject> spawnedGuetteur = new List<GameObject>(); // List to store references to spawned prefabs
     private GameObject chosenPrefab; // Reference to the chosen prefab
 
+    public GameObject MainCamera;
+
     AudioSource[] sources;
     AudioSource Harmonic01;
     AudioSource Harmonic02;
     AudioSource Harmonic03;
     AudioSource Harmonic04;
+
+    public float offseteffect = 1f;
 
     // Start is called before the first frame update
     void Start()
@@ -42,7 +46,7 @@ public class GuetteurSpawner : MonoBehaviour
             Vector3 newPosition = new Vector3(newX, startPosition.y, startPosition.z);
 
             // Instantiate the prefab at the calculated position with the specified rotation
-            GameObject guetteurPrefab = Instantiate(prefabToSpawn, newPosition, rotation);
+            GameObject guetteurPrefab = Instantiate(prefabToSpawn, newPosition, rotation, this.transform);
             guetteurPrefab.GetComponent<GuetterGuetApen>().SetID(i); // Assign a unique ID
             spawnedGuetteur.Add(guetteurPrefab); // Store reference to the spawned prefab
         }
@@ -109,6 +113,17 @@ public class GuetteurSpawner : MonoBehaviour
             }
         }
     }
+    public void callTurnONEveryGuetteurRoutine(float seconds)
+    {
+        StartCoroutine(TurnONEveryGuetteurIN(seconds));
+    }
+    public IEnumerator TurnONEveryGuetteurIN(float seconds)
+    {
+        print("OpenEye In progress");
+        yield return new WaitForSeconds(seconds);
+        print("OpenEye Openened");
+        TurnONEveryGuetteur();
+    }
 
     public void TurnONEveryGuetteur()
     {
@@ -132,4 +147,92 @@ public class GuetteurSpawner : MonoBehaviour
             }
         }
     }
+
+    public void ResetAnimGuetteurToFalse()
+    {
+        if (spawnedGuetteur.Count == 0)
+        {
+            Debug.LogError("No prefabs have been spawned.");
+            return;
+        }
+
+        foreach (GameObject guetteurPrefab in spawnedGuetteur)
+        {
+            GuetterGuetApen script = guetteurPrefab.GetComponent<GuetterGuetApen>();
+            if (script != null)
+            {
+                print("Harmonic will Launch From Spawner");
+                script.ResetAnimationVariables();
+            }
+            else
+            {
+                Debug.LogError("GuetterGuetApen script not found on the prefab.");
+            }
+        }
+    }
+
+    public void CameraShake()
+    {
+
+        if (MainCamera != null)
+        {
+            CameraFollow target = MainCamera.GetComponent<CameraFollow>();
+            if (target != null)
+            {
+                //set target to limuleTunnel
+                target.fovTransitionDuration = 2f;
+                //target.fovTargetThree += 20f;
+                target.smoothSpeed2 = 0.05f;
+                target.offset = new Vector3(0.12f, 0.3f - offseteffect / 10, -1.37f - offseteffect / 10);
+                StartCoroutine(restoreOffset(0.1f));
+            }
+            else
+            {
+                Debug.LogError("CameraFollow component not found on pinceObject.");
+            }
+        }
+        else
+        {
+            Debug.LogError("MainCamera is null.");
+        }
+
+    }
+
+    IEnumerator restoreOffset(float delay)
+    {
+        // Wait for the specified delay
+        yield return new WaitForSeconds(delay);
+        CameraFollow target = MainCamera.GetComponent<CameraFollow>();
+        target.smoothSpeed2 = 0.2f;
+        target.offset = new Vector3(0.12f, 0.3f, -1.37f);
+        //StartCoroutine(testfalling(0.2f));
+        //target.offset = new Vector3(0, 0.1f, -1.37f);
+
+
+    }
+
+    public void LightUpSequence()
+    {
+        StartCoroutine(LightUpPrefabsSequentially());
+    }
+
+    private IEnumerator LightUpPrefabsSequentially()
+    {
+        for (int i = spawnedGuetteur.Count - 1; i >= 0; i--)
+        {
+            GuetterGuetApen script = spawnedGuetteur[i].GetComponent<GuetterGuetApen>();
+            if (script != null)
+            {
+                yield return new WaitForSeconds(0.1f);
+                //print($"Wait time for prefab {i}: {(spawnedGuetteur.Count - i) * 0.05f}");
+                //script.Play_BlinkRed_Sound();
+                script.TurnONOpenEye();
+            }
+        }
+        print("coroutine ended: AH");
+    }
+
+
+
+
 }
