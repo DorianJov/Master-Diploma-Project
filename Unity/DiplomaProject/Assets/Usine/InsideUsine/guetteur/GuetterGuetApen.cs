@@ -7,6 +7,7 @@ public class GuetterGuetApen : MonoBehaviour
 {
     AudioSource[] sources;
     AudioSource OpenEye;
+    AudioSource RedBlink;
     AudioSource Harmonic01;
     AudioSource Harmonic02;
     AudioSource Harmonic03;
@@ -35,6 +36,7 @@ public class GuetterGuetApen : MonoBehaviour
         Harmonic02 = sources[2];
         Harmonic03 = sources[3];
         Harmonic04 = sources[4];
+        RedBlink = sources[5];
     }
 
     // Update is called once per frame
@@ -103,7 +105,7 @@ public class GuetterGuetApen : MonoBehaviour
 
     public void Play_BlinkRed_Sound()
     {
-        OpenEye.Play();
+        RedBlink.Play();
     }
 
     public void Play_KillMode_Sound()
@@ -149,16 +151,16 @@ public class GuetterGuetApen : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            if (!OpenEyeOnceAnimation)
-            {
-                animator.SetBool("OpenEye", true);
-                if (isLastPrefab)
-                {
-                    print("LightUpSequence");
-                    guetteurSpawner.LightUpSequence();
-                }
-                OpenEyeOnceAnimation = true;
-            }
+            /* if (!OpenEyeOnceAnimation)
+             {
+                 animator.SetBool("OpenEye", true);
+                 if (isLastPrefab)
+                 {
+                     print("LightUpSequence");
+                     guetteurSpawner.LightUpSequence();
+                 }
+                 OpenEyeOnceAnimation = true;
+             }*/
         }
     }
 
@@ -170,6 +172,14 @@ public class GuetterGuetApen : MonoBehaviour
             print("LightUpSequence");
             guetteurSpawner.LightUpSequence();
         }
+    }
+
+    public void ActivatBlinkRed()
+    {
+
+        animator.SetBool("BlinkRed", true);
+        Play_BlinkRed_Sound();
+
     }
 
     // Assign unique ID to each instance
