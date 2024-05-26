@@ -14,6 +14,8 @@ public class GlowingAttack : MonoBehaviour
     private AudioSource impactSound;
     public GameObject MainCamera;
 
+    public GameObject GuetteurSpawner;
+
     public float offseteffect = 1f;
 
     bool impactSoundPlayed = false;
@@ -23,6 +25,8 @@ public class GlowingAttack : MonoBehaviour
     bool floorbuttonOnce = true;
 
     public GameObject InsideUsineSpotLight01; // Reference to the other GameObject to rotate
+
+    bool calledGuetteurOpenEye = false;
 
 
 
@@ -67,7 +71,7 @@ public class GlowingAttack : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         //Debug.Log("LIGHT");
-        if (other.tag == "sunFlowers")
+        if (other.CompareTag("sunFlowers"))
         {
             //AudioSource[] sources = this.gameObject.GetComponents<AudioSource>();
             //sources[0].Play();
@@ -77,7 +81,7 @@ public class GlowingAttack : MonoBehaviour
             //this.gameObject.tag = "Lamp";
         }
 
-        if (other.tag == "falling")
+        if (other.CompareTag("falling"))
         {
             //AudioSource[] sources = this.gameObject.GetComponents<AudioSource>();
             //sources[0].Play();
@@ -95,7 +99,7 @@ public class GlowingAttack : MonoBehaviour
             //this.gameObject.tag = "Lamp";
         }
 
-        if (other.tag == "reverseSnare")
+        if (other.CompareTag("reverseSnare"))
         {
             //AudioSource[] sources = this.gameObject.GetComponents<AudioSource>();
             //sources[0].Play();
@@ -104,7 +108,7 @@ public class GlowingAttack : MonoBehaviour
             //this.gameObject.tag = "Lamp";
         }
 
-        if (other.tag == "MoveSphere")
+        if (other.CompareTag("MoveSphere"))
         {
             //AudioSource[] sources = this.gameObject.GetComponents<AudioSource>();
             //sources[0].Play();
@@ -123,13 +127,51 @@ public class GlowingAttack : MonoBehaviour
         }
 
 
-        if (other.tag == "floorbutton")
+        if (other.CompareTag("floorbutton"))
         {
             if (floorbuttonOnce)
             {
                 StartCoroutine(lauchShakeEffect(1.6f));
                 floorbuttonOnce = false;
             }
+        }
+
+        if (other.CompareTag("specialPadButton"))
+        {
+            CallGuetteur();
+
+        }
+    }
+
+    void CallGuetteur()
+    {
+        if (GuetteurSpawner != null)
+        {
+            GuetteurSpawner guetteurSpawner = GuetteurSpawner.GetComponent<GuetteurSpawner>();
+            if (guetteurSpawner != null)
+            {
+                //set target to limuleTunnel
+                //target.fovTargetThree += 20f;
+                if (!calledGuetteurOpenEye)
+                {
+                    guetteurSpawner.TurnONEveryGuetteur();
+                    print("TurnedONGuetteur");
+                    calledGuetteurOpenEye = true;
+                }
+                guetteurSpawner.LaunchHarmonicForAll(1.3f);
+
+
+
+
+            }
+            else
+            {
+                Debug.LogError("GuetteurSpawner component not found on GuetteurSpawner GameObject.");
+            }
+        }
+        else
+        {
+            Debug.LogError("GuetteurSpawner GameObject is null.");
         }
     }
 

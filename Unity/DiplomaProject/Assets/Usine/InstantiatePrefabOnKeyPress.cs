@@ -138,7 +138,7 @@ public class InstantiatePrefabOnKeyPress : MonoBehaviour
             if (selectedAudioSource != null)
             {
                 selectedAudioSource.Play();
-                Debug.Log("Playing sound: " + selectedAudioSource.clip.name); // Print the name of the played audio clip
+                //Debug.Log("Playing sound: " + selectedAudioSource.clip.name); // Print the name of the played audio clip
                 currentIndex++; // Move to the next index for the next frame
             }
             else

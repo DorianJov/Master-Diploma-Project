@@ -14,7 +14,9 @@ public class DelayedFollower : MonoBehaviour
 
     private float currentDelay;
 
-    public bool canInteractWithTige = true;
+    public bool canChangeDelay = true;
+
+    public bool tigeScene = true;
 
     bool ismoving = false;
 
@@ -60,18 +62,26 @@ public class DelayedFollower : MonoBehaviour
         }
 
         // Check if the follower is at the target position
-        if (IsAtTargetPosition())
+        if (tigeScene)
         {
-            this.gameObject.tag = "FollowerNoTrigger";
-            ismoving = false;
-            // Add logic to be executed when the follower is at the target position
-            Debug.Log("Follower is at the target position");
+            if (IsAtTargetPosition())
+            {
+                this.gameObject.tag = "FollowerNoTrigger";
+                ismoving = false;
+                // Add logic to be executed when the follower is at the target position
+                //Debug.Log("Follower is at the target position");
+            }
+            else
+            {
+                this.gameObject.tag = "Player";
+                //Debug.Log("ismoving");
+                ismoving = true;
+            }
+
         }
         else
         {
             this.gameObject.tag = "Player";
-            Debug.Log("ismoving");
-            ismoving = true;
         }
     }
 
@@ -84,18 +94,25 @@ public class DelayedFollower : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (canInteractWithTige)
+        if (canChangeDelay)
         {
             if (ismoving)
             {
                 if (other.CompareTag("tigeInsideUsine"))
                 {
+                    tigeScene = true;
                     //TouchedWall++;
-                    //print("Should change delay");
+                    print("Should change delay");
                     delay = Random.Range(0.1f, 10f);
                     //smoothTransitionSpeed = Random.Range(0.1f, 5f);
                 }
             }
+        }
+
+        if (other.CompareTag("secondfloorbutton"))
+        {
+            tigeScene = false;
+            canChangeDelay = true;
         }
     }
 }

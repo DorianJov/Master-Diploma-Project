@@ -148,7 +148,7 @@ public class TigeInsideUsine : MonoBehaviour
                 //myParticleSystem.Play();
                 PlayRandomAudio();
                 //myParticleSystem.Play();
-                Debug.Log("ENTER");
+                //Debug.Log("ENTER");
                 active = true;
                 StartCoroutine(LookAtSmoothly(target));
                 //StartCoroutine(LookAtSmoothly(target, xPercentage, yPercentage, zPercentage));
@@ -199,11 +199,11 @@ public class TigeInsideUsine : MonoBehaviour
             // Play the audio clip at the randomly selected index
             sources[randomIndex].Play();
             // Print the name of the currently played audio clip
-            Debug.Log("Playing audio: " + sources[randomIndex].clip.name);
+            //Debug.Log("Playing audio: " + sources[randomIndex].clip.name);
         }
         else
         {
-            Debug.LogWarning("No AudioSource components found on this GameObject.");
+            //Debug.LogWarning("No AudioSource components found on this GameObject.");
         }
     }
 

@@ -644,7 +644,7 @@ public class MoveSphereTunnel : MonoBehaviour
         UpdateDelayIncrement(incrementation);
 
 
-        Debug.Log("delay applystopped");
+        //Debug.Log("delay applystopped");
     }
 
     // Function to update the delay increment
@@ -658,7 +658,8 @@ public class MoveSphereTunnel : MonoBehaviour
             DelayedFollower delayedFollower = followers[i].GetComponent<DelayedFollower>();
             if (delayedFollower != null)
             {
-                delayedFollower.canInteractWithTige = true;
+
+                delayedFollower.canChangeDelay = true;
                 delayedFollower.delay = (i + 1) * delayIncrement;
                 delayedFollower.smoothTransitionSpeed = 5f;
             }
@@ -676,7 +677,7 @@ public class MoveSphereTunnel : MonoBehaviour
             DelayedFollower delayedFollower = followers[i].GetComponent<DelayedFollower>();
             if (delayedFollower != null)
             {
-                delayedFollower.canInteractWithTige = false;
+                delayedFollower.canChangeDelay = false;
                 delayedFollower.delay = (i + 1) * delayIncrement;
                 delayedFollower.smoothTransitionSpeed = 5f;
             }

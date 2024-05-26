@@ -9,7 +9,7 @@ public class floorbuttSpawner : MonoBehaviour
     public float zIncrement = 0.7f; // Fixed increment for Z position
     public Vector2 xRange = new Vector2(1, 3); // Random range for X position increment
     public AudioClip[] audioClips; // Array to hold audio clips
-
+    int rawcounter = 0;
     void Start()
     {
         if (audioClips.Length == 0)
@@ -33,8 +33,18 @@ public class floorbuttSpawner : MonoBehaviour
 
         for (int i = 0; i < totalPrefabs; i++)
         {
-            // Calculate the new position for the prefab
             float randomXIncrement = Random.Range(xRange.x, xRange.y) * rowCount;
+            if (i % prefabsPerRow == 0)
+            {
+                rawcounter++;
+            }
+
+            if (rawcounter % 3 == 0)
+            {
+                randomXIncrement = 0.45f * rowCount;
+            }
+            // Calculate the new position for the prefab
+
             float newX = startPosition.x + randomXIncrement;
             float newZ = startPosition.z + (i % prefabsPerRow) * zIncrement;
             Vector3 newPosition = new Vector3(newX, startPosition.y, newZ);

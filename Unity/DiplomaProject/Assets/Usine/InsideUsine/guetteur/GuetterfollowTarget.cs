@@ -43,7 +43,7 @@ public class GuetterfollowTarget : MonoBehaviour
 
 
 
-        if (other.CompareTag("Player"))
+        /*if (other.CompareTag("Player"))
         {
             if (once)
             {
@@ -54,6 +54,6 @@ public class GuetterfollowTarget : MonoBehaviour
                 once = false;
             }
 
-        }
+        }*/
     }
 }
