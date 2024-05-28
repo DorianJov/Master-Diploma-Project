@@ -47,7 +47,14 @@ public class GuetteurSpawner : MonoBehaviour
 
             // Instantiate the prefab at the calculated position with the specified rotation
             GameObject guetteurPrefab = Instantiate(prefabToSpawn, newPosition, rotation, this.transform);
-            guetteurPrefab.GetComponent<GuetterGuetApen>().SetID(i); // Assign a unique ID
+            if (i != numberOfPrefabs - 1)
+            {
+                guetteurPrefab.GetComponent<GuetterGuetApen>().SetID(i, false); // Assign a unique ID
+            }
+            else
+            {
+                guetteurPrefab.GetComponent<GuetterGuetApen>().SetID(i, true); // Assign a unique ID
+            }
             spawnedGuetteur.Add(guetteurPrefab); // Store reference to the spawned prefab
         }
     }
@@ -231,6 +238,45 @@ public class GuetteurSpawner : MonoBehaviour
         }
         print("coroutine ended: AH");
     }
+
+    public void CallAllBlinkRed()
+    {
+        CallAllBlinkRedPrefabs();
+    }
+
+    private void CallAllBlinkRedPrefabs()
+    {
+        for (int i = spawnedGuetteur.Count - 1; i >= 0; i--)
+        {
+            GuetterGuetApen script = spawnedGuetteur[i].GetComponent<GuetterGuetApen>();
+            if (script != null)
+            {
+                script.ActivatBlinkRed();
+            }
+        }
+    }
+
+
+    public void CallKillMode()
+    {
+        StartCoroutine(ActivateKillModeSequentially());
+    }
+
+    private IEnumerator ActivateKillModeSequentially()
+    {
+        for (int i = spawnedGuetteur.Count - 1; i >= 0; i--)
+        {
+            GuetterGuetApen script = spawnedGuetteur[i].GetComponent<GuetterGuetApen>();
+            if (script != null)
+            {
+                yield return new WaitForSeconds(2.5f);
+                script.LetsGoKillMode();
+            }
+        }
+        print("coroutine ended: AH");
+    }
+
+
 
 
 

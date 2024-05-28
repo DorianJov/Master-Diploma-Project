@@ -20,11 +20,13 @@ public class DelayedFollower : MonoBehaviour
 
     bool ismoving = false;
 
+
     void Start()
     {
         positionHistory = new Queue<Vector3>();
         timeHistory = new Queue<float>();
         currentDelay = delay;
+        smoothTransitionSpeed = 0.1f;
     }
 
     void Update()
@@ -85,6 +87,7 @@ public class DelayedFollower : MonoBehaviour
         }
     }
 
+
     private bool IsAtTargetPosition()
     {
         Vector3 targetPositionWithOffset = target.position;
@@ -102,9 +105,9 @@ public class DelayedFollower : MonoBehaviour
                 {
                     tigeScene = true;
                     //TouchedWall++;
-                    print("Should change delay");
+                    print("Should change delay-Once");
                     delay = Random.Range(0.1f, 10f);
-                    //smoothTransitionSpeed = Random.Range(0.1f, 5f);
+                    smoothTransitionSpeed = Random.Range(0.1f, 0.05f);
                 }
             }
         }

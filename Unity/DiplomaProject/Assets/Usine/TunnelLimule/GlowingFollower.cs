@@ -105,6 +105,12 @@ public class GlowingFollower : MonoBehaviour
         hitfloor.Play();
     }
 
+    public void Play_Sync_Sound()
+    {
+        playAnim(true);
+        hitfloor.Play();
+    }
+
     private void OnTriggerExit(Collider other)
     {
         if (FollowerWithLightComponent)

@@ -4962,6 +4962,10 @@ MonoBehaviour:
   target: {fileID: 0}
   delay: 0.1
   zOffset: 0.5
+  smoothTransitionSpeed: 0.1
+  positionTolerance: 0.001
+  canChangeDelay: 1
+  tigeScene: 1
 --- !u!114 &8669548883594054866
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4976,6 +4980,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MainCamera: {fileID: 0}
   FollowerWithLightComponent: 1
+  TimeToPlaySoundAgain: 0.1
 --- !u!54 &4966191372169246771
 Rigidbody:
   m_ObjectHideFlags: 0

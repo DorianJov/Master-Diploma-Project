@@ -570,6 +570,14 @@ public class MoveSphereTunnel : MonoBehaviour
 
     }
 
+    public void LimuleIsFalling()
+    {
+        //dev = false;
+        //falling = true;
+        //LimuleCanMoveFreely = false;
+        m_Rigidbody.useGravity = true;
+    }
+
     IEnumerator turnOFFLightIn(float seconds)
     {
         // wait for 1 second
@@ -691,6 +699,26 @@ public class MoveSphereTunnel : MonoBehaviour
                 delayedFollower.smoothTransitionSpeed = 5f;
             }
         }
+
+        Play_My_Sync_Sound();
+        StartCoroutine(PlayDelayIncrementSound(newDelayIncrement));
+    }
+
+    IEnumerator PlayDelayIncrementSound(float newDelayIncrement)
+    {
+
+
+        // Update the delay for each follower
+        for (int i = 0; i < followers.Count; i++)
+        {
+            GlowingFollower glowingFollower = followers[i].GetComponent<GlowingFollower>();
+            if (glowingFollower != null)
+            {
+                yield return new WaitForSeconds(newDelayIncrement);
+                glowingFollower.Play_Sync_Sound();
+
+            }
+        }
     }
 
     public void UpdateDelayIncrementRandom(float min, float max)
@@ -717,6 +745,13 @@ public class MoveSphereTunnel : MonoBehaviour
         animator.SetBool("PlayAnimShort", true);
         StartCoroutine(turnOFFLightIn(0.05f));
 
+    }
+
+    public void Play_My_Sync_Sound()
+    {
+        limulemaxSpeedSound.Play();
+        animator.SetBool("PlayAnimShort", true);
+        StartCoroutine(turnOFFLightIn(0.05f));
     }
 
 }

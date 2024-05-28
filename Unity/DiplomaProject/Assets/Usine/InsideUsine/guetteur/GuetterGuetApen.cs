@@ -13,14 +13,17 @@ public class GuetterGuetApen : MonoBehaviour
     AudioSource Harmonic03;
     AudioSource Harmonic04;
 
+    AudioSource KillMode;
+
     GuetteurSpawner guetteurSpawner;
+    private MoveSphereTunnel moveSphereTunnelScript;
 
     private Animator animator;
     private bool playedOpenEyeOnce = false;
     private bool OpenEyeOnceAnimation = false;
     private bool isChosen = false; // Flag to determine if this prefab is the chosen one
 
-    private bool isLastPrefab = false; // Flag to determine if this prefab is the last one
+    public bool isLastPrefab = false; // Flag to determine if this prefab is the last one
 
     int myID = 0;
 
@@ -28,6 +31,7 @@ public class GuetterGuetApen : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
         animator = GetComponent<Animator>();
         guetteurSpawner = GetComponentInParent<GuetteurSpawner>();
         sources = GetComponents<AudioSource>();
@@ -37,6 +41,7 @@ public class GuetterGuetApen : MonoBehaviour
         Harmonic03 = sources[3];
         Harmonic04 = sources[4];
         RedBlink = sources[5];
+        KillMode = sources[6];
     }
 
     // Update is called once per frame
@@ -106,11 +111,75 @@ public class GuetterGuetApen : MonoBehaviour
     public void Play_BlinkRed_Sound()
     {
         RedBlink.Play();
+        CallresetLimuleIncrementation();
     }
 
-    public void Play_KillMode_Sound()
+    public void KillMode_Sound()
     {
-        OpenEye.Play();
+        KillMode.Play();
+    }
+
+    public void LetsGoKillMode()
+    {
+        animator.SetBool("KillMode", true);
+        //CallCameraShake();
+        //deactivateKillMode.
+        StartCoroutine(DeactiveKillModeIn(1.5f));
+    }
+
+    private void CallresetLimuleIncrementation()
+    {
+        GameObject limuleTunnel = GameObject.Find("LimuleTunnel");
+        if (limuleTunnel != null)
+        {
+            moveSphereTunnelScript = limuleTunnel.GetComponent<MoveSphereTunnel>();
+            if (moveSphereTunnelScript != null)
+            {
+                moveSphereTunnelScript.ResetDelayIncrement(0.1f);
+                moveSphereTunnelScript.LimuleIsFalling();
+            }
+            else
+            {
+                Debug.LogError("MoveSphereTunnel script not found on the limuleTunnel GameObject.");
+            }
+        }
+        else
+        {
+            Debug.LogError("limuleTunnel GameObject not found.");
+        }
+
+    }
+
+    private void CallRandomLimuleIncrementation()
+    {
+        GameObject limuleTunnel = GameObject.Find("LimuleTunnel");
+        if (limuleTunnel != null)
+        {
+            moveSphereTunnelScript = limuleTunnel.GetComponent<MoveSphereTunnel>();
+            if (moveSphereTunnelScript != null)
+            {
+                moveSphereTunnelScript.UpdateDelayIncrementRandom(0.1f, 5f);
+            }
+            else
+            {
+                Debug.LogError("MoveSphereTunnel script not found on the limuleTunnel GameObject.");
+            }
+        }
+        else
+        {
+            Debug.LogError("limuleTunnel GameObject not found.");
+        }
+
+    }
+
+    private IEnumerator DeactiveKillModeIn(float Seconds)
+    {
+        yield return new WaitForSeconds(Seconds);
+        animator.SetBool("KillMode", false);
+
+        //KillMode.Stop();
+
+
     }
 
     public void LaunchHarmonic(float timeToLaunch)
@@ -131,6 +200,11 @@ public class GuetterGuetApen : MonoBehaviour
     {
         //print("Guetteur IS BLINK White");
         animator.SetBool("BlinkWhite", true);
+        if (myID == 0)
+        {
+            CallRandomLimuleIncrementation();
+        }
+
 
     }
 
@@ -174,24 +248,42 @@ public class GuetterGuetApen : MonoBehaviour
         }
     }
 
+    public void ActivatALLBlinkRed()
+    {
+        if (myID == 0)
+        {
+            Play_BlinkRed_Sound();
+            CallresetLimuleIncrementation();
+            guetteurSpawner.CallAllBlinkRed();
+        }
+    }
+
+    public void ActivatKillMode()
+    {
+        if (myID == 0)
+        {
+            guetteurSpawner.CallKillMode();
+        }
+    }
+
+
     public void ActivatBlinkRed()
     {
-
         animator.SetBool("BlinkRed", true);
-        Play_BlinkRed_Sound();
-
+        CallCameraShake();
     }
 
     // Assign unique ID to each instance
-    public void SetID(int id)
+    public void SetID(int id, bool AmILast)
     {
         myID = id;
         gameObject.name = "Guetteur_" + id;
-        if (id == 9) // Assuming the last prefab has the ID of 0
-        {
-            isLastPrefab = true;
-        }
+        isLastPrefab = AmILast;
+        print("Guetteur_ID" + id + "AmILast ?: " + AmILast);
+
     }
+
+
 
     // Mark as chosen one
     public void SetChosen(bool chosen)
