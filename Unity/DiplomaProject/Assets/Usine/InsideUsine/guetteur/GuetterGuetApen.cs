@@ -86,7 +86,7 @@ public class GuetterGuetApen : MonoBehaviour
             if (randomHarmonic != null)
             {
                 randomHarmonic.Play();
-                CallCameraShake();
+                CallCameraShake(0);
             }
             else
             {
@@ -95,12 +95,19 @@ public class GuetterGuetApen : MonoBehaviour
         }
     }
 
-    public void CallCameraShake()
+    public void CallCameraShake(int whichShake)
     {
 
         if (guetteurSpawner != null)
         {
-            guetteurSpawner.CameraShake();
+            if (whichShake == 0)
+            {
+                guetteurSpawner.CameraShake();
+            }
+            else
+            {
+                guetteurSpawner.CameraShakeToNewOffset();
+            }
         }
         else
         {
@@ -253,6 +260,7 @@ public class GuetterGuetApen : MonoBehaviour
         if (myID == 0)
         {
             Play_BlinkRed_Sound();
+            CallCameraShake(1);
             CallresetLimuleIncrementation();
             guetteurSpawner.CallAllBlinkRed();
         }
@@ -270,7 +278,7 @@ public class GuetterGuetApen : MonoBehaviour
     public void ActivatBlinkRed()
     {
         animator.SetBool("BlinkRed", true);
-        CallCameraShake();
+
     }
 
     // Assign unique ID to each instance

@@ -837,7 +837,7 @@ ParticleSystem:
     boxThickness: {x: 0, y: 0, z: 0}
     radiusThickness: 1
     donutRadius: 0.2
-    m_Position: {x: 0, y: 0, z: 9.03}
+    m_Position: {x: 0, y: 0, z: 6.12}
     m_Rotation: {x: 0, y: 0, z: 0}
     m_Scale: {x: 2.1, y: 1.08, z: 7.96}
     placementMode: 0
@@ -1768,7 +1768,7 @@ ParticleSystem:
     z:
       serializedVersion: 2
       minMaxState: 0
-      scalar: -1
+      scalar: -3
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -4944,7 +4944,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 257
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10758, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 0e38de9389e6263498731cc91fb20678, type: 2}
   - {fileID: 2100000, guid: bb6ae12f2237e7f4493d72617a1678f7, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0

@@ -29,6 +29,8 @@ public class MoveSphereTunnel : MonoBehaviour
 
     private tunnelLimuleSpawn tunnelLimuleSpawnScript;
 
+    public ParticlesInsideUsine particlesInsideUsine;
+
 
 
     ParticleSystem myParticleSystem;
@@ -75,6 +77,12 @@ public class MoveSphereTunnel : MonoBehaviour
     bool smoothTransitionPlayed = false;
 
     bool triggerColliderMoveSphereOnce = true;
+
+    bool canJump = false;
+
+    float lastSpeed = 0f;
+
+    bool limuleIsJumpingPhase = false;
 
 
     [Header("Followers")]
@@ -177,9 +185,14 @@ public class MoveSphereTunnel : MonoBehaviour
 
         }
 
-        if (LimuleCanMoveFreely || dev)
+        if (LimuleCanMoveFreely & !limuleIsJumpingPhase || dev & !limuleIsJumpingPhase)
         {
             MoveSphere();
+        }
+
+        if (limuleIsJumpingPhase)
+        {
+            LimuleJumping();
         }
 
         //print("acceleration: " + Acceleration);
@@ -511,6 +524,106 @@ public class MoveSphereTunnel : MonoBehaviour
         movementYAudio.volume = volume2;
 
         //Debug.Log("Current Speed: " + Speed);
+        lastSpeed = Speed;
+    }
+
+
+    void LimuleJumping()
+    {
+        //dev power
+        if (Input.GetMouseButton(0))
+        {
+            // Your code here to handle the left mouse button being held down
+            MaxSpeed = 2f;
+            Debug.Log("Left mouse button is being held down.");
+        }
+        else
+        {
+            //MaxSpeed = 0.3f;
+        }
+
+        Acceleration = 10f;
+        Deceleration = 5f;
+
+        if (!smoothTransitionPlayed)
+        {
+            m_Rigidbody.useGravity = false;
+            Speed2 = -0.05f;
+            smoothTransitionPlayed = true;
+        }
+
+
+        if (Speed != 0 || Speed2 != 0)
+        {
+            emissionModule.enabled = true;
+        }
+        else
+        {
+            emissionModule.enabled = false;
+
+        }
+
+
+        if (Input.GetKeyUp("a") || Input.GetKeyUp("d"))
+        {
+            canJump = true;
+        }
+        if (Input.GetKey("a") & canJump)
+        {
+            if (Speed >= -0.1f)
+            {
+                Speed = -0.8f;
+                Speed2 = 0.7f;
+                canJump = false;
+            }
+
+        }
+        else if (Input.GetKey("d") & canJump)
+        {
+            if (Speed <= 0.1f)
+            {
+                Speed = 0.8f;
+                Speed2 = 0.7f;
+                canJump = false;
+            }
+
+        }
+
+        else
+        {
+            if (Speed > Deceleration * Time.deltaTime) Speed -= Deceleration * Time.deltaTime;
+            else if (Speed < -Deceleration * Time.deltaTime) Speed += Deceleration * Time.deltaTime;
+            else
+                Speed = 0;
+
+        }
+
+
+        if (Speed2 > Deceleration * Time.deltaTime) Speed2 -= Deceleration * Time.deltaTime;
+        else if (Speed2 < -Deceleration * Time.deltaTime) Speed2 += Deceleration * Time.deltaTime;
+        else
+            Speed2 = 0;
+
+        Vector3 controlKeysMovement = new(Speed * Time.deltaTime * dashSpeed, Speed2 * Time.deltaTime * dashSpeed, 0f);
+        m_Rigidbody.MovePosition(transform.position += controlKeysMovement);
+
+
+        m_Rigidbody.MovePosition(transform.position += transform.right * Mathf.Sin(speedUpDown * Time.time) * Time.deltaTime * distanceUpDown);
+        m_Rigidbody.MovePosition(transform.position += transform.up * Mathf.Sin(speedUpDownUP * Time.time) * Time.deltaTime * distanceUpDownUP);
+
+
+        m_Rigidbody.velocity = Vector3.zero;
+
+
+        // Map the current speed to the volume of the audio
+        float volume = Mathf.Lerp(minVolume, maxVolume, Mathf.InverseLerp(minSpeed, maxSpeed, Mathf.Abs(Speed)));
+        float volume2 = Mathf.Lerp(minVolume, maxVolume, Mathf.InverseLerp(minSpeed, maxSpeed, Mathf.Abs(Speed2)));
+
+        // Set the volume of the audio source
+        movementXAudio.volume = volume;
+        movementYAudio.volume = volume2;
+
+        //Debug.Log("Current Speed: " + Speed);
     }
 
     void OnTriggerEnter(Collider other)
@@ -575,7 +688,14 @@ public class MoveSphereTunnel : MonoBehaviour
         //dev = false;
         //falling = true;
         //LimuleCanMoveFreely = false;
+        //
+
         m_Rigidbody.useGravity = true;
+        particlesInsideUsine.SetVelocityOverLifetimeY(-3.0f); // Example to set Y velocity to 5.0
+        particlesInsideUsine.DeactivateEmission(); // Deactivate emission
+        Speed = lastSpeed * 5;
+        Speed2 = -2f;
+        limuleIsJumpingPhase = true;
     }
 
     IEnumerator turnOFFLightIn(float seconds)

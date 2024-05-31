@@ -205,6 +205,63 @@ public class GuetteurSpawner : MonoBehaviour
 
     }
 
+    public void CameraShakeToNewOffset()
+    {
+
+        if (MainCamera != null)
+        {
+            CameraFollow target = MainCamera.GetComponent<CameraFollow>();
+            if (target != null)
+            {
+                //set target to limuleTunnel
+                //target.fovTransitionDuration = 2f;
+                //target.fovTargetThree += 20f;
+                //target.smoothSpeed2 = 0.05f;
+                //target.offset = new Vector3(0.12f, 0.01f, -1.37f);
+                target.offset = new Vector3(-0.41f, 0.05f, -1.37f);
+                target.CallSmoothSpeed2Transition(2f, 0.2f, 4f);
+                target.SmoothTransitionRotation(Quaternion.Euler(-8.37f, 0f, 0f), 15f);
+                //StartCoroutine(ChangeOffset(5f));
+            }
+            else
+            {
+                Debug.LogError("CameraFollow component not found on pinceObject.");
+            }
+        }
+        else
+        {
+            Debug.LogError("MainCamera is null.");
+        }
+
+    }
+
+
+    IEnumerator ChangeOffset(float delay)
+    {
+        // Wait for the specified delay
+        yield return new WaitForSeconds(delay);
+        CameraFollow target = MainCamera.GetComponent<CameraFollow>();
+        target.smoothSpeed2 = 2f;
+
+
+        //target.offset = new Vector3(0.12f, 0.01f, -1.37f - offseteffect / 10);
+        //target.SmoothTransitionRotation(Quaternion.Euler(-8.37f, 0f, 0f), 5f);
+        target.SmoothTransitionRotation(Quaternion.Euler(-8.37f, 0f, 0f), 5f);
+        target.offset = new Vector3(0.12f, 0.01f, -1.37f);
+        StartCoroutine(ChangeOffsetAndRotation(1f));
+        //target.transform.rotation = Quaternion.Euler(-8.37f, 0f, 0f);
+    }
+
+    IEnumerator ChangeOffsetAndRotation(float delay)
+    {
+        // Wait for the specified delay
+        yield return new WaitForSeconds(delay);
+        CameraFollow target = MainCamera.GetComponent<CameraFollow>();
+        target.smoothSpeed2 = 0.2f;
+        target.SwitchCamTarget(3);
+        target.offset = new Vector3(-0.41f, 0.01f, -1.37f);
+    }
+
     IEnumerator restoreOffset(float delay)
     {
         // Wait for the specified delay

@@ -99,31 +99,10 @@ public class CameraFollow : MonoBehaviour
 
     void FollowTarget(Transform target, float smoothSpeed)
     {
-        //before setting x max position
-
-        /*Vector3 desiredPosition = target.position + offset;
-        // Add the zOffset to the desired position's z-coordinate
-        desiredPosition.z += zOffset;
-        // Clamp the desired position along the Y-axis
-        desiredPosition.y = Mathf.Clamp(desiredPosition.y, minY, maxY);
-
-        Vector3 smoothedPosition = Vector3.SmoothDamp(transform.position, desiredPosition, ref velocity, smoothSpeed);
-        transform.position = smoothedPosition;
-        */
-
-        //after setting x max pos
-
         Vector3 desiredPosition = target.position + offset;
         // Add the zOffset to the desired position's z-coordinate
         desiredPosition.z += zOffset;
 
-        /* //before try changing for negatives values
-            // Clamp the desired position along the Y-axis
-            desiredPosition.y = Mathf.Clamp(desiredPosition.y, minY, maxY);
-            // Clamp the desired position along the X-axis
-            desiredPosition.x = Mathf.Clamp(desiredPosition.x, minX, maxX); // Add this line
-            
-    */
         // Check if Y values are negative
         if (minY < 0 && maxY < 0)
         {
@@ -147,8 +126,6 @@ public class CameraFollow : MonoBehaviour
             // Clamp the desired position along the X-axis for positive values
             desiredPosition.x = Mathf.Clamp(desiredPosition.x, minX, maxX);
         }
-
-
 
         Vector3 smoothedPosition = Vector3.SmoothDamp(transform.position, desiredPosition, ref velocity, smoothSpeed);
         transform.position = smoothedPosition;
@@ -180,10 +157,50 @@ public class CameraFollow : MonoBehaviour
         this.smoothSpeed = endSpeed;
     }
 
+    public void CallSmoothSpeed2Transition(float startSpeed, float endSpeed, float duration)
+    {
+        StartCoroutine(SmoothSpeed2Transition(startSpeed, endSpeed, duration)); // Start speed: 1, End speed: 0.125, Duration: 1 second
+    }
+
+    IEnumerator SmoothSpeed2Transition(float startSpeed, float endSpeed, float duration)
+    {
+        float elapsedTime = 0f;
+        while (elapsedTime < duration)
+        {
+            float smoothSpeed2 = Mathf.Lerp(startSpeed, endSpeed, elapsedTime / duration);
+            this.smoothSpeed2 = smoothSpeed2;
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        // Ensure the smoothSpeed is set to the end value after the duration
+        this.smoothSpeed2 = endSpeed;
+    }
+
 
     void SmoothTransitionFOV(float targetFOV)
     {
         Camera.main.fieldOfView = Mathf.Lerp(Camera.main.fieldOfView, targetFOV, Time.deltaTime / fovTransitionDuration);
+    }
+
+    public void SmoothTransitionRotation(Quaternion targetRotation, float duration)
+    {
+        StartCoroutine(SmoothRotationCoroutine(targetRotation, duration));
+    }
+
+    private IEnumerator SmoothRotationCoroutine(Quaternion targetRotation, float duration)
+    {
+        Quaternion initialRotation = transform.rotation;
+        float timeElapsed = 0f;
+
+        while (timeElapsed < duration)
+        {
+            transform.rotation = Quaternion.Slerp(initialRotation, targetRotation, timeElapsed / duration);
+            timeElapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.rotation = targetRotation;
+        //smoothSpeed2 = 0.2f;
     }
 
     private void controlFOV()
