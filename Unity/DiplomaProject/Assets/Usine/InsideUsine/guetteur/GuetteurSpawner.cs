@@ -11,6 +11,7 @@ public class GuetteurSpawner : MonoBehaviour
     private List<GameObject> spawnedGuetteur = new List<GameObject>(); // List to store references to spawned prefabs
     private GameObject chosenPrefab; // Reference to the chosen prefab
 
+    public ScreenEffects screenEffects;
     public GameObject MainCamera;
 
     AudioSource[] sources;
@@ -205,6 +206,35 @@ public class GuetteurSpawner : MonoBehaviour
 
     }
 
+    public void CameraShakeTransition()
+    {
+
+        if (MainCamera != null)
+        {
+            CameraFollow target = MainCamera.GetComponent<CameraFollow>();
+            if (target != null)
+            {
+                //set target to limuleTunnel
+                target.fovTransitionDuration = 2f;
+                //target.fovTargetThree += 20f;
+                target.smoothSpeed2 = 0.05f;
+                target.offset = new Vector3(0.12f, 0.3f - offseteffect / 10, -1.37f - offseteffect / 10);
+                StartCoroutine(waitEndShakeAndCallNewOffset(0.1f));
+                //change ListenerPosition:
+
+            }
+            else
+            {
+                Debug.LogError("CameraFollow component not found on pinceObject.");
+            }
+        }
+        else
+        {
+            Debug.LogError("MainCamera is null.");
+        }
+
+    }
+
     public void CameraShakeToNewOffset()
     {
 
@@ -235,31 +265,64 @@ public class GuetteurSpawner : MonoBehaviour
 
     }
 
+    public void CallCameraVibrationFromSpawner()
+    {
+
+        if (MainCamera != null)
+        {
+            CameraFollow target = MainCamera.GetComponent<CameraFollow>();
+            if (target != null)
+            {
+                target.ShakeCamera(1.5f, 0.005f);
+            }
+            else
+            {
+                Debug.LogError("CameraFollow component not found on pinceObject.");
+            }
+        }
+        else
+        {
+            Debug.LogError("MainCamera is null.");
+        }
+
+    }
+
+    public void CallChangeActiveListener()
+    {
+
+        if (MainCamera != null)
+        {
+            CameraFollow target = MainCamera.GetComponent<CameraFollow>();
+            target.SwitchListener();
+        }
+        else
+        {
+            Debug.LogError("MainCamera is null.");
+        }
+
+    }
+
 
     IEnumerator ChangeOffset(float delay)
     {
         // Wait for the specified delay
         yield return new WaitForSeconds(delay);
-        CameraFollow target = MainCamera.GetComponent<CameraFollow>();
-        target.smoothSpeed2 = 2f;
+        CameraShakeToNewOffset();
 
-
-        //target.offset = new Vector3(0.12f, 0.01f, -1.37f - offseteffect / 10);
-        //target.SmoothTransitionRotation(Quaternion.Euler(-8.37f, 0f, 0f), 5f);
-        target.SmoothTransitionRotation(Quaternion.Euler(-8.37f, 0f, 0f), 5f);
-        target.offset = new Vector3(0.12f, 0.01f, -1.37f);
-        StartCoroutine(ChangeOffsetAndRotation(1f));
         //target.transform.rotation = Quaternion.Euler(-8.37f, 0f, 0f);
     }
 
-    IEnumerator ChangeOffsetAndRotation(float delay)
+    IEnumerator waitEndShakeAndCallNewOffset(float delay)
     {
         // Wait for the specified delay
         yield return new WaitForSeconds(delay);
         CameraFollow target = MainCamera.GetComponent<CameraFollow>();
-        target.smoothSpeed2 = 0.2f;
-        target.SwitchCamTarget(3);
-        target.offset = new Vector3(-0.41f, 0.01f, -1.37f);
+        target.smoothSpeed2 = 0.05f;
+        target.offset = new Vector3(0.12f, 0.3f, -1.37f);
+        StartCoroutine(ChangeOffset(0.3f));
+        //StartCoroutine(testfalling(0.2f));
+        //target.offset = new Vector3(0, 0.1f, -1.37f);
+
     }
 
     IEnumerator restoreOffset(float delay)
@@ -277,6 +340,7 @@ public class GuetteurSpawner : MonoBehaviour
 
     public void LightUpSequence()
     {
+        CallChangeActiveListener();
         StartCoroutine(LightUpPrefabsSequentially());
     }
 
@@ -299,6 +363,14 @@ public class GuetteurSpawner : MonoBehaviour
     public void CallAllBlinkRed()
     {
         CallAllBlinkRedPrefabs();
+        CallJitterPostEffect();
+
+    }
+
+    private void CallJitterPostEffect()
+    {
+        screenEffects.ActivateJumpPostEffect(0.1f, 0.1f);
+
     }
 
     private void CallAllBlinkRedPrefabs()
@@ -326,7 +398,7 @@ public class GuetteurSpawner : MonoBehaviour
             GuetterGuetApen script = spawnedGuetteur[i].GetComponent<GuetterGuetApen>();
             if (script != null)
             {
-                yield return new WaitForSeconds(2.5f);
+                yield return new WaitForSeconds(2f);
                 script.LetsGoKillMode();
             }
         }

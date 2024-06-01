@@ -24,6 +24,8 @@ public class GlowingFollower : MonoBehaviour
 
     bool playtwoTimesFloor = true;
 
+
+
     void Start()
     {
         //Get default Parameters
@@ -34,8 +36,9 @@ public class GlowingFollower : MonoBehaviour
         endTunnel = audios[3];
         impactSound = audios[4];
         hitfloor = audios[5];
-    }
 
+
+    }
 
     private void OnTriggerEnter(Collider other)
     {

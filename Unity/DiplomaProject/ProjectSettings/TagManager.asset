@@ -22,6 +22,7 @@ TagManager:
   - tigeInsideUsine
   - FollowerNoTrigger
   - InsideUsineFloor
+  - Guetteur
   layers:
   - Default
   - TransparentFX

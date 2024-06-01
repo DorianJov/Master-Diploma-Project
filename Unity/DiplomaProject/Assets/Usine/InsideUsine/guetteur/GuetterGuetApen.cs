@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Data.Common;
 using UnityEditor.ShaderGraph.Drawing.Inspector.PropertyDrawers;
 using UnityEngine;
 
@@ -14,6 +15,8 @@ public class GuetterGuetApen : MonoBehaviour
     AudioSource Harmonic04;
 
     AudioSource KillMode;
+
+    AudioSource KillModeAmbiant;
 
     GuetteurSpawner guetteurSpawner;
     private MoveSphereTunnel moveSphereTunnelScript;
@@ -42,6 +45,12 @@ public class GuetterGuetApen : MonoBehaviour
         Harmonic04 = sources[4];
         RedBlink = sources[5];
         KillMode = sources[6];
+        KillModeAmbiant = sources[7];
+        if (myID == 0)
+        {
+            KillModeAmbiant.Play();
+            KillModeAmbiant.Stop();
+        }
     }
 
     // Update is called once per frame
@@ -106,7 +115,7 @@ public class GuetterGuetApen : MonoBehaviour
             }
             else
             {
-                guetteurSpawner.CameraShakeToNewOffset();
+                guetteurSpawner.CameraShakeTransition();
             }
         }
         else
@@ -118,7 +127,13 @@ public class GuetterGuetApen : MonoBehaviour
     public void Play_BlinkRed_Sound()
     {
         RedBlink.Play();
-        CallresetLimuleIncrementation();
+        //CallresetLimuleIncrementation();
+    }
+
+    public void Play_KillAmbiant_Sound()
+    {
+        KillModeAmbiant.Play();
+        //CallresetLimuleIncrementation();
     }
 
     public void KillMode_Sound()
@@ -132,6 +147,20 @@ public class GuetterGuetApen : MonoBehaviour
         //CallCameraShake();
         //deactivateKillMode.
         StartCoroutine(DeactiveKillModeIn(1.5f));
+        CallCameraVibration();
+    }
+
+    public void CallCameraVibration()
+    {
+
+        if (guetteurSpawner != null)
+        {
+            guetteurSpawner.CallCameraVibrationFromSpawner();
+        }
+        else
+        {
+            Debug.LogError("guetteurSpawner is null");
+        }
     }
 
     private void CallresetLimuleIncrementation()
@@ -142,8 +171,33 @@ public class GuetterGuetApen : MonoBehaviour
             moveSphereTunnelScript = limuleTunnel.GetComponent<MoveSphereTunnel>();
             if (moveSphereTunnelScript != null)
             {
-                moveSphereTunnelScript.ResetDelayIncrement(0.1f);
+                //moveSphereTunnelScript.ResetDelayIncrement(0.1f);
+                //moveSphereTunnelScript.ResetDelay(0.1f);
                 moveSphereTunnelScript.LimuleIsFalling();
+            }
+            else
+            {
+                Debug.LogError("MoveSphereTunnel script not found on the limuleTunnel GameObject.");
+            }
+        }
+        else
+        {
+            Debug.LogError("limuleTunnel GameObject not found.");
+        }
+
+    }
+
+    private void CallLimulefollowerRESET()
+    {
+        GameObject limuleTunnel = GameObject.Find("LimuleTunnel");
+        if (limuleTunnel != null)
+        {
+            moveSphereTunnelScript = limuleTunnel.GetComponent<MoveSphereTunnel>();
+            if (moveSphereTunnelScript != null)
+            {
+                //moveSphereTunnelScript.ResetDelayIncrement(0.1f);
+                moveSphereTunnelScript.ResetDelay(0f);
+                //moveSphereTunnelScript.LimuleIsFalling();
             }
             else
             {
@@ -209,7 +263,8 @@ public class GuetterGuetApen : MonoBehaviour
         animator.SetBool("BlinkWhite", true);
         if (myID == 0)
         {
-            CallRandomLimuleIncrementation();
+            //CallresetLimuleIncrementation();
+            CallLimulefollowerRESET();
         }
 
 
@@ -260,6 +315,7 @@ public class GuetterGuetApen : MonoBehaviour
         if (myID == 0)
         {
             Play_BlinkRed_Sound();
+            Play_KillAmbiant_Sound();
             CallCameraShake(1);
             CallresetLimuleIncrementation();
             guetteurSpawner.CallAllBlinkRed();

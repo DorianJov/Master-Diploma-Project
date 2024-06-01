@@ -28,6 +28,11 @@ public class ScreenEffects : MonoBehaviour
     public float minBloomThresholdIntensity = 4.13f;
     public float maxBloomThresholdIntensity = 0f;
 
+    [Header("Jump")]
+
+    public float minJumpIntensity = 0.026f;
+    public float maxJumpIntensity = 10f;
+
     [Header("Shake")]
     public MoveTrashBox MoveTrashBox;
 
@@ -87,6 +92,32 @@ public class ScreenEffects : MonoBehaviour
         //print("CACA");
         //StartCoroutine(ShakeCamera(0.1f, 0.2f));
         //glitch.shake.Override(1f);
+    }
+
+    public void ActivateJumpPostEffect(float start, float duration)
+    {
+        if (glitch != null)
+        {
+            StartCoroutine(GlitchEffectCoroutine(start, duration));
+        }
+    }
+
+    private IEnumerator GlitchEffectCoroutine(float start, float duration)
+    {
+        float timeElapsed = 0f;
+
+        while (timeElapsed < duration)
+        {
+            // Lerp the jitter value from start to 0 over the duration
+            glitch.jump.Override(Mathf.Lerp(start, 0, timeElapsed / duration));
+            glitch.jitter.Override(Mathf.Lerp(start, 0, timeElapsed / duration));
+            timeElapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        // Ensure the jitter is set to 0 after the duration
+        glitch.jump.Override(0);
+        glitch.jitter.Override(0);
     }
 
     float Map(float value, float inMin, float inMax, float outMin, float outMax)

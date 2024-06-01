@@ -96,6 +96,7 @@ public class MoveSphereTunnel : MonoBehaviour
     [Header("Teleport Inside Usine")]
     public bool dev = false;
 
+    bool calledOnceRandomDelayLimule = false;
 
 
     void Start()
@@ -192,6 +193,11 @@ public class MoveSphereTunnel : MonoBehaviour
 
         if (limuleIsJumpingPhase)
         {
+            if (!calledOnceRandomDelayLimule)
+            {
+                UpdateDelayForGuetteurScene(0.1f, 5f);
+                calledOnceRandomDelayLimule = true;
+            }
             LimuleJumping();
         }
 
@@ -572,9 +578,9 @@ public class MoveSphereTunnel : MonoBehaviour
         {
             if (Speed >= -0.1f)
             {
-                Speed = -0.8f;
-                Speed2 = 0.7f;
-                canJump = false;
+                //Speed = -1f;
+                //Speed2 = 0.5f;
+                //canJump = false;
             }
 
         }
@@ -582,8 +588,13 @@ public class MoveSphereTunnel : MonoBehaviour
         {
             if (Speed <= 0.1f)
             {
-                Speed = 0.8f;
+                //Speed = 0.8f;
+                //Speed2 = 0.7f;
+                //canJump = false;
+
+                Speed = 0.9f;
                 Speed2 = 0.7f;
+
                 canJump = false;
             }
 
@@ -677,6 +688,7 @@ public class MoveSphereTunnel : MonoBehaviour
             //TouchedWall++;
 
             ResetDelayIncrement(0.1f);
+            //ResetDelay(0.01f);
 
         }
 
@@ -689,12 +701,13 @@ public class MoveSphereTunnel : MonoBehaviour
         //falling = true;
         //LimuleCanMoveFreely = false;
         //
-
+        //ResetDelay(0.01f);
         m_Rigidbody.useGravity = true;
         particlesInsideUsine.SetVelocityOverLifetimeY(-3.0f); // Example to set Y velocity to 5.0
         particlesInsideUsine.DeactivateEmission(); // Deactivate emission
-        Speed = lastSpeed * 5;
+        Speed = lastSpeed * 2;
         Speed2 = -2f;
+
         limuleIsJumpingPhase = true;
     }
 
@@ -715,6 +728,13 @@ public class MoveSphereTunnel : MonoBehaviour
         {
             // Instantiate the prefab
             GameObject follower = Instantiate(limuleFollowerPrefab, transform.position, transform.rotation);
+
+            // Create a new material instance for each renderer in the follower
+            Renderer[] renderers = follower.GetComponentsInChildren<Renderer>();
+            foreach (Renderer rend in renderers)
+            {
+                rend.material = new Material(rend.material);
+            }
 
             // Set the delay for the DelayedFollower script
             DelayedFollower delayedFollower = follower.GetComponent<DelayedFollower>();
@@ -742,17 +762,12 @@ public class MoveSphereTunnel : MonoBehaviour
 
             if (glowingFollower != null)
             {
-                //last follwershould have the first delay increment value which is 0.1
-                //float initialTimeToPlaySound = (numberOfFollowers - i) * delayIncrement + 0.1f + (i * 0.1f);
+                // Last follower should have the first delay increment value which is 0.1
                 float initialTimeToPlaySound = (numberOfFollowers - i) * delayIncrement + 0.1f - (i * 0.05f);
-
-
-
-                //float initialTimeToPlaySound = (numberOfFollowers - i) * delayIncrement + 0.1f + (i * 0.1f);
 
                 glowingFollower.TimeToPlaySoundAgain = initialTimeToPlaySound;
 
-                // Deactivate the light component and "make me glow" script after the 5th follower
+                // Deactivate the light component and "make me glow" script after the 12th follower
                 if (i >= 12)
                 {
                     Light lightComponent = follower.GetComponentInChildren<Light>();
@@ -762,13 +777,14 @@ public class MoveSphereTunnel : MonoBehaviour
                     }
 
                     glowingFollower.FollowerWithLightComponent = false;
-
                 }
             }
+
             // Add the follower to the list
             followers.Add(follower);
         }
     }
+
 
 
 
@@ -824,6 +840,26 @@ public class MoveSphereTunnel : MonoBehaviour
         StartCoroutine(PlayDelayIncrementSound(newDelayIncrement));
     }
 
+    public void ResetDelay(float newDelayIncrement)
+    {
+        delayIncrement = newDelayIncrement;
+
+        // Update the delay for each follower
+        for (int i = 0; i < followers.Count; i++)
+        {
+            DelayedFollower delayedFollower = followers[i].GetComponent<DelayedFollower>();
+            if (delayedFollower != null)
+            {
+                delayedFollower.canChangeDelay = false;
+                delayedFollower.delay = delayIncrement;
+                delayedFollower.smoothTransitionSpeed = 5f;
+            }
+        }
+
+        Play_My_Sync_Sound();
+        StartCoroutine(PlayDelayIncrementSound(newDelayIncrement));
+    }
+
     IEnumerator PlayDelayIncrementSound(float newDelayIncrement)
     {
 
@@ -851,6 +887,28 @@ public class MoveSphereTunnel : MonoBehaviour
             {
                 delayedFollower.delay = Random.Range(min, max);
                 delayedFollower.smoothTransitionSpeed = 0.1f;
+            }
+        }
+    }
+
+    public void UpdateDelayForGuetteurScene(float min, float max)
+    {
+        // Update the delay for each follower with a random value within the range
+        for (int i = 0; i < followers.Count; i++)
+        {
+            DelayedFollower delayedFollower = followers[i].GetComponent<DelayedFollower>();
+            if (delayedFollower != null)
+            {
+                if (i == 0)
+                {
+                    delayedFollower.delay = 2f;
+                    delayedFollower.smoothTransitionSpeed = 0.1f;
+                }
+                else
+                {
+                    delayedFollower.delay = Random.Range(min, max);
+                    delayedFollower.smoothTransitionSpeed = 0.1f;
+                }
             }
         }
     }
