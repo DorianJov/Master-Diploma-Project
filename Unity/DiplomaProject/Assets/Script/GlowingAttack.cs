@@ -15,6 +15,7 @@ public class GlowingAttack : MonoBehaviour
     public GameObject MainCamera;
 
     public GameObject GuetteurSpawner;
+    public GameObject FloorButSpawner;
 
     public float offseteffect = 1f;
 
@@ -28,7 +29,7 @@ public class GlowingAttack : MonoBehaviour
 
     bool calledGuetteurOpenEye = false;
 
-    bool calledGuetteurOnce = false;
+    public bool calledGuetteurOnce = false;
 
 
     void Start()
@@ -67,6 +68,30 @@ public class GlowingAttack : MonoBehaviour
 
 
 
+    }
+
+    public void ResetCamera()
+    {
+        // Check if pinceObject is not null and has the pinceScript component
+        if (MainCamera != null)
+        {
+            CameraFollow target = MainCamera.GetComponent<CameraFollow>();
+            if (target != null)
+            {
+                target.StoprotationCoroutine();
+                target.transform.rotation = Quaternion.Euler(7.85f, 0f, 0f);
+                target.applyoffsetOnceTarget3 = true;
+                //target.SmoothTransitionRotation(Quaternion.Euler(7.85f, 0f, 0f), 0.1f);
+            }
+            else
+            {
+                Debug.LogError("CameraFollow component not found on pinceObject.");
+            }
+        }
+        else
+        {
+            Debug.LogError("MainCamera is null.");
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -171,6 +196,50 @@ public class GlowingAttack : MonoBehaviour
                 guetteurSpawner.LaunchHarmonicForAll(1.1f);
 
 
+            }
+            else
+            {
+                Debug.LogError("GuetteurSpawner component not found on GuetteurSpawner GameObject.");
+            }
+        }
+        else
+        {
+            Debug.LogError("GuetteurSpawner GameObject is null.");
+        }
+    }
+
+    public void CallResetFloorPadButts()
+    {
+        if (FloorButSpawner != null)
+        {
+            floorbuttSpawner floorButSpawner = FloorButSpawner.GetComponent<floorbuttSpawner>();
+            if (FloorButSpawner != null)
+            {
+
+                floorButSpawner.ResetAllButtons();
+
+            }
+            else
+            {
+                Debug.LogError("GuetteurSpawner component not found on GuetteurSpawner GameObject.");
+            }
+        }
+        else
+        {
+            Debug.LogError("GuetteurSpawner GameObject is null.");
+        }
+    }
+
+    public void CallKillAllGuetteurAndReset()
+    {
+        if (GuetteurSpawner != null)
+        {
+            GuetteurSpawner guetteurSpawner = GuetteurSpawner.GetComponent<GuetteurSpawner>();
+            if (guetteurSpawner != null)
+            {
+                guetteurSpawner.KillAllGuetteursAndRespawn();
+                //resetlistener as well
+                guetteurSpawner.CallChangeActiveListener(1);
             }
             else
             {

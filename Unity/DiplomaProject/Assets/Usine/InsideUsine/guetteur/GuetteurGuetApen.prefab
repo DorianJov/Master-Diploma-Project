@@ -199,7 +199,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 0
   serializedVersion: 3
-  m_Size: {x: 1, y: 1.59, z: 16.18}
+  m_Size: {x: 1.5, y: 2.71, z: 16.18}
   m_Center: {x: 0, y: 0, z: 6.1}
 --- !u!198 &4074214242788954360
 ParticleSystem:
@@ -5874,7 +5874,7 @@ Light:
   m_RenderingLayerMask: 1
   m_Lightmapping: 1
   m_LightShadowCasterMode: 2
-  m_AreaSize: {x: 0.99, y: 0.63}
+  m_AreaSize: {x: 1.14, y: 0.63}
   m_BounceIntensity: 1
   m_ColorTemperature: 1500
   m_UseColorTemperature: 1
@@ -5908,7 +5908,7 @@ MonoBehaviour:
   m_AffectDiffuse: 1
   m_AffectSpecular: 1
   m_NonLightmappedOnly: 0
-  m_ShapeWidth: 0.99
+  m_ShapeWidth: 1.14
   m_ShapeHeight: 0.63
   m_AspectRatio: 1.4
   m_ShapeRadius: 0.025

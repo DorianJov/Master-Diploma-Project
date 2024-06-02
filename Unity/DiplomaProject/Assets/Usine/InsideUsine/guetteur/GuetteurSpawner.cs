@@ -22,6 +22,8 @@ public class GuetteurSpawner : MonoBehaviour
 
     public float offseteffect = 1f;
 
+    private Coroutine activateKillModeCoroutine;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -90,7 +92,7 @@ public class GuetteurSpawner : MonoBehaviour
         GuetterGuetApen script = randomGuetteurPrefab.GetComponent<GuetterGuetApen>();
         if (script != null)
         {
-            print("Harmonic will Launch From Spawner");
+            //print("Harmonic will Launch From Spawner");
             script.LaunchHarmonic(timeTolaunch);
         }
         else
@@ -112,7 +114,7 @@ public class GuetteurSpawner : MonoBehaviour
             GuetterGuetApen script = guetteurPrefab.GetComponent<GuetterGuetApen>();
             if (script != null)
             {
-                print("Harmonic will Launch From Spawner");
+                //print("Harmonic will Launch From Spawner");
                 script.LaunchHarmonic(timeToLaunch);
             }
             else
@@ -121,15 +123,41 @@ public class GuetteurSpawner : MonoBehaviour
             }
         }
     }
+
+    public void KillAllGuetteursAndRespawn()
+    {
+        StopCallKillModeCoroutine();
+        if (spawnedGuetteur.Count == 0)
+        {
+            Debug.LogError("No prefabs have been spawned.");
+            return;
+        }
+
+        foreach (GameObject guetteurPrefab in spawnedGuetteur)
+        {
+            GuetterGuetApen script = guetteurPrefab.GetComponent<GuetterGuetApen>();
+            if (script != null)
+            {
+                script.KillMe();
+            }
+            else
+            {
+                Debug.LogError("GuetterGuetApen script not found on the prefab.");
+            }
+        }
+        spawnedGuetteur.Clear();
+        SpawnPrefabs();
+        ChooseRandomPrefab();
+    }
     public void callTurnONEveryGuetteurRoutine(float seconds)
     {
         StartCoroutine(TurnONEveryGuetteurIN(seconds));
     }
     public IEnumerator TurnONEveryGuetteurIN(float seconds)
     {
-        print("OpenEye In progress");
+        //print("OpenEye In progress");
         yield return new WaitForSeconds(seconds);
-        print("OpenEye Openened");
+        //print("OpenEye Openened");
         TurnONEveryGuetteur();
     }
 
@@ -146,7 +174,7 @@ public class GuetteurSpawner : MonoBehaviour
             GuetterGuetApen script = guetteurPrefab.GetComponent<GuetterGuetApen>();
             if (script != null)
             {
-                print("Harmonic will Launch From Spawner");
+                //print("Harmonic will Launch From Spawner");
                 script.TurnONOpenEye();
             }
             else
@@ -169,7 +197,7 @@ public class GuetteurSpawner : MonoBehaviour
             GuetterGuetApen script = guetteurPrefab.GetComponent<GuetterGuetApen>();
             if (script != null)
             {
-                print("Harmonic will Launch From Spawner");
+                //print("Harmonic will Launch From Spawner");
                 script.ResetAnimationVariables();
             }
             else
@@ -287,13 +315,13 @@ public class GuetteurSpawner : MonoBehaviour
 
     }
 
-    public void CallChangeActiveListener()
+    public void CallChangeActiveListener(int index)
     {
 
         if (MainCamera != null)
         {
             CameraFollow target = MainCamera.GetComponent<CameraFollow>();
-            target.SwitchListener();
+            target.SwitchListener(index);
         }
         else
         {
@@ -340,7 +368,7 @@ public class GuetteurSpawner : MonoBehaviour
 
     public void LightUpSequence()
     {
-        CallChangeActiveListener();
+        CallChangeActiveListener(2);
         StartCoroutine(LightUpPrefabsSequentially());
     }
 
@@ -357,7 +385,7 @@ public class GuetteurSpawner : MonoBehaviour
                 script.TurnONOpenEye();
             }
         }
-        print("coroutine ended: AH");
+        //print("coroutine ended: AH");
     }
 
     public void CallAllBlinkRed()
@@ -370,6 +398,7 @@ public class GuetteurSpawner : MonoBehaviour
     private void CallJitterPostEffect()
     {
         screenEffects.ActivateJumpPostEffect(0.1f, 0.1f);
+
 
     }
 
@@ -388,7 +417,18 @@ public class GuetteurSpawner : MonoBehaviour
 
     public void CallKillMode()
     {
-        StartCoroutine(ActivateKillModeSequentially());
+        //StartCoroutine(ActivateKillModeSequentially());
+        // Start the new rotation coroutine and store the reference
+        activateKillModeCoroutine = StartCoroutine(ActivateKillModeSequentially());
+    }
+
+    public void StopCallKillModeCoroutine()
+    {
+        if (activateKillModeCoroutine != null)
+        {
+            StopCoroutine(activateKillModeCoroutine);
+            activateKillModeCoroutine = null;
+        }
     }
 
     private IEnumerator ActivateKillModeSequentially()
@@ -402,7 +442,7 @@ public class GuetteurSpawner : MonoBehaviour
                 script.LetsGoKillMode();
             }
         }
-        print("coroutine ended: AH");
+        //print("coroutine ended: AH");
     }
 
 

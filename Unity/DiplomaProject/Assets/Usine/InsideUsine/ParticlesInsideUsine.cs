@@ -25,7 +25,7 @@ public class ParticlesInsideUsine : MonoBehaviour
             yVelocityCurve.constant = newYVelocity;
             velocityOverLifetime.y = yVelocityCurve;
 
-            Debug.Log($"Velocity over lifetime Y set to: {newYVelocity}");
+            //Debug.Log($"Velocity over lifetime Y set to: {newYVelocity}");
         }
     }
 
@@ -36,7 +36,18 @@ public class ParticlesInsideUsine : MonoBehaviour
             var emission = myParticleSystem.emission;
             emission.enabled = false;
 
-            Debug.Log("Particle emission deactivated.");
+            //Debug.Log("Particle emission deactivated.");
+        }
+    }
+
+    public void ActivateEmission()
+    {
+        if (myParticleSystem != null)
+        {
+            var emission = myParticleSystem.emission;
+            emission.enabled = true;
+
+            //Debug.Log("Particle emission deactivated.");
         }
     }
 }

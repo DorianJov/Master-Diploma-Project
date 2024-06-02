@@ -57,4 +57,10 @@ public class Floorbuttpad : MonoBehaviour
         //this.gameObject.tag = "Lamp";
     }
 
+    public void resetMyState()
+    {
+        Once = true;
+        animator.SetBool("turnColor", false);
+    }
+
 }

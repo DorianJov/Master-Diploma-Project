@@ -27,7 +27,7 @@ public class CameraFollow : MonoBehaviour
     public float fovTransitionDuration = 0.5f; // Duration of FOV transition
     float fovValueAnim = 0f;
     bool animationFOV = false;
-    bool applyoffsetOnceTarget3 = true;
+    public bool applyoffsetOnceTarget3 = true;
 
     // Variables for shaking effect
     private Vector3 originalPosition;
@@ -35,6 +35,8 @@ public class CameraFollow : MonoBehaviour
     private float shakeMagnitude = 0f;
 
     private AudioListenerControl audioListenerControl;
+
+    private Coroutine rotationCoroutine;
 
 
     private void Start()
@@ -110,11 +112,18 @@ public class CameraFollow : MonoBehaviour
     }
 
     // Example method to switch to Listener01
-    public void SwitchListener()
+    public void SwitchListener(int index)
     {
         if (audioListenerControl != null)
         {
-            audioListenerControl.SetActiveListener("Listener02");
+            if (index == 2)
+            {
+                audioListenerControl.SetActiveListener("Listener02");
+            }
+            else
+            {
+                audioListenerControl.SetActiveListener("Listener01");
+            }
         }
     }
 
@@ -201,7 +210,18 @@ public class CameraFollow : MonoBehaviour
 
     public void SmoothTransitionRotation(Quaternion targetRotation, float duration)
     {
-        StartCoroutine(SmoothRotationCoroutine(targetRotation, duration));
+        //StartCoroutine(SmoothRotationCoroutine(targetRotation, duration));
+        // Start the new rotation coroutine and store the reference
+        rotationCoroutine = StartCoroutine(SmoothRotationCoroutine(targetRotation, duration));
+    }
+
+    public void StoprotationCoroutine()
+    {
+        if (rotationCoroutine != null)
+        {
+            StopCoroutine(rotationCoroutine);
+            rotationCoroutine = null;
+        }
     }
 
     private IEnumerator SmoothRotationCoroutine(Quaternion targetRotation, float duration)

@@ -13,6 +13,8 @@ public class ScreenEffects : MonoBehaviour
     private Glitch glitch;
     private Bloom bloom;
 
+    private ChromaticAberration chromaticAberration;
+
     [Header("DarkillonsDistance")]
     public float minDarkillonsDistance = 0.12f;
     public float maxDarkillonsDistance = 0.4f;
@@ -44,6 +46,12 @@ public class ScreenEffects : MonoBehaviour
         volume = GetComponent<Volume>();
         volume.profile.TryGet(out glitch);
         volume.profile.TryGet(out bloom);
+        volume.profile.TryGet(out chromaticAberration);
+
+        bloom.threshold.Override(4.13f);
+        bloom.intensity.Override(0.026f);
+        glitch.drift.Override(0);
+        glitch.jitter.Override(0);
 
     }
 
@@ -79,10 +87,10 @@ public class ScreenEffects : MonoBehaviour
         }
         else
         {
-            bloom.threshold.Override(4.13f);
+            /*bloom.threshold.Override(4.13f);
             bloom.intensity.Override(0.026f);
             glitch.drift.Override(0);
-            glitch.jitter.Override(0);
+            glitch.jitter.Override(0);*/
         }
 
     }
@@ -99,6 +107,7 @@ public class ScreenEffects : MonoBehaviour
         if (glitch != null)
         {
             StartCoroutine(GlitchEffectCoroutine(start, duration));
+            jitterfunction();
         }
     }
 
@@ -110,14 +119,23 @@ public class ScreenEffects : MonoBehaviour
         {
             // Lerp the jitter value from start to 0 over the duration
             glitch.jump.Override(Mathf.Lerp(start, 0, timeElapsed / duration));
-            glitch.jitter.Override(Mathf.Lerp(start, 0, timeElapsed / duration));
+            //glitch.jitter.Override(Mathf.Lerp(start, 0, timeElapsed / duration));
             timeElapsed += Time.deltaTime;
             yield return null;
         }
 
         // Ensure the jitter is set to 0 after the duration
         glitch.jump.Override(0);
-        glitch.jitter.Override(0);
+        //glitch.jitter.Override(0);
+    }
+
+    void jitterfunction()
+    {
+        //glitch.jump.Override(0.01f);
+        //glitch.jitter.Override(0.05f);
+        //chromaticAberration.intensity.Override(1f);
+
+
     }
 
     float Map(float value, float inMin, float inMax, float outMin, float outMax)

@@ -1,4 +1,4 @@
-using Unity.VisualScripting;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class floorbuttSpawner : MonoBehaviour
@@ -10,6 +10,8 @@ public class floorbuttSpawner : MonoBehaviour
     public Vector2 xRange = new Vector2(1, 3); // Random range for X position increment
     public AudioClip[] audioClips; // Array to hold audio clips
     int rawcounter = 0;
+
+    private List<GameObject> instantiatedPrefabs = new List<GameObject>();
     void Start()
     {
         if (audioClips.Length == 0)
@@ -69,15 +71,27 @@ public class floorbuttSpawner : MonoBehaviour
                 }
 
             }
-
-
-
-
+            // Add the instantiated prefab to the list
+            instantiatedPrefabs.Add(newPrefab);
 
             // Increment rowCount when a row is filled
             if ((i + 1) % prefabsPerRow == 0)
             {
                 rowCount++;
+            }
+        }
+    }
+
+    public void ResetAllButtons()
+    {
+        //print("RESETALLBUTT WAS CALLED");
+        // Call resetMyState() on all instantiated prefabs
+        foreach (GameObject prefab in instantiatedPrefabs)
+        {
+            Floorbuttpad floorbuttpad = prefab.GetComponent<Floorbuttpad>();
+            if (floorbuttpad != null)
+            {
+                floorbuttpad.resetMyState();
             }
         }
     }

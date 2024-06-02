@@ -1,7 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Data.Common;
-using UnityEditor.ShaderGraph.Drawing.Inspector.PropertyDrawers;
 using UnityEngine;
 
 public class GuetterGuetApen : MonoBehaviour
@@ -143,11 +141,16 @@ public class GuetterGuetApen : MonoBehaviour
 
     public void LetsGoKillMode()
     {
-        animator.SetBool("KillMode", true);
-        //CallCameraShake();
-        //deactivateKillMode.
-        StartCoroutine(DeactiveKillModeIn(1.5f));
-        CallCameraVibration();
+        if (animator != null)
+        {
+            animator.SetBool("KillMode", true);
+
+            //CallCameraShake();
+            //deactivateKillMode.
+            StartCoroutine(DeactiveKillModeIn(1.5f));
+
+            CallCameraVibration();
+        }
     }
 
     public void CallCameraVibration()
@@ -236,7 +239,11 @@ public class GuetterGuetApen : MonoBehaviour
     private IEnumerator DeactiveKillModeIn(float Seconds)
     {
         yield return new WaitForSeconds(Seconds);
-        animator.SetBool("KillMode", false);
+        if (animator != null)
+        {
+            animator.SetBool("KillMode", false);
+            StartCoroutine(ChangeActiveListenerIN(2f));
+        }
 
         //KillMode.Stop();
 
@@ -272,8 +279,13 @@ public class GuetterGuetApen : MonoBehaviour
 
     public void TurnONOpenEye()
     {
-        print("IM LUNCH OpenEye:" + myID);
+        //print("IM LUNCH OpenEye:" + myID);
         animator.SetBool("OpenEye", true);
+    }
+
+    public void KillMe()
+    {
+        Destroy(gameObject);
     }
 
     public void ResetAnimationVariables()
@@ -305,7 +317,7 @@ public class GuetterGuetApen : MonoBehaviour
     {
         if (isLastPrefab)
         {
-            print("LightUpSequence");
+            //print("LightUpSequence");
             guetteurSpawner.LightUpSequence();
         }
     }
@@ -343,8 +355,30 @@ public class GuetterGuetApen : MonoBehaviour
         myID = id;
         gameObject.name = "Guetteur_" + id;
         isLastPrefab = AmILast;
-        print("Guetteur_ID" + id + "AmILast ?: " + AmILast);
+        //print("Guetteur_ID" + id + "AmILast ?: " + AmILast);
 
+    }
+
+    public void ChangeListennerPosition()
+    {
+        if (myID == 0)
+        {
+            if (guetteurSpawner != null)
+            {
+                guetteurSpawner.CallChangeActiveListener(1);
+            }
+            else
+            {
+                Debug.LogError("guetteurSpawner is null");
+            }
+        }
+
+    }
+
+    IEnumerator ChangeActiveListenerIN(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        ChangeListennerPosition();
     }
 
 

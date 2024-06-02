@@ -31,13 +31,14 @@ public class MoveSphereTunnel : MonoBehaviour
 
     public ParticlesInsideUsine particlesInsideUsine;
 
+    private GlowingAttack glowingAttack;
 
 
-    ParticleSystem myParticleSystem;
+
+    public ParticleSystem myParticleSystem;
     ParticleSystem.EmissionModule emissionModule;
-
-    ParticleSystem myParticleSystem2;
-    ParticleSystem.EmissionModule emissionModule2;
+    ParticleSystem.EmissionModule emissiondeathParticles;
+    public ParticleSystem deathParticles;
 
     [Header("Audio Parameters")]
     // Define minimum and maximum speeds for the audio volume mapping
@@ -97,6 +98,7 @@ public class MoveSphereTunnel : MonoBehaviour
     public bool dev = false;
 
     bool calledOnceRandomDelayLimule = false;
+    AudioSource[] audios;
 
 
     void Start()
@@ -110,15 +112,16 @@ public class MoveSphereTunnel : MonoBehaviour
             Debug.LogError("tunnelLimuleSpawn script not found on the same GameObject.");
         }
 
-
+        glowingAttack = GetComponent<GlowingAttack>();
         // Get the system and the emission module.
-        myParticleSystem = GetComponentInChildren<ParticleSystem>();
+        //myParticleSystem = GetComponentInChildren<ParticleSystem>();
         emissionModule = myParticleSystem.emission;
+        emissiondeathParticles = deathParticles.emission;
         //var emission = ps.emission;
         animator = GetComponentInChildren<Animator>();
 
-        myParticleSystem2 = GetComponent<ParticleSystem>();
-        AudioSource[] audios = GetComponents<AudioSource>();
+        //myParticleSystem2 = GetComponent<ParticleSystem>();
+        audios = GetComponents<AudioSource>();
         movementXAudio = audios[0];
         movementYAudio = audios[1];
         AccerelationTunnelAudio = audios[4];
@@ -412,6 +415,7 @@ public class MoveSphereTunnel : MonoBehaviour
 
     void MoveSphere()
     {
+        print("MoveSphere");
         //dev power
         if (Input.GetMouseButton(0))
         {
@@ -536,6 +540,12 @@ public class MoveSphereTunnel : MonoBehaviour
 
     void LimuleJumping()
     {
+        print("LIMULEJUMNPING");
+        if (Input.GetKeyUp("a") || Input.GetKeyUp("d"))
+        {
+
+        }
+
         //dev power
         if (Input.GetMouseButton(0))
         {
@@ -576,7 +586,7 @@ public class MoveSphereTunnel : MonoBehaviour
         }
         if (Input.GetKey("a") & canJump)
         {
-            if (Speed >= -0.1f)
+            if (Speed >= -0.005f)
             {
                 //Speed = -1f;
                 //Speed2 = 0.5f;
@@ -586,13 +596,13 @@ public class MoveSphereTunnel : MonoBehaviour
         }
         else if (Input.GetKey("d") & canJump)
         {
-            if (Speed <= 0.1f)
+            if (Speed <= 0.005f)
             {
                 //Speed = 0.8f;
                 //Speed2 = 0.7f;
                 //canJump = false;
 
-                Speed = 0.9f;
+                Speed = 1f;
                 Speed2 = 0.7f;
 
                 canJump = false;
@@ -635,6 +645,7 @@ public class MoveSphereTunnel : MonoBehaviour
         movementYAudio.volume = volume2;
 
         //Debug.Log("Current Speed: " + Speed);
+
     }
 
     void OnTriggerEnter(Collider other)
@@ -692,7 +703,21 @@ public class MoveSphereTunnel : MonoBehaviour
 
         }
 
+        if (other.CompareTag("Guetteur"))
+        {
+            TurnOnDeathParticles();
+            PlayRandomDyingSound();
+            StartCoroutine(WaitBeforeRespawn(2f));
 
+        }
+
+
+    }
+
+    IEnumerator WaitBeforeRespawn(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        KillAllFollowersForRespawn();
     }
 
     public void LimuleIsFalling()
@@ -702,13 +727,14 @@ public class MoveSphereTunnel : MonoBehaviour
         //LimuleCanMoveFreely = false;
         //
         //ResetDelay(0.01f);
+        limuleIsJumpingPhase = true;
         m_Rigidbody.useGravity = true;
         particlesInsideUsine.SetVelocityOverLifetimeY(-3.0f); // Example to set Y velocity to 5.0
         particlesInsideUsine.DeactivateEmission(); // Deactivate emission
         Speed = lastSpeed * 2;
         Speed2 = -2f;
 
-        limuleIsJumpingPhase = true;
+
     }
 
     IEnumerator turnOFFLightIn(float seconds)
@@ -913,6 +939,47 @@ public class MoveSphereTunnel : MonoBehaviour
         }
     }
 
+    public void KillAllFollowersForRespawn()
+    {
+        // Update the delay for each follower with a random value within the range
+        for (int i = 0; i < followers.Count; i++)
+        {
+            DelayedFollower delayedFollower = followers[i].GetComponent<DelayedFollower>();
+            if (delayedFollower != null)
+            {
+                delayedFollower.KillMeNow();
+            }
+        }
+        transform.position = new Vector3(1.7534f, -4.768f, 0.996f);
+
+
+        //deathParticles.Stop();
+        emissiondeathParticles.enabled = false;
+        emissionModule.enabled = true;
+        m_Rigidbody.useGravity = false;
+        limuleIsJumpingPhase = false;
+        canJump = false;
+        calledOnceRandomDelayLimule = false;
+        particlesInsideUsine.SetVelocityOverLifetimeY(0); // Example to set Y velocity to 5.0
+        particlesInsideUsine.ActivateEmission();
+        ResetCamera();
+        glowingAttack.CallKillAllGuetteurAndReset();
+        glowingAttack.CallResetFloorPadButts();
+        glowingAttack.calledGuetteurOnce = false;
+        // Clear the list
+        followers.Clear();
+
+        SpawnFollowers();
+        UpdateDelayIncrementRandom(0.1f, 10f);
+
+    }
+
+    void ResetCamera()
+    {
+        glowingAttack.ResetCamera();
+
+    }
+
     IEnumerator playHitfloorAgainIn(float seconds)
     {
         yield return new WaitForSeconds(seconds);
@@ -932,7 +999,34 @@ public class MoveSphereTunnel : MonoBehaviour
         StartCoroutine(turnOFFLightIn(0.05f));
     }
 
+    public void TurnOnDeathParticles()
+    {
+        deathParticles.Play();
+        emissiondeathParticles.enabled = true;
+
+    }
+
+
+    public void PlayRandomDyingSound()
+    {
+
+        // Randomly select an index between 10 and 12
+        int randomIndex = Random.Range(10, 13); // Range is inclusive for the lower bound and exclusive for the upper bound
+
+        // Play the selected audio source
+        if (audios[randomIndex] != null)
+        {
+            audios[randomIndex].Play();
+        }
+        else
+        {
+            Debug.LogWarning($"Audio source at index {randomIndex} is null.");
+        }
+
+    }
 }
+
+
 
 
 

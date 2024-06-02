@@ -17,7 +17,7 @@ public class DelayedFollower : MonoBehaviour
 
     public bool canChangeDelay = true;
 
-    public bool tigeScene = true;
+    private bool tigeScene = false;
 
     bool ismoving = false;
 
@@ -29,7 +29,19 @@ public class DelayedFollower : MonoBehaviour
 
     Rigidbody m_Rigidbody;
     private Vector3 previousPosition;
-    public AudioSource audioSource;
+
+    bool FollowerIsDead = false;
+
+    private AudioSource audioSourceMouvement;
+    private AudioSource DyingSound01;
+    private AudioSource DyingSound02;
+    private AudioSource DyingSound03;
+
+    private AudioSource impactSound;
+
+    private AudioSource hitfloor;
+
+    AudioSource[] audioSources;
 
     void Start()
     {
@@ -38,6 +50,7 @@ public class DelayedFollower : MonoBehaviour
         currentDelay = delay;
         smoothTransitionSpeed = 0.1f;
         m_Rigidbody = GetComponent<Rigidbody>();
+        audioSources = GetComponents<AudioSource>();
 
         // Ensure at least one Particle System is found
         if (particleSystems1 == null & particleSystems2 == null)
@@ -48,10 +61,7 @@ public class DelayedFollower : MonoBehaviour
 
         TurnOnParticleSystem(0);
 
-        if (audioSource == null)
-        {
-            audioSource = GetComponent<AudioSource>();
-        }
+        audioSourceMouvement = audioSources[0];
         previousPosition = transform.position;
 
     }
@@ -98,20 +108,21 @@ public class DelayedFollower : MonoBehaviour
             previousPosition = currentPosition;
 
             // Map the velocity to the audio volume (e.g., assuming a max velocity of 10 for full volume)
-            if (canPlayAudio)
+            if (canPlayAudio & !FollowerIsDead)
             {
                 float maxVelocity = 10f;
-                float targetVolume = velocity / maxVelocity * 0.035f; // Adjusted max volume to 0.01
-                audioSource.volume = Mathf.Clamp01(targetVolume);
+                float targetVolume = velocity / maxVelocity * 0.025f; // Adjusted max volume to 0.01
+                audioSourceMouvement.volume = Mathf.Clamp01(targetVolume);
             }
             else
             {
-                audioSource.volume = 0;
+                audioSourceMouvement.volume = 0;
             }
 
             // Check if the follower is at the target position
             if (tigeScene)
             {
+                print("tigeScene IS TRUE");
                 if (IsAtTargetPosition())
                 {
                     this.gameObject.tag = "FollowerNoTrigger";
@@ -171,15 +182,20 @@ public class DelayedFollower : MonoBehaviour
 
         if (other.CompareTag("secondfloorbutton"))
         {
+            canPlayAudio = true;
             tigeScene = false;
             canChangeDelay = true;
         }
 
         if (other.CompareTag("Guetteur"))
         {
-            TurnOnParticleSystem(1);
-            //Destroy(this.gameObject, 1f);
-            StartCoroutine(waitForKill(1f));
+            if (!FollowerIsDead)
+            {
+                TurnOnParticleSystem(1);
+                PlayRandomDyingSound();
+                //Destroy(this.gameObject, 1f);
+                StartCoroutine(waitForKill(0.5f));
+            }
         }
     }
 
@@ -188,6 +204,7 @@ public class DelayedFollower : MonoBehaviour
         if (other.CompareTag("Guetteur"))
         {
             TurnOFFParticleSystem(1);
+            StopCoroutine("waitForKill");
 
         }
     }
@@ -204,11 +221,11 @@ public class DelayedFollower : MonoBehaviour
         m_Rigidbody.useGravity = true;
 
         DeactivateLightAndChangeColor();
-        TurnOFFParticleSystem(1);
     }
 
     public void DeactivateLightAndChangeColor()
     {
+        FollowerIsDead = true;
         // Find and deactivate the light component if it exists
         Light lightComponent = GetComponentInChildren<Light>();
         if (lightComponent != null)
@@ -232,9 +249,14 @@ public class DelayedFollower : MonoBehaviour
                 renderer.material.SetFloat("_EmissiveIntensity", 0f);
             }
         }
+        TurnOFFParticleSystem(1);
+        //Destroy(gameObject, 5f);
     }
 
-
+    public void KillMeNow()
+    {
+        Destroy(gameObject);
+    }
     public void TurnOnParticleSystem(int index)
     {
         if (index == 1)
@@ -257,5 +279,23 @@ public class DelayedFollower : MonoBehaviour
         {
             particleSystems2.Stop();
         }
+    }
+
+    public void PlayRandomDyingSound()
+    {
+
+        // Randomly select an index between 5 and 7
+        int randomIndex = Random.Range(6, 9); // Range is inclusive for the lower bound and exclusive for the upper bound
+
+        // Play the selected audio source
+        if (audioSources[randomIndex] != null)
+        {
+            audioSources[randomIndex].Play();
+        }
+        else
+        {
+            Debug.LogWarning($"Audio source at index {randomIndex} is null.");
+        }
+
     }
 }

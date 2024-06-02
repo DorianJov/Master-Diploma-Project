@@ -99,6 +99,11 @@ public class GlowingFollower : MonoBehaviour
                 playtwoTimesFloor = false;
             }
         }
+
+        if (other.tag == "Guetteur")
+        {
+            playAnim(true);
+        }
     }
 
     IEnumerator playHitfloorAgainIn(float seconds)
@@ -147,6 +152,8 @@ public class GlowingFollower : MonoBehaviour
             Debug.LogError("MainCamera is null.");
         }
     }
+
+
 
     void playAnim(bool Switch)
     {
