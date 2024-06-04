@@ -23,6 +23,7 @@ TagManager:
   - FollowerNoTrigger
   - InsideUsineFloor
   - Guetteur
+  - ToTheSkyButton
   layers:
   - Default
   - TransparentFX

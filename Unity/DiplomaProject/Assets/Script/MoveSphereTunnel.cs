@@ -116,6 +116,8 @@ public class MoveSphereTunnel : MonoBehaviour
     private Color originalEmissiveColor;
     private float originalEmissiveIntensity;
 
+    bool ToTheSkyPhase = false;
+
 
     void Start()
     {
@@ -186,6 +188,11 @@ public class MoveSphereTunnel : MonoBehaviour
             {
                 this.transform.position = new Vector3(0.29f, -4.77f, 0.996f);
             }
+
+            if (Input.GetKeyUp("j"))
+            {
+                this.transform.position = new Vector3(10f, -4.77f, 0.996f);
+            }
         }
 
         if (!dev)
@@ -219,7 +226,7 @@ public class MoveSphereTunnel : MonoBehaviour
             MoveSphere();
         }
 
-        if (limuleIsJumpingPhase)
+        if (limuleIsJumpingPhase & !ToTheSkyPhase)
         {
             if (!calledOnceRandomDelayLimule)
             {
@@ -230,7 +237,11 @@ public class MoveSphereTunnel : MonoBehaviour
             LimuleJumping();
 
         }
+        if (ToTheSkyPhase)
+        {
+            ToTheSkyMove();
 
+        }
         //print("acceleration: " + Acceleration);
         //print("Decerelation: " + Deceleration);
         //MoveSphereOnlyD
@@ -564,6 +575,71 @@ public class MoveSphereTunnel : MonoBehaviour
         lastSpeed = Speed;
     }
 
+    void ToTheSkyMove()
+    {
+        MaxSpeed = 0.3f;
+        if (Input.GetKey("w"))
+        {
+            //Deceleration = 0f;
+            //Deceleration = 2f;
+            Speed2 = 2f;
+        }
+
+        if (Input.GetKey("s"))
+        {
+            //Deceleration = 2f;
+        }
+
+        if (Speed != 0 || Speed2 != 0)
+        {
+            emissionModule.enabled = true;
+        }
+        else
+        {
+            emissionModule.enabled = false;
+
+        }
+
+        if (Input.GetKey("a"))
+        {
+            if (Speed > -MaxSpeed) Speed -= Acceleration * Time.deltaTime;
+        }
+        else if (Input.GetKey("d"))
+        {
+            if (Speed < MaxSpeed) Speed += Acceleration * Time.deltaTime;
+        }
+        else
+        {
+            if (Speed > Deceleration * Time.deltaTime) Speed -= Deceleration * Time.deltaTime;
+            else if (Speed < -Deceleration * Time.deltaTime) Speed += Deceleration * Time.deltaTime;
+            else
+                Speed = 0;
+        }
+
+
+        if (Speed2 > Deceleration * Time.deltaTime) Speed2 -= Deceleration * Time.deltaTime;
+        else if (Speed2 < -Deceleration * Time.deltaTime) Speed2 += Deceleration * Time.deltaTime;
+        else
+            Speed2 = 0;
+
+        Vector3 controlKeysMovement = new(Speed * Time.deltaTime * dashSpeed, Speed2 * Time.deltaTime * dashSpeed, 0f);
+        m_Rigidbody.MovePosition(transform.position += controlKeysMovement);
+
+
+        m_Rigidbody.MovePosition(transform.position += transform.right * Mathf.Sin(speedUpDown * Time.time) * Time.deltaTime * distanceUpDown);
+        m_Rigidbody.MovePosition(transform.position += transform.up * Mathf.Sin(speedUpDownUP * Time.time) * Time.deltaTime * distanceUpDownUP);
+
+        m_Rigidbody.velocity = Vector3.zero;
+
+        float volume = Mathf.Lerp(minVolume, maxVolume, Mathf.InverseLerp(minSpeed, maxSpeed, Mathf.Abs(Speed)));
+        float volume2 = Mathf.Lerp(minVolume, maxVolume, Mathf.InverseLerp(minSpeed, maxSpeed, Mathf.Abs(Speed2)));
+
+        movementXAudio.volume = volume;
+        movementYAudio.volume = volume2;
+
+        lastSpeed = Speed;
+    }
+
 
 
     void UpdateKeyPressDuration(string key)
@@ -759,6 +835,16 @@ public class MoveSphereTunnel : MonoBehaviour
             StartCoroutine(turnOFFLightIn(0.05f));
             StartCoroutine(WaitBeforeRespawn(5f));
             FadeScreenToBlack();
+
+        }
+
+        if (other.CompareTag("ToTheSkyButton"))
+        {
+            //glowingAttack.CameraToTheSkyPhase();
+            ToTheSkyPhase = true;
+            Speed = 0f;
+            Deceleration = 0;
+            Speed2 = 1.5f;
 
         }
 
