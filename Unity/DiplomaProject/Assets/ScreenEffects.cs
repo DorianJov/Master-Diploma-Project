@@ -107,7 +107,7 @@ public class ScreenEffects : MonoBehaviour
         if (glitch != null)
         {
             StartCoroutine(GlitchEffectCoroutine(start, duration));
-            jitterfunction();
+            //GlitchOnDeath();
         }
     }
 
@@ -129,10 +129,10 @@ public class ScreenEffects : MonoBehaviour
         //glitch.jitter.Override(0);
     }
 
-    void jitterfunction()
+    public void GlitchOnDeath(float intensity)
     {
-        //glitch.jump.Override(0.01f);
-        //glitch.jitter.Override(0.05f);
+        glitch.block.Override(intensity);
+        glitch.jitter.Override(intensity);
         //chromaticAberration.intensity.Override(1f);
 
 

@@ -17,7 +17,7 @@ public class DelayedFollower : MonoBehaviour
 
     public bool canChangeDelay = true;
 
-    private bool tigeScene = false;
+    private bool tigeScene = true;
 
     bool ismoving = false;
 
@@ -122,7 +122,7 @@ public class DelayedFollower : MonoBehaviour
             // Check if the follower is at the target position
             if (tigeScene)
             {
-                print("tigeScene IS TRUE");
+                //print("tigeScene IS TRUE");
                 if (IsAtTargetPosition())
                 {
                     this.gameObject.tag = "FollowerNoTrigger";
@@ -133,7 +133,7 @@ public class DelayedFollower : MonoBehaviour
                 else
                 {
                     this.gameObject.tag = "Player";
-                    //Debug.Log("ismoving");
+                    Debug.Log("ismoving");
                     ismoving = true;
                 }
 
@@ -147,6 +147,8 @@ public class DelayedFollower : MonoBehaviour
         {
 
         }
+
+        //print("delayed follower state: " + "CanChangeDelay: " + canChangeDelay + "  " + "isMoveing: " + ismoving + "TigeScene: " + tigeScene);
     }
 
 
@@ -165,19 +167,17 @@ public class DelayedFollower : MonoBehaviour
             canPlayAudio = true;
         }
 
-        if (canChangeDelay)
+        if (canChangeDelay & ismoving)
         {
-            if (ismoving)
+            if (other.CompareTag("tigeInsideUsine"))
             {
-                if (other.CompareTag("tigeInsideUsine"))
-                {
-                    tigeScene = true;
-                    //TouchedWall++;
-                    print("Should change delay-Once");
-                    delay = Random.Range(0.1f, 10f);
-                    smoothTransitionSpeed = Random.Range(0.1f, 0.05f);
-                }
+                tigeScene = true;
+                //TouchedWall++;
+                //print("Should change delay-Once");
+                delay = Random.Range(0.1f, 10f);
+                smoothTransitionSpeed = Random.Range(0.1f, 0.05f);
             }
+
         }
 
         if (other.CompareTag("secondfloorbutton"))
@@ -194,7 +194,8 @@ public class DelayedFollower : MonoBehaviour
                 TurnOnParticleSystem(1);
                 PlayRandomDyingSound();
                 //Destroy(this.gameObject, 1f);
-                StartCoroutine(waitForKill(0.5f));
+                StopLimule();
+                StartCoroutine(waitForKill(1f));
             }
         }
     }
@@ -203,15 +204,13 @@ public class DelayedFollower : MonoBehaviour
     {
         if (other.CompareTag("Guetteur"))
         {
-            TurnOFFParticleSystem(1);
-            StopCoroutine("waitForKill");
+            //TurnOFFParticleSystem(1);
+            //StopCoroutine("waitForKill");
 
         }
     }
-
-    IEnumerator waitForKill(float delay)
+    void StopLimule()
     {
-        yield return new WaitForSeconds(delay);
         SphereCollider sphereCollider = GetComponent<SphereCollider>();
         if (sphereCollider != null)
         {
@@ -219,6 +218,11 @@ public class DelayedFollower : MonoBehaviour
         }
         canMove = false;
         m_Rigidbody.useGravity = true;
+    }
+    IEnumerator waitForKill(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
 
         DeactivateLightAndChangeColor();
     }
@@ -285,7 +289,7 @@ public class DelayedFollower : MonoBehaviour
     {
 
         // Randomly select an index between 5 and 7
-        int randomIndex = Random.Range(6, 9); // Range is inclusive for the lower bound and exclusive for the upper bound
+        int randomIndex = Random.Range(6, 12); // Range is inclusive for the lower bound and exclusive for the upper bound
 
         // Play the selected audio source
         if (audioSources[randomIndex] != null)

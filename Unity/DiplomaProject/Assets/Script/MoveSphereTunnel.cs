@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -32,6 +33,7 @@ public class MoveSphereTunnel : MonoBehaviour
     public ParticlesInsideUsine particlesInsideUsine;
 
     private GlowingAttack glowingAttack;
+    public ScreenFader screenFader;
 
 
 
@@ -85,6 +87,9 @@ public class MoveSphereTunnel : MonoBehaviour
 
     bool limuleIsJumpingPhase = false;
 
+    private float dKeyPressDuration;
+    private float holdThreshold = 0.05f;
+
 
     [Header("Followers")]
     public GameObject limuleFollowerPrefab; // The prefab to instantiate
@@ -99,6 +104,17 @@ public class MoveSphereTunnel : MonoBehaviour
 
     bool calledOnceRandomDelayLimule = false;
     AudioSource[] audios;
+
+    bool PlayerWillDie = false;
+
+    bool LimuleFunctionCanPlay = false;
+
+    private Renderer playerRenderer;
+    private Light playerLight;
+
+    private Color originalBaseColor;
+    private Color originalEmissiveColor;
+    private float originalEmissiveIntensity;
 
 
     void Start()
@@ -132,7 +148,16 @@ public class MoveSphereTunnel : MonoBehaviour
 
         SpawnFollowers();
 
+        playerRenderer = GetComponent<Renderer>();
+        playerLight = GetComponent<Light>();
 
+        if (playerRenderer != null)
+        {
+            // Save the original material properties
+            originalBaseColor = playerRenderer.material.GetColor("_BaseColor");
+            originalEmissiveColor = playerRenderer.material.GetColor("_EmissiveColor");
+            originalEmissiveIntensity = playerRenderer.material.GetFloat("_EmissiveIntensity");
+        }
 
 
     }
@@ -201,7 +226,9 @@ public class MoveSphereTunnel : MonoBehaviour
                 UpdateDelayForGuetteurScene(0.1f, 5f);
                 calledOnceRandomDelayLimule = true;
             }
+
             LimuleJumping();
+
         }
 
         //print("acceleration: " + Acceleration);
@@ -415,7 +442,7 @@ public class MoveSphereTunnel : MonoBehaviour
 
     void MoveSphere()
     {
-        print("MoveSphere");
+        //print("MoveSphere");
         //dev power
         if (Input.GetMouseButton(0))
         {
@@ -538,9 +565,28 @@ public class MoveSphereTunnel : MonoBehaviour
     }
 
 
+
+    void UpdateKeyPressDuration(string key)
+    {
+        if (Input.GetKey(key))
+        {
+            dKeyPressDuration += Time.deltaTime;
+        }
+        else
+        {
+            dKeyPressDuration = 0f;
+        }
+    }
+
+    bool IsKeyHeld(string key)
+    {
+        return dKeyPressDuration >= holdThreshold;
+    }
+
     void LimuleJumping()
     {
-        print("LIMULEJUMNPING");
+        //print("LIMULEJUMNPING");
+        UpdateKeyPressDuration("d");
         if (Input.GetKeyUp("a") || Input.GetKeyUp("d"))
         {
 
@@ -559,7 +605,10 @@ public class MoveSphereTunnel : MonoBehaviour
         }
 
         Acceleration = 10f;
-        Deceleration = 5f;
+        if (LimuleFunctionCanPlay)
+        {
+            Deceleration = 5f;
+        }
 
         if (!smoothTransitionPlayed)
         {
@@ -580,21 +629,13 @@ public class MoveSphereTunnel : MonoBehaviour
         }
 
 
+
         if (Input.GetKeyUp("a") || Input.GetKeyUp("d"))
         {
             canJump = true;
         }
-        if (Input.GetKey("a") & canJump)
-        {
-            if (Speed >= -0.005f)
-            {
-                //Speed = -1f;
-                //Speed2 = 0.5f;
-                //canJump = false;
-            }
 
-        }
-        else if (Input.GetKey("d") & canJump)
+        if (Input.GetKey("d") & canJump & !PlayerWillDie! & !IsKeyHeld("d") & LimuleFunctionCanPlay)
         {
             if (Speed <= 0.005f)
             {
@@ -602,10 +643,15 @@ public class MoveSphereTunnel : MonoBehaviour
                 //Speed2 = 0.7f;
                 //canJump = false;
 
-                Speed = 1f;
+                Speed = 1.1f;
                 Speed2 = 0.7f;
-
                 canJump = false;
+            }
+            else
+            {
+                Deceleration = 50f;
+                Speed2 = 0;
+
             }
 
         }
@@ -618,6 +664,7 @@ public class MoveSphereTunnel : MonoBehaviour
                 Speed = 0;
 
         }
+
 
 
         if (Speed2 > Deceleration * Time.deltaTime) Speed2 -= Deceleration * Time.deltaTime;
@@ -703,21 +750,79 @@ public class MoveSphereTunnel : MonoBehaviour
 
         }
 
-        if (other.CompareTag("Guetteur"))
+        if (other.CompareTag("Guetteur") & !PlayerWillDie)
         {
             TurnOnDeathParticles();
             PlayRandomDyingSound();
-            StartCoroutine(WaitBeforeRespawn(2f));
+            PlayerWillDie = true;
+            animator.SetBool("PlayAnimShort", true);
+            StartCoroutine(turnOFFLightIn(0.05f));
+            StartCoroutine(WaitBeforeRespawn(5f));
+            FadeScreenToBlack();
 
         }
 
 
     }
 
+    public void DeactivateLightAndChangeToBlack()
+    {
+        if (playerRenderer != null)
+        {
+            // Change the material properties to black
+            playerRenderer.material.SetColor("_BaseColor", Color.black);
+            playerRenderer.material.SetColor("_EmissiveColor", Color.black);
+            playerRenderer.material.SetFloat("_EmissiveIntensity", 0f);
+        }
+
+        if (playerLight != null)
+        {
+            // Deactivate the light component
+            playerLight.enabled = false;
+        }
+    }
+
+    public void ReactivateLightAndRestoreMaterial()
+    {
+        if (playerRenderer != null)
+        {
+            // Restore the original material properties
+            playerRenderer.material.SetColor("_BaseColor", originalBaseColor);
+            playerRenderer.material.SetColor("_EmissiveColor", originalEmissiveColor);
+            playerRenderer.material.SetFloat("_EmissiveIntensity", originalEmissiveIntensity);
+        }
+
+        if (playerLight != null)
+        {
+            // Reactivate the light component
+            playerLight.enabled = true;
+        }
+    }
+
+
     IEnumerator WaitBeforeRespawn(float delay)
     {
         yield return new WaitForSeconds(delay);
         KillAllFollowersForRespawn();
+    }
+
+    void FadeScreenToBlack()
+    {
+        // Start fading to black
+        screenFader.FadeOut();
+
+        // Wait for the fade duration and respawn the player
+        StartCoroutine(UnFadeScreen());
+    }
+
+    IEnumerator UnFadeScreen()
+    {
+        yield return new WaitForSeconds(6f);
+
+        // Respawn logic here
+
+        // Start fading to clear
+        screenFader.FadeIn();
     }
 
     public void LimuleIsFalling()
@@ -728,6 +833,8 @@ public class MoveSphereTunnel : MonoBehaviour
         //
         //ResetDelay(0.01f);
         limuleIsJumpingPhase = true;
+        Deceleration = 3f;
+        StartCoroutine(TurnOnLimuleFunctionCanPlay(2f));
         m_Rigidbody.useGravity = true;
         particlesInsideUsine.SetVelocityOverLifetimeY(-3.0f); // Example to set Y velocity to 5.0
         particlesInsideUsine.DeactivateEmission(); // Deactivate emission
@@ -735,6 +842,12 @@ public class MoveSphereTunnel : MonoBehaviour
         Speed2 = -2f;
 
 
+    }
+
+    IEnumerator TurnOnLimuleFunctionCanPlay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        LimuleFunctionCanPlay = true;
     }
 
     IEnumerator turnOFFLightIn(float seconds)
@@ -911,6 +1024,7 @@ public class MoveSphereTunnel : MonoBehaviour
             DelayedFollower delayedFollower = followers[i].GetComponent<DelayedFollower>();
             if (delayedFollower != null)
             {
+                delayedFollower.canChangeDelay = true;
                 delayedFollower.delay = Random.Range(min, max);
                 delayedFollower.smoothTransitionSpeed = 0.1f;
             }
@@ -958,6 +1072,7 @@ public class MoveSphereTunnel : MonoBehaviour
         emissionModule.enabled = true;
         m_Rigidbody.useGravity = false;
         limuleIsJumpingPhase = false;
+        LimuleFunctionCanPlay = false;
         canJump = false;
         calledOnceRandomDelayLimule = false;
         particlesInsideUsine.SetVelocityOverLifetimeY(0); // Example to set Y velocity to 5.0
@@ -966,9 +1081,10 @@ public class MoveSphereTunnel : MonoBehaviour
         glowingAttack.CallKillAllGuetteurAndReset();
         glowingAttack.CallResetFloorPadButts();
         glowingAttack.calledGuetteurOnce = false;
+        PlayerWillDie = false;
         // Clear the list
         followers.Clear();
-
+        ReactivateLightAndRestoreMaterial();
         SpawnFollowers();
         UpdateDelayIncrementRandom(0.1f, 10f);
 
@@ -1003,7 +1119,14 @@ public class MoveSphereTunnel : MonoBehaviour
     {
         deathParticles.Play();
         emissiondeathParticles.enabled = true;
+        StartCoroutine(StopDeathParticles(1f));
+    }
 
+    IEnumerator StopDeathParticles(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        emissiondeathParticles.enabled = false;
+        DeactivateLightAndChangeToBlack();
     }
 
 
@@ -1011,16 +1134,16 @@ public class MoveSphereTunnel : MonoBehaviour
     {
 
         // Randomly select an index between 10 and 12
-        int randomIndex = Random.Range(10, 13); // Range is inclusive for the lower bound and exclusive for the upper bound
+        int randomIndex = Random.Range(10, 13);
 
-        // Play the selected audio source
-        if (audios[randomIndex] != null)
+        // Play the selected audio source if it exists
+        if (randomIndex >= 0 && randomIndex < audios.Length && audios[randomIndex] != null)
         {
             audios[randomIndex].Play();
         }
         else
         {
-            Debug.LogWarning($"Audio source at index {randomIndex} is null.");
+            Debug.LogWarning($"Audio source at index {randomIndex} is null or out of range.");
         }
 
     }

@@ -13,6 +13,7 @@ public class GlowingAttack : MonoBehaviour
 
     private AudioSource impactSound;
     public GameObject MainCamera;
+    public GameObject SkyAndFogVolumes;
 
     public GameObject GuetteurSpawner;
     public GameObject FloorButSpawner;
@@ -80,7 +81,11 @@ public class GlowingAttack : MonoBehaviour
             {
                 target.StoprotationCoroutine();
                 target.transform.rotation = Quaternion.Euler(7.85f, 0f, 0f);
-                target.applyoffsetOnceTarget3 = true;
+                //target.applyoffsetOnceTarget3 = true;
+                target.offset = new Vector3(0.12f, 0.3f, -1.37f);
+                target.fovTransitionDuration = 0.5f;
+                target.minY = -4.2f;
+                target.maxY = -6f;
                 //target.SmoothTransitionRotation(Quaternion.Euler(7.85f, 0f, 0f), 0.1f);
             }
             else
@@ -91,6 +96,28 @@ public class GlowingAttack : MonoBehaviour
         else
         {
             Debug.LogError("MainCamera is null.");
+        }
+    }
+
+    public void CallGlitchEffect()
+    {
+        // Check if pinceObject is not null and has the pinceScript component
+        if (SkyAndFogVolumes != null)
+        {
+            ScreenEffects screenEffects = SkyAndFogVolumes.GetComponent<ScreenEffects>();
+            if (screenEffects != null)
+            {
+                screenEffects.GlitchOnDeath(0.1f);
+
+            }
+            else
+            {
+                Debug.LogError("ScreenEffects component not found on SkyAndFogVolume.");
+            }
+        }
+        else
+        {
+            Debug.LogError("screenEffects is null.");
         }
     }
 
@@ -161,6 +188,11 @@ public class GlowingAttack : MonoBehaviour
                 floorbuttonOnce = false;
             }
         }
+        if (other.CompareTag("Guetteur"))
+        {
+            //CallGlitchEffect();
+        }
+
 
         if (other.CompareTag("specialPadButton"))
         {
