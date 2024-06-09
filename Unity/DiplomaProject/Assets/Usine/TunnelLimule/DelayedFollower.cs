@@ -114,10 +114,17 @@ public class DelayedFollower : MonoBehaviour
                 float targetVolume = velocity / maxVelocity * 0.025f; // Adjusted max volume to 0.01
                 audioSourceMouvement.volume = Mathf.Clamp01(targetVolume);
             }
-            else
+            else if (!canPlayAudio & !FollowerIsDead)
             {
                 audioSourceMouvement.volume = 0;
             }
+            else if (FollowerIsDead)
+            {
+                print("IM DEAD");
+                audioSourceMouvement.Stop();
+            }
+
+
 
             // Check if the follower is at the target position
             if (tigeScene)
@@ -133,7 +140,7 @@ public class DelayedFollower : MonoBehaviour
                 else
                 {
                     this.gameObject.tag = "Player";
-                    Debug.Log("ismoving");
+                    //Debug.Log("ismoving");
                     ismoving = true;
                 }
 

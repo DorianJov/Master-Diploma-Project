@@ -28,7 +28,7 @@ public class GlowingAttack : MonoBehaviour
 
     public GameObject InsideUsineSpotLight01; // Reference to the other GameObject to rotate
 
-    bool calledGuetteurOpenEye = false;
+    //bool calledGuetteurOpenEye = false;
 
     public bool calledGuetteurOnce = false;
 

@@ -25,8 +25,8 @@ public class CameraFollow : MonoBehaviour
     public float fovTargetThree = 80f; // FOV value for target three
     public float fovTargetFour = 60f; // FOV value for target four
     public float fovTransitionDuration = 0.5f; // Duration of FOV transition
-    float fovValueAnim = 0f;
-    bool animationFOV = false;
+    //float fovValueAnim = 0f;
+    //bool animationFOV = false;
     public bool applyoffsetOnceTarget3 = true;
 
     // Variables for shaking effect
@@ -252,10 +252,10 @@ public class CameraFollow : MonoBehaviour
             pinceScript pinceScript = bacParentRotation.GetComponent<pinceScript>();
             if (pinceScript != null)
             {
-                if (pinceScript.currenteuleurAngles >= 1)
+                /*if (pinceScript.currenteuleurAngles >= 1)
                 {
                     animationFOV = true;
-                }
+                }*/
                 fovTargetTwo = MapValue(pinceScript.currenteuleurAngles, oldMin, oldMax, newMin, newMax);
             }
             else

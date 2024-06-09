@@ -9,6 +9,7 @@ public class ChangeCamOffsetFromCollider : MonoBehaviour
     public GameObject MainCamera;
     bool DoitOnce = true;
 
+
     public void CameraToTheSkyPhase()
     {
         // Check if pinceObject is not null and has the pinceScript component
@@ -19,6 +20,7 @@ public class ChangeCamOffsetFromCollider : MonoBehaviour
             {
                 target.StoprotationCoroutine();
                 //target.transform.rotation = Quaternion.Euler(7.85f, 0f, 0f);
+                target.SmoothTransitionRotation(Quaternion.Euler(-8.37f, 0f, 0f), 1f);
                 //target.applyoffsetOnceTarget3 = true;
                 target.offset = new Vector3(0f, 0.05f, -1.37f);
                 target.CallSmoothSpeed2Transition(1f, 0.2f, 5f);
@@ -39,6 +41,27 @@ public class ChangeCamOffsetFromCollider : MonoBehaviour
         }
     }
 
+    public void ChangeListener()
+    {
+        // Check if pinceObject is not null and has the pinceScript component
+        if (MainCamera != null)
+        {
+            AudioListenerControl audioListenerControl = MainCamera.GetComponent<AudioListenerControl>();
+            if (audioListenerControl != null)
+            {
+                audioListenerControl.SetActiveListener("Listener01");
+            }
+            else
+            {
+                Debug.LogError("AudioListenerControl component not found on MainCamera.");
+            }
+        }
+        else
+        {
+            Debug.LogError("MainCamera is null.");
+        }
+    }
+
     void OnTriggerEnter(Collider other)
     {
 
@@ -47,8 +70,11 @@ public class ChangeCamOffsetFromCollider : MonoBehaviour
             if (DoitOnce)
             {
                 CameraToTheSkyPhase();
+                //ChangeListener();
                 DoitOnce = false;
             }
         }
     }
+
+
 }

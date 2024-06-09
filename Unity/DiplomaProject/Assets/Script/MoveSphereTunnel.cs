@@ -10,13 +10,13 @@ public class MoveSphereTunnel : MonoBehaviour
 
     private Animator animator;
     public float Speed = 0.0f; //Don’t touch this
-    float Speed2 = 0.0f; //Don’t touch this
+    public float Speed2 = 0.0f; //Don’t touch this
 
-    float t = 0;
+    //float t = 0;
 
     Rigidbody m_Rigidbody;
-    public float MaxDashSpeed = 5f;
-    public float DashsmoothSpeed = 0.5f;
+    //public float MaxDashSpeed = 5f;
+    // public float DashsmoothSpeed = 0.5f;
     private float dashSpeed = 1f; //Don’t touch this
     public float MaxSpeed = 0.3f; //This is the maximum speed that the object will achieve
     public float Acceleration = 2f; //How fast will object reach a maximum speed
@@ -66,7 +66,7 @@ public class MoveSphereTunnel : MonoBehaviour
 
     bool boostOnSpawn = true;
     bool SpeedwasAt0 = false;
-    bool CanTouchInputs = true;
+    //bool CanTouchInputs = true;
 
     public float pitchIncreaseRate = 0.1f;
 
@@ -239,7 +239,7 @@ public class MoveSphereTunnel : MonoBehaviour
         }
         if (ToTheSkyPhase)
         {
-            ToTheSkyMove();
+            ToTheSkyMoveOnlyUP();
 
         }
         //print("acceleration: " + Acceleration);
@@ -577,12 +577,12 @@ public class MoveSphereTunnel : MonoBehaviour
 
     void ToTheSkyMove()
     {
-        MaxSpeed = 0.3f;
+        //MaxSpeed = 0.3f;
         if (Input.GetKey("w"))
         {
             //Deceleration = 0f;
             //Deceleration = 2f;
-            Speed2 = 2f;
+            //Speed2 = 2f;
         }
 
         if (Input.GetKey("s"))
@@ -638,6 +638,43 @@ public class MoveSphereTunnel : MonoBehaviour
         movementYAudio.volume = volume2;
 
         lastSpeed = Speed;
+    }
+    void ToTheSkyMoveOnlyUP()
+    {
+
+        if (Speed != 0 || Speed2 != 0)
+        {
+            emissionModule.enabled = true;
+        }
+        else
+        {
+            m_Rigidbody.useGravity = false;
+            emissionModule.enabled = false;
+
+        }
+        if (Speed > Deceleration * Time.deltaTime) Speed -= Deceleration * Time.deltaTime;
+        else if (Speed < -Deceleration * Time.deltaTime) Speed += Deceleration * Time.deltaTime;
+        else
+            Speed = 0;
+
+        if (Speed2 > Deceleration * Time.deltaTime) Speed2 -= Deceleration * Time.deltaTime;
+        else if (Speed2 < -Deceleration * Time.deltaTime) Speed2 += Deceleration * Time.deltaTime;
+        else
+            Speed2 = 0;
+
+        Vector3 controlKeysMovement = new(Speed * Time.deltaTime * dashSpeed, Speed2 * Time.deltaTime * dashSpeed, 0f);
+        m_Rigidbody.MovePosition(transform.position += controlKeysMovement);
+
+        //m_Rigidbody.MovePosition(transform.position += transform.right * Mathf.Sin(speedUpDown * Time.time) * Time.deltaTime * distanceUpDown);
+        //m_Rigidbody.MovePosition(transform.position += transform.up * Mathf.Sin(speedUpDownUP * Time.time) * Time.deltaTime * distanceUpDownUP);
+
+        m_Rigidbody.velocity = Vector3.zero;
+
+        float volume = Mathf.Lerp(minVolume, maxVolume, Mathf.InverseLerp(minSpeed, maxSpeed, Mathf.Abs(Speed)));
+        float volume2 = Mathf.Lerp(minVolume, maxVolume, Mathf.InverseLerp(minSpeed, maxSpeed, Mathf.Abs(Speed2)));
+
+        movementXAudio.volume = volume;
+        movementYAudio.volume = volume2;
     }
 
 
@@ -841,10 +878,12 @@ public class MoveSphereTunnel : MonoBehaviour
         if (other.CompareTag("ToTheSkyButton"))
         {
             //glowingAttack.CameraToTheSkyPhase();
+            ResetDelay(0f);
             ToTheSkyPhase = true;
             Speed = 0f;
-            Deceleration = 0;
-            Speed2 = 1.5f;
+            Speed2 = -0.1f;
+            //Deceleration = 50f;
+            //Speed2 = 1.5f;
 
         }
 

@@ -21,7 +21,7 @@ public class GuetterGuetApen : MonoBehaviour
 
     private Animator animator;
     private bool playedOpenEyeOnce = false;
-    private bool OpenEyeOnceAnimation = false;
+    //private bool OpenEyeOnceAnimation = false;
     private bool isChosen = false; // Flag to determine if this prefab is the chosen one
 
     public bool isLastPrefab = false; // Flag to determine if this prefab is the last one

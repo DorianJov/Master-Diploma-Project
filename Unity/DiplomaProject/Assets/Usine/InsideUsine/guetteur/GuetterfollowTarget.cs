@@ -12,7 +12,7 @@ public class GuetterfollowTarget : MonoBehaviour
 
     public bool active = false;
 
-    bool once = true;
+    //bool once = true;
     // Start is called before the first frame update
     void Start()
     {

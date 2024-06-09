@@ -46,7 +46,7 @@ public class MoveTrashBox : MonoBehaviour
     //public float rotationToZDuration = 0.06f;
     private Quaternion initialRotation;
 
-    private bool canRotatetoX = false;
+    //private bool canRotatetoX = false;
     private float volume = 0f;
 
 
@@ -112,7 +112,7 @@ public class MoveTrashBox : MonoBehaviour
 
         if (!stopperActive)
         {
-            canRotatetoX = false;
+            //canRotatetoX = false;
             //rotate bac idle + speed related
             float baseRotationAngle = Mathf.Lerp(-MaxRotation, MaxRotation, Mathf.InverseLerp(-MaxSpeed, MaxSpeed, Speed));
 

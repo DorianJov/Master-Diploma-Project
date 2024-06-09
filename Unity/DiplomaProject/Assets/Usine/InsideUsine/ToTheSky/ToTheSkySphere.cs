@@ -7,7 +7,7 @@ public class ToTheSkySphere : MonoBehaviour
     float Speed = 0.0f; //Don’t touch this
     float Speed2 = 0.0f; //Don’t touch this
 
-    float t = 0;
+    //float t = 0;
 
     Rigidbody m_Rigidbody;
 
