@@ -239,6 +239,7 @@ public class MoveSphereTunnel : MonoBehaviour
         }
         if (ToTheSkyPhase)
         {
+            MoveSphereForJumpOnly();
             ToTheSkyMoveOnlyUP();
 
         }
@@ -453,7 +454,7 @@ public class MoveSphereTunnel : MonoBehaviour
 
     void MoveSphere()
     {
-        //print("MoveSphere");
+        print("MoveSphere");
         //dev power
         if (Input.GetMouseButton(0))
         {
@@ -575,6 +576,65 @@ public class MoveSphereTunnel : MonoBehaviour
         lastSpeed = Speed;
     }
 
+    void MoveSphereForJumpOnly()
+    {
+        print("MoveSphereForJumpOnly");
+        //dev power
+        if (Input.GetMouseButton(0))
+        {
+            // Your code here to handle the left mouse button being held down
+            MaxSpeed = 2f;
+            Debug.Log("Left mouse button is being held down.");
+        }
+        else
+        {
+            MaxSpeed = 0.3f;
+        }
+
+        Acceleration = 2f;
+        Deceleration = 2f;
+
+        if (!smoothTransitionPlayed)
+        {
+            m_Rigidbody.useGravity = false;
+            Speed2 = -0.05f;
+            smoothTransitionPlayed = true;
+        }
+
+
+        if (Speed != 0 || Speed2 != 0)
+        {
+            emissionModule.enabled = true;
+        }
+        else
+        {
+            emissionModule.enabled = false;
+
+        }
+
+        if (Speed > Deceleration * Time.deltaTime) Speed -= Deceleration * Time.deltaTime;
+        else if (Speed < -Deceleration * Time.deltaTime) Speed += Deceleration * Time.deltaTime;
+        else
+            Speed = 0;
+
+        if (Speed2 > Deceleration * Time.deltaTime) Speed2 -= Deceleration * Time.deltaTime;
+        else if (Speed2 < -Deceleration * Time.deltaTime) Speed2 += Deceleration * Time.deltaTime;
+        else
+            Speed2 = 0;
+
+
+        Vector3 controlKeysMovement = new(Speed * Time.deltaTime * dashSpeed, Speed2 * Time.deltaTime * dashSpeed, 0f);
+        m_Rigidbody.MovePosition(transform.position += controlKeysMovement);
+
+        m_Rigidbody.MovePosition(transform.position += transform.right * Mathf.Sin(speedUpDown * Time.time) * Time.deltaTime * distanceUpDown);
+        m_Rigidbody.MovePosition(transform.position += transform.up * Mathf.Sin(speedUpDownUP * Time.time) * Time.deltaTime * distanceUpDownUP);
+
+        m_Rigidbody.velocity = Vector3.zero;
+
+        //Debug.Log("Current Speed: " + Speed);
+        lastSpeed = Speed;
+    }
+
     void ToTheSkyMove()
     {
         //MaxSpeed = 0.3f;
@@ -641,6 +701,7 @@ public class MoveSphereTunnel : MonoBehaviour
     }
     void ToTheSkyMoveOnlyUP()
     {
+        print("ToTheSkyMoveOnlyUP");
 
         if (Speed != 0 || Speed2 != 0)
         {
@@ -882,6 +943,8 @@ public class MoveSphereTunnel : MonoBehaviour
             ToTheSkyPhase = true;
             Speed = 0f;
             Speed2 = -0.1f;
+            MaxSpeed = 0.3f;
+            Deceleration = 2f;
             //Deceleration = 50f;
             //Speed2 = 1.5f;
 
