@@ -7,6 +7,7 @@ public class ChangeTargetAndDelPrev : MonoBehaviour
 {
     public GameObject MainCamera;
     public GameObject InsideUsineLevel;
+    public GameObject Tunnel;
     public GameObject SpotLightToTurnOff;
     public GameObject SlapScene;
     bool once = true;
@@ -80,8 +81,19 @@ public class ChangeTargetAndDelPrev : MonoBehaviour
 
     void DeleteAllpreviousLevels()
     {
+        StartCoroutine(UnloadAssetsCoroutine(11f));
         Destroy(InsideUsineLevel, 10f);
+        Destroy(Tunnel);
 
+    }
+
+    IEnumerator UnloadAssetsCoroutine(float delay)
+    {
+        // Wait for the specified delay
+        yield return new WaitForSeconds(delay);
+
+        // Unload unused assets after the delay
+        Resources.UnloadUnusedAssets();
     }
 
     void ActivateSlapScene()
@@ -101,9 +113,13 @@ public class ChangeTargetAndDelPrev : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             //add entering hole sound_effect();
-            audioSource.Play();
-            StartCoroutine(WaitForShake(0.1f));
-            StartCoroutine(CallFunctionsIn(1f));
+            if (once)
+            {
+                audioSource.Play();
+                StartCoroutine(WaitForShake(0.1f));
+                StartCoroutine(CallFunctionsIn(1f));
+                once = false;
+            }
         }
 
     }
