@@ -24,6 +24,7 @@ TagManager:
   - InsideUsineFloor
   - Guetteur
   - ToTheSkyButton
+  - HoleBeforeSlap
   layers:
   - Default
   - TransparentFX

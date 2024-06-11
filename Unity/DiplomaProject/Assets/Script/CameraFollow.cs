@@ -8,6 +8,7 @@ public class CameraFollow : MonoBehaviour
     public GameObject bacParentRotation;
     public Transform target3;
     public Transform target4;
+    public Transform target5;
     public float smoothSpeed = 0.5f;
     public float smoothSpeed2 = 0.5f;
     public Vector3 offset;
@@ -24,6 +25,8 @@ public class CameraFollow : MonoBehaviour
     public float fovTargetTwo = 100f; // FOV value for target two
     public float fovTargetThree = 80f; // FOV value for target three
     public float fovTargetFour = 60f; // FOV value for target four
+
+    public float fovTargetFive = 100f; // FOV value for target four
     public float fovTransitionDuration = 0.5f; // Duration of FOV transition
     //float fovValueAnim = 0f;
     //bool animationFOV = false;
@@ -96,6 +99,14 @@ public class CameraFollow : MonoBehaviour
                 offset = new Vector3(0.12f, 0.3f, -1.37f);
                 minY = -1.2f;
                 maxY = 3f;
+                break;
+
+            case 5:
+                FollowTarget(target5, smoothSpeed2);
+                SmoothTransitionFOV(fovTargetFive);
+                //offset = new Vector3(0f, 0.05f, -1.37f);
+                //minY = -100f;
+                //maxY = 100f;
                 break;
         }
 

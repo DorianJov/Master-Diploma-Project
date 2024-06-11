@@ -151,7 +151,7 @@ public class MoveSphereTunnel : MonoBehaviour
         SpawnFollowers();
 
         playerRenderer = GetComponent<Renderer>();
-        playerLight = GetComponent<Light>();
+        playerLight = GetComponentInChildren<Light>();
 
         if (playerRenderer != null)
         {
@@ -950,7 +950,41 @@ public class MoveSphereTunnel : MonoBehaviour
 
         }
 
+        if (other.CompareTag("HoleBeforeSlap"))
+        {
+            //deactivate the light
+            turnOFFAllLightComponent();
+            //wait for kill
+            TurnOffLightAndKillAllFollowers();
+            KillMeNow();
+        }
 
+
+    }
+
+    void turnOFFAllLightComponent()
+    {
+
+        playerLight.enabled = false;
+    }
+
+    public void TurnOffLightAndKillAllFollowers()
+    {
+
+        // Update the delay for each follower
+        for (int i = 0; i < followers.Count; i++)
+        {
+            DelayedFollower delayedFollower = followers[i].GetComponent<DelayedFollower>();
+            if (delayedFollower != null)
+            {
+                Light lightComponent = delayedFollower.GetComponentInChildren<Light>();
+                if (lightComponent != null)
+                {
+                    lightComponent.enabled = false;
+                }
+                delayedFollower.KillMeNow();
+            }
+        }
     }
 
     public void DeactivateLightAndChangeToBlack()
@@ -1334,6 +1368,11 @@ public class MoveSphereTunnel : MonoBehaviour
             Debug.LogWarning($"Audio source at index {randomIndex} is null or out of range.");
         }
 
+    }
+
+    public void KillMeNow()
+    {
+        Destroy(gameObject, 2f);
     }
 }
 

@@ -59,13 +59,17 @@ public class CounterToTheSky : MonoBehaviour
             {
                 if (ChangeOffsetOnce)
                 {
-                    //ChangeOffset();
-                    ChangeOffsetOnce = false;
+                    //DestroyMe();
                 }
             }
         }
     }
 
+
+    public void DestroyMe()
+    {
+        Destroy(spawnPointObject);
+    }
 
     public void TurnONLightOfspawnPointObject()
     {
@@ -90,7 +94,6 @@ public class CounterToTheSky : MonoBehaviour
     public void LaunchJumpAnim()
     {
         animator.SetBool("JumpSky", true);
-
         //TurnONLightOfspawnPointObject();    
         //audioSources[1].Stop();
         CameraShake();
@@ -197,6 +200,7 @@ public class CounterToTheSky : MonoBehaviour
                 print("Made-a-revolution");
                 LaunchJumpAnim();
                 gospawn = false;
+                //DestroyMe();
             }
 
             // Calculate the position of the prefab around the circle using trigonometry

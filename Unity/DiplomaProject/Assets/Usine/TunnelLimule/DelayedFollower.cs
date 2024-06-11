@@ -266,7 +266,7 @@ public class DelayedFollower : MonoBehaviour
 
     public void KillMeNow()
     {
-        Destroy(gameObject);
+        Destroy(gameObject, 2f);
     }
     public void TurnOnParticleSystem(int index)
     {
